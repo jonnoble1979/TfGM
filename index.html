@@ -8,27 +8,29 @@
 </head>
 <body>
 
+
 <nav id="top-nav">
-  <button onclick="loadSection('pages\home.html')">Overview</button>
-  <button onclick="loadSection('pages\advice.html')">Obtain road safety advice</button>
-  <button onclick="loadSection('pages\overview.html')">Overview Road Safety Audits</button>
-  <button onclick="loadSection('pages\responsibilities.html')">1. Responsibilities</button>
-  <button onclick="loadSection('pages\applicability.html')">2. Applicability of RSA</button>
-  <button onclick="loadSection('pages\teamreqs.html')">3. RSA Team Requirements</button>
-  <button onclick="loadSection('pages\auditbrief.html')">4. Audit Brief</button>
-  <button onclick="loadSection('pages\stages.html')">5. RSA stages</button>
-  <button onclick="loadSection('pages\response.html')">6. Response report</button>
-  <button onclick="loadSection('pages\checklist.html')">7. RSA checklist</button>
+  <button onclick="showPage('home', 'pages/home.html')">Overview</button>
+  <button onclick="showPage('advice', 'pages/advice.html')">Obtain road safety advice</button>
+  <button onclick="showPage('overview', 'pages/overview.html')">Overview Road Safety Audits</button>
+  <button onclick="showPage('responsibilities', 'pages/responsibilities.html')">1. Responsibilities</button>
+  <button onclick="showPage('applicability', 'pages/applicability.html')">2. Applicability of RSA</button>
+  <button onclick="showPage('teamreqs', 'pages/teamreqs.html')">3. RSA Team Requirements</button>
+  <button onclick="showPage('auditbrief', 'pages/auditbrief.html')">4. Audit Brief</button>
+  <button onclick="showPage('stages', 'pages/stages.html')">5. RSA stages</button>
+  <button onclick="showPage('response', 'pages/response.html')">6. Response report</button>
+  <button onclick="showPage('checklist', 'pages/checklist.html')">7. RSA checklist</button>
 
   <div class="dropdown">
     <button class="dropbtn">Downloads <span class="arrow-down"></span></button>
     <div class="dropdown-content">
       path/to/rsa_exceptions_form.docRSA exceptions form</a>
-      <a href="path/to/rsa_audit_template.doc template</a>
+      path/to/rsa_audit_template.docRSA audit template</a>
       path/to/rsa_response_report_template.docRSA response report template</a>
     </div>
   </div>
 </nav>
+
 
 
   <section id="content">
