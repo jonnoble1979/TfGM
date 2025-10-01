@@ -99,6 +99,40 @@ async function loadDefinitions() {
 }
 
 
+// Renders <tr> rows inside <tbody id="definitions-list">
+function renderDefinitions(filterTerm = '') {
+  const tbody = document.getElementById('definitions-list');
+  if (!tbody) return;
+
+  const q = filterTerm.toLowerCase().trim();
+
+  // Build a set of exact terms for quick exact-match detection
+  const termSet = new Set(DEFINITIONS.map(d => d.term));
+  const isExactFilter = termSet.has(filterTerm);
+
+  const filtered = DEFINITIONS.filter(d => {
+    if (!q) return true; // show all if empty
+    const t = d.term.toLowerCase();
+    const def = d.definition.toLowerCase();
+    return isExactFilter
+      ? d.term === filterTerm
+      : (t.includes(q) || def.includes(q));
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="2">No definitions match your search.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(d => `
+    <tr class="definition-item" data-term="${escapeAttr(d.term)}">
+      <th scope="row" style="width:35%">${escapeHtml(d.term)}</th>
+      <td>${escapeHtml(d.definition)}</td>
+    </tr>
+  `).join('');
+}
+
+
 // Main filter function called by search input or link click
 function filterDefinitions(searchTerm) {
     const searchInput = document.getElementById('definition-search');
