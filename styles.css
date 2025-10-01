@@ -1,275 +1,271 @@
+* --- GLOBAL LAYOUT --- */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: #f4f4f9;
 }
 
-/* --- Top Navigation Bar --- */
 #top-nav {
-    background-color: #004488; /* Dark Blue */
+    background-color: #334155; /* Dark Slate */
+    color: white;
     padding: 10px 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    display: flex; /* Use flexbox for layout control */
+    display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; /* Start items from the left */
-    align-items: center; /* Vertically align items */
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-#top-nav a {
+#top-nav a, .dropbtn {
     color: white;
     text-decoration: none;
     padding: 8px 15px;
-    margin: 0 5px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    font-weight: 500;
 }
 
-#top-nav a:hover {
-    background-color: #005aae;
+#top-nav a:hover, .dropbtn:hover {
+    background-color: #1e293b; /* Darker slate on hover */
 }
 
-/* --- Main Content Layout --- */
-#content {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 20px;
-}
-
-/* Page Management */
-.page {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    display: none;
-}
-
-.active-page {
-    display: block;
-}
-
-/* --- Home Page Styling --- */
-.tfgm-logo {
-    max-width: 300px;
-    height: auto;
-    display: block;
-    margin: 0 auto 20px;
-}
-
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
-}
-
-.main-button {
-    padding: 15px 30px;
-    font-size: 1.1em;
-    cursor: pointer;
-    background-color: #ff9900; /* Orange/Accent Color */
-    color: #333;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.main-button:hover {
-    background-color: #e68a00;
-}
-
-/* Advice Page Flowchart */
-.flowchart {
-    text-align: center;
-    margin: 30px 0;
-    padding: 20px;
-    border: 1px dashed #ccc;
-    border-radius: 5px;
-}
-
-.time-box {
-    display: inline-block;
-    padding: 10px 15px;
-    margin-top: 15px;
-    background-color: #e0f7fa;
-    border: 1px solid #00bcd4;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-/* --- Table and Filter Styling --- */
-.filter-group {
-    margin: 15px 0;
-}
-
-.filter-group button {
-    padding: 8px 15px;
-    margin-right: 10px;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.filter-group button:hover {
-    background-color: #5a6268;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-    vertical-align: top;
-    font-size: 0.9em;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-/* Download Buttons (in-page) */
-.download-button {
-    display: block;
-    width: fit-content;
-    margin: 20px 0;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.download-button:hover {
-    background-color: #1e7e34;
-}
-
-/* --- Checklist Styling FIX (Targeting the new <ul> structure) --- */
-.checklist-list {
-    list-style: none; /* Remove bullet points */
-    padding-left: 0;
-    margin: 0;
-}
-
-.checklist-list li {
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.checklist-list li label {
-    display: block; /* Ensures each label is on its own row */
-    cursor: pointer;
-}
-
-.checklist-list li input[type="checkbox"] {
-    margin-right: 10px;
-    /* Vertically align the checkbox with the text */
-    vertical-align: middle; 
-}
-
-
-/* --- DROPDOWN STYLING (Downloads) --- */
-
+/* Dropdown specific styles */
 .dropdown {
     position: relative;
     display: inline-block;
-    margin-left: auto; /* Pushes element to the right in the flex container */
-}
-
-.dropbtn {
-    background-color: #005aae;
-    color: white;
-    padding: 8px 15px;
-    font-size: 1em;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.dropbtn:hover, .dropbtn:focus {
-    background-color: #007bff;
-}
-
-/* CSS for the little down arrow */
-.arrow-down {
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    display: inline-block;
-    padding: 3px;
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    margin-left: 8px;
-    transition: transform 0.3s;
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #fff; /* Explicitly white background */
-    min-width: 250px;
+    background-color: #f9f9f9;
+    min-width: 220px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 10;
-    text-align: left;
-    right: 0; /* Align to the right edge of the button */
-    top: 100%;
+    z-index: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    right: 0; /* Align to the right of the button */
 }
 
 .dropdown-content a {
-    color: #333 !important; /* FORCED FIX: Ensures dark gray text is visible on the white background */
+    color: #334155;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
-    border-radius: 0;
-    margin: 0;
+    border-bottom: 1px solid #eee;
 }
 
 .dropdown-content a:hover {
-    background-color: #ddd;
+    background-color: #e2e8f0;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-.dropdown:hover .arrow-down {
-    transform: rotate(-135deg); /* Arrow points up when dropdown is open */
+.arrow-down {
+    margin-left: 5px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
 
-/* --- Media Query for responsiveness --- */
-@media (max-width: 1000px) {
-    #top-nav {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    #top-nav a {
-        display: block;
-        margin: 5px 0;
-    }
-    .button-group {
-        flex-direction: column;
-    }
-    .main-button {
-        width: 100%;
-    }
-    .dropdown {
-        width: 100%; 
-        margin-left: 0;
-    }
-    .dropbtn {
-        width: 100%;
-        text-align: left;
-    }
-    .dropdown-content {
-        position: static;
-        width: 100%;
-    }
+/* Main Content and Sidebar Layout */
+.main-container {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 80vh;
+}
+#content {
+    flex: 4; /* Main content takes ~80% */
+    padding-right: 20px;
+}
+#definitions-sidebar {
+    flex: 1; /* Sidebar takes ~20% */
+    padding: 20px;
+    background-color: #ffffff;
+    border-left: 1px solid #e2e8f0;
+    overflow-y: auto;
+    max-height: calc(100vh - 70px); /* Adjust height to fit viewport minus nav */
+    position: sticky;
+    top: 0;
+}
+
+/* Page Display Logic */
+.page {
+    display: none;
+    padding: 20px 0;
+    max-width: 100%;
+}
+.active-page {
+    display: block;
+}
+
+/* --- SIDEBAR STYLING --- */
+#definitions-sidebar h3 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff; /* Primary color separator */
+    color: #1e293b;
+    font-size: 1.25rem;
+}
+#definitions-sidebar input[type="search"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.definition-item {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px dotted #ccc;
+    background-color: #f9f9fc;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.definition-item h4 {
+    margin-top: 0;
+    color: #007bff;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.definition-item p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #475569;
+}
+
+/* --- MAIN CONTENT & SHARED STYLING --- */
+h1 { color: #1e293b; margin-bottom: 10px; }
+h2 { color: #334155; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-top: 30px; }
+p { line-height: 1.6; color: #475569; }
+
+.intro-text {
+    font-size: 1.1rem;
+    font-weight: 300;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #e0f2f1; /* Light cyan */
+    border-left: 5px solid #007bff;
+    border-radius: 8px;
+}
+
+.button-group {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.main-button {
+    padding: 15px 30px;
+    background-color: #10b981; /* Teal */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 4px #047857;
+}
+
+.main-button:hover {
+    background-color: #047857;
+    transform: translateY(1px);
+}
+
+.tfgm-logo {
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* Clickable term styling (New) */
+.term-link {
+    cursor: pointer;
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: underline;
+    transition: color 0.1s; 
+}
+.term-link:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden; /* Ensures rounded corners clip table borders */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+th, td {
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    text-align: left;
+}
+th {
+    background-color: #cbd5e1; /* Light gray-blue header */
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Filter and Download Buttons */
+.filter-group button, .download-button {
+    padding: 10px 15px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.2s ease;
+}
+.filter-group button:hover, .download-button:hover {
+    background-color: #0056b3;
+}
+
+/* Checklist Styling */
+.checklist-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.checklist-list li {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e2e8f0;
+    background-color: #fff;
+    margin-bottom: 5px;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.checklist-list li:last-child {
+    border-bottom: none;
+}
+
+.checklist-list li label {
+    display: flex; /* Use flex to align checkbox and text */
+    align-items: center;
+    cursor: pointer;
+    color: #334155;
+}
+
+.checklist-list li input[type="checkbox"] {
+    margin-right: 15px;
+    width: 18px;
+    height: 18px;
 }
