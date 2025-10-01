@@ -1,23 +1,4 @@
-// --- DEFINITIONS DATA ---
-const DEFINITIONS = {
-    'Road Safety Audit (RSA)': {
-        term: 'Road Safety Audit (RSA)',
-        definition: 'An RSA is the staged evaluation of the changes to the highway during design, implementation and subsequent operation. It seeks to identify potential road safety hazards that may result in personal injury for any type of road user and to suggest measures to eliminate or mitigate those problems. This evaluation is carried out during the design stages (Stages 1 & 2), as closely as possible after the measures become operational (Stage 3), and with 12 months of validated Personal Injury Collision data to enable an accurate comparison between the ‘pre-construction period’ and control data for the ‘post-construction period’ after the scheme becomes operational (Stage 4).'
-    },
-    'Client': {
-        term: 'Client',
-        definition: 'The relevant Greater Manchester highway/roads authority under their statutory duty for road user safety. The Client may not commission and pay for the audit (e.g. for developer-led schemes) but they are the ones who require the audit to be undertaken. If the project is a local authority or developer-led, designated Scheme Manager will be identified in the relevant organisation.'
-    },
-    'Collision Investigation': {
-        term: 'Collision Investigation',
-        definition: 'The collection and examination of validated historical collision data over a period of time in order to identify common trends and factors which may have contributed to the collisions. This could also include the detailed forensic investigation of single collisions, any provisional collision data and operational incident data that may be available.'
-    }
-};
-
-
 // --- loads HTML into each section  //
-
-
 
 
 function showPage(pageId, filePath) {
@@ -65,40 +46,58 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // --- DEFINITIONS RENDERING AND FILTERING LOGIC ---
 
-// Function to render all or filtered definitions
-function renderDefinitions(filterTerm = '') {
-    const listContainer = document.getElementById('definitions-list');
-    let html = '';
-    const lowerCaseFilter = filterTerm.toLowerCase().trim();
-    
-    // If the filter is explicitly set by clicking a term, it should match exactly
-    const isExactFilter = Object.keys(DEFINITIONS).includes(filterTerm);
-    
-    for (const key in DEFINITIONS) {
-        const def = DEFINITIONS[key];
-        const lowerCaseTerm = def.term.toLowerCase();
-        const lowerCaseDefinition = def.definition.toLowerCase();
-        
-        // Filtering Logic
-        if (filterTerm === '' || 
-            (isExactFilter && key === filterTerm) ||
-            (!isExactFilter && (lowerCaseTerm.includes(lowerCaseFilter) || lowerCaseDefinition.includes(lowerCaseFilter)))
-        ) {
-            html += `
-                <div class="definition-item" data-term="${def.term}">
-                    <h4>${def.term}</h4>
-                    <p>${def.definition}</p>
-                </div>
-            `;
+// Holds normalized definitions as an array: [{ term, definition }, ...]
+let DEFINITIONS = [];
+
+/** Escape helpers to avoid accidental HTML injection */
+const escapeHtml = s => String(s)
+  .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+const escapeAttr = escapeHtml;
+
+/** Fetch and normalize JSON from /data/definitions.json */
+async function loadDefinitions() {
+  try {
+    // ✅ Make sure this path matches your actual file name and location
+    const res = await fetch('data/definitions.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status} fetching definitions.json`);
+
+    const data = await res.json();
+
+    // Normalize: support either an array or an object keyed by term
+    if (Array.isArray(data)) {
+      // Expecting [{ term: "...", definition: "..." }, ...]
+      DEFINITIONS = data
+        .filter(d => d && d.term && d.definition)
+        .map(d => ({ term: String(d.term), definition: String(d.definition) }));
+    } else if (data && typeof data === 'object') {
+      // Expecting { "Term": "Definition", ... } OR { "key": {term, definition}, ... }
+      DEFINITIONS = Object.entries(data).map(([key, value]) => {
+        if (value && typeof value === 'object') {
+          return {
+            term: String(value.term ?? key),
+            definition: String(value.definition ?? '')
+          };
         }
+        return { term: String(key), definition: String(value) };
+      });
+    } else {
+      throw new Error('Unexpected JSON shape for definitions');
     }
-    
-    if (html === '') {
-        html = '<p>No definitions match your search.</p>';
+
+    renderDefinitions(); // initial render
+  } catch (err) {
+    console.error('Failed to load definitions:', err);
+    const tbody = document.getElementById('definitions-list');
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr><td colspan="2" style="color:#b91c1c">
+          Failed to load definitions: ${escapeHtml(err.message)}
+        </td></tr>`;
     }
-    
-    listContainer.innerHTML = html;
+  }
 }
+
 
 // Main filter function called by search input or link click
 function filterDefinitions(searchTerm) {
