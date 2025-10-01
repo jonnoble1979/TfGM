@@ -1,123 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>RSA Guidance Tool</title>
-  <link>styles.css</link>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSA Guidance Tool Undertaking a Road Safety Audit (RSA)</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a href="#advice" onclick="showSection('>
-      <li>#overviewOverview Road Safety Audits</a></li>
-      <li><a href="#responsResponsibilities</a></li>
-      <li>#applicabilityApplicability of RSA</a></li>
-      <li>#teamRSA Team Requirements</a></li>
-      <li>#briefAudit Brief</a></li>
-      <li>#stagesRSA Stages</a></li>
-      <li><a href="#responseReport</a></li>
-      <li>#checklistRSA Checklist</a></li>
-      <li><a href="#downloads" onclick="showSection('downloadseader>
-    <img src="TfGM-logo.png" alt="Transport for Greater Manchester Logo" class="A)</h1>
-    <p>Welcome to the RSA Guidance Tool, please select what information you need below.</p>
-    <div class="button-row">
-      <button onclick="showSection('advice')">Obtain road safety advice</button>
-      <button onclick="showSection('overview')">Undertake RSA</button>
+
+    <nav id="top-nav">
+        <a href="#home" onclick="showPage('home')">Home</a>
+        <a href="#advice" onclick="showPage('advice')">Obtain road safety advice</a>
+        <a href="#overview" onclick="showPage('overview')">Overview Road Safety Audits</a>
+        </nav>
+
+    <div id="content">
+
+        <section id="home" class="page active-page">
+            <div class="logo-container">
+                <img src="path/to/TfGM_Logo.png" alt="Transport for Greater Manchester Logo" class="tfgm-logo">
+            </div>
+            [cite_start]<h1>RSA Guidance Tool Undertaking a Road Safety Audit (RSA) [cite: 18]</h1>
+            [cite_start]<p class="intro-text">Welcome to the RSA Guidance Tool, please select what information you need below. [cite: 19]</p>
+            <div class="button-group">
+                [cite_start]<button onclick="showPage('advice')" class="main-button">Obtain road safety advice [cite: 21]</button>
+                [cite_start]<button onclick="showPage('overview')" class="main-button">Undertake RSA [cite: 22]</button>
+            </div>
+        </section>
+
+        <section id="advice" class="page">
+            [cite_start]<h2>Getting Advice on Road Safety [cite: 24]</h2>
+
+            [cite_start]<p>All design projects should undergo a Road Safety Review early in the design[cite: 25]. [cite_start]The cost for this is minimal (1-2 hours of an expert's time), and ensures designers are aware of road safety issues early[cite: 25]. [cite_start]This minimises potential issues and re-design[cite: 25]. [cite_start]Contact the WSP road safety team to arrange this[cite: 25]. [cite_start]They will ensure the team doing the reviews is different from the one doing the road safety audits to ensure the total independence of the latter from the design as per process[cite: 25].</p>
+
+            [cite_start]<p>At any time during the design process if you have any road safety concerns with your projects the WSP road safety team are here and available to offer an opinion, help and advice (again they will make sure independence of the RSA team is maintained)[cite: 26].</p>
+
+            <div class="flowchart">
+                <img src="path/to/flowchart.png" alt="Flowchart showing benefits of early safety review" style="max-width: 100%;">
+                <p class="time-box">Time required for a safety review could be as little as 1 hour.</p>
+            </div>
+        </section>
+
+        <section id="overview" class="page">
+            <h2>2. [cite_start]Overview Road Safety Audits [cite: 28]</h2>
+            [cite_start]<p>TBC [cite: 29]</p>
+            <div class="sub-nav">
+                [cite_start]<a href="#responsibilities" onclick="showPage('responsibilities')">Responsibilities [cite: 6]</a>
+                [cite_start]<a href="#applicability" onclick="showPage('applicability')">Applicability of RSA [cite: 7]</a>
+                [cite_start]<a href="#teamreqs" onclick="showPage('teamreqs')">RSA Team Requirements [cite: 8]</a>
+                [cite_start]<a href="#auditbrief" onclick="showPage('auditbrief')">Audit Brief [cite: 9]</a>
+                [cite_start]<a href="#stages" onclick="showPage('stages')">RSA stages [cite: 10]</a>
+                [cite_start]<a href="#response" onclick="showPage('response')">Response report [cite: 11]</a>
+                [cite_start]<a href="#checklist" onclick="showPage('checklist')">RSA checklist [cite: 12]</a>
+            </div>
+        </section>
+
+        <section id="responsibilities" class="page sub-page">
+            [cite_start]<h2>Responsibilities [cite: 6]</h2>
+            [cite_start]<p>Everyone involved in the RSA process has different responsibilities. [cite: 31]</p>
+
+            <div class="filter-group">
+                <button onclick="filterTable('all')">Show All</button>
+                [cite_start]<button onclick="filterTable('design')">Design Organisation [cite: 32]</button>
+                [cite_start]<button onclick="filterTable('overseeing')">Overseeing Organisation [cite: 32]</button>
+                [cite_start]<button onclick="filterTable('rsateam')">RSA Team [cite: 32]</button>
+            </div>
+
+            <table id="responsibilities-table">
+                <thead>
+                    <tr>
+                        <th>Organisation</th>
+                        <th>Applicability of RSA</th>
+                        <th>RSA Team approval</th>
+                        <th>RSA brief</th>
+                        <th>RSA</th>
+                        <th>Response Report</th>
+                        <th>Log</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-org="overseeing">
+                        <td>Overseeing Organisation / Highway Authority</td>
+                        [cite_start]<td>OO to decide applicability of RSA Guidance on Tab 1. If RSA is not applicable fill in the exception report (download available on Tab 1) [cite: 32]</td>
+                        [cite_start]<td>Receive CVs from RSA team and ensure the team is competent and meet the following requirements listed in Tab 2. Formally approve the RSA team [cite: 32]</td>
+                        [cite_start]<td>Approve RSA brief [cite: 32]</td>
+                        <td></td>
+                        [cite_start]<td>Respond to Design Organisation comments and agree action [cite: 32]</td>
+                        <td>Check that the RSA has been logged and saved in the correct folder. [cite_start][...] [cite: 32]</td>
+                    </tr>
+                    <tr data-org="rsateam">
+                        <td>RSA Team</td>
+                        [cite_start]<td>If the RSA is not applicable check and sign the exception report [cite: 32]</td>
+                        [cite_start]<td>Send your CV to the OO for approval using the template provided [cite: 32]</td>
+                        [cite_start]<td>Ensure the information in the brief is complete [cite: 32]</td>
+                        [cite_start]<td>Undertake RSA [cite: 32]</td>
+                        [cite_start]<td>Read through the RR to ensure all issues have been understood [cite: 32]</td>
+                        [cite_start]<td>Log the RSA report for your record [cite: 32]</td>
+                    </tr>
+                    <tr data-org="design">
+                        <td>Design Organisation</td>
+                        <td></td>
+                        <td></td>
+                        [cite_start]<td>Produce RSA brief using template on Tab 3 Once the OO has approved the brief send to the Audit Team alongside relevant drawings and audit and response report template on Tab 5 [cite: 32]</td>
+                        <td></td>
+                        [cite_start]<td>Produce the report using the template in Tab 5 [cite: 32]</td>
+                        <td>Long and save the RSA in the correct folder. [cite_start][...] [cite: 32]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="applicability" class="page sub-page">
+            [cite_start]<h2>Applicability of RSA [cite: 7]</h2>
+            [cite_start]<p>Where there are physical changes to the highway impacting on road user behaviour or resulting in a change to the outcome of a collision on the trunk road and motorway network, road safety audit (RSA) shall apply, regardless of the procurement method. [cite: 34]</p>
+            [cite_start]<p>Temporary traffic management and temporary changes to the highway not associated with the construction of a highway scheme, and that last longer than 6 months in duration, are considered to be physical changes to the highway. [cite: 34]</p>
+            [cite_start]<p>RSA shall not apply where a physical change to the highway will not impact on road user behaviour, or change the outcome of a collision on the trunk road and motorway network. [cite: 34]</p>
+            [cite_start]<p>The Overseeing Organisation shall produce an exemption file note to be kept on the scheme file (or equivalent) where there is no need to apply RSA on the trunk road and motorway network. [cite: 34]</p>
+            [cite_start]<p>An exemption file note template is provided in appendix A. [cite: 34]</p>
+            [cite_start]<button class="download-button" onclick="downloadFile('RSA exceptions form')">Download the exemption file note here [cite: 14]</button>
+        </section>
+
+        <section id="teamreqs" class="page sub-page">
+            [cite_start]<h2>RSA Team Requirements [cite: 8]</h2>
+            <table id="team-competency-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>RSA team observer</th>
+                        <th>RSA team member</th>
+                        <th>RSA team leader</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Training</td>
+                        [cite_start]<td>10 days of formal collision data analysis or road safety engineering/road design training [cite: 35]</td>
+                        [cite_start]<td>10 days of formal collision data analysis or road safety engineering/road design training [cite: 35]</td>
+                        [cite_start]<td>10 days of formal collision data analysis or road safety engineering/road design training [cite: 35]</td>
+                    </tr>
+                    <tr>
+                        <td>CPD</td>
+                        [cite_start]<td>N/A [cite: 35]</td>
+                        [cite_start]<td>A minimum of 2 days CPD in the field of RSA, collision data analysis or road safety engineering in the last 12 months [cite: 35]</td>
+                        [cite_start]<td>A minimum of 2 days CPD in the field of RSA, collision data analysis or road safety engineering in the last 12 months [cite: 35]</td>
+                    </tr>
+                    <tr>
+                        <td>Experience</td>
+                        [cite_start]<td>1 year of collision data analysis or road safety engineering/road design experience [cite: 35]</td>
+                        [cite_start]<td>2 years of collision data analysis or road safety engineering/road design experience [cite: 35] [cite_start]<br> 5 RSAs completed within the last 24 months as team leader, member or observer [cite: 35]</td>
+                        [cite_start]<td>4 years of collision data analysis or road safety engineering/road design experience [cite: 35] [cite_start]<br> 5 RSAs completed within the last 12 months as team leader or member [cite: 35]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="auditbrief" class="page sub-page">
+            [cite_start]<h2>Audit Brief [cite: 9]</h2>
+            [cite_start]<p>TBC [cite: 37]</p>
+            [cite_start]<button class="download-button" onclick="downloadFile('RSA audit template')">Download the brief template [cite: 15]</button>
+            [cite_start]<p>TBC [cite: 39]</p>
+            [cite_start]<button class="download-button" onclick="downloadFile('RSA audit template')">Download the RSA audit template [cite: 15]</button>
+        </section>
+
+        <section id="stages" class="page sub-page">
+            [cite_start]<h2>RSA stages [cite: 10]</h2>
+            [cite_start]<p>Filter: “what RS stage do you need?” [cite: 43]</p>
+
+            <div class="filter-group">
+                <button onclick="filterStageTable('all')">Show All Stages</button>
+                <button onclick="filterStageTable(1)">Stage 1</button>
+                <button onclick="filterStageTable(2)">Stage 2</button>
+                <button onclick="filterStageTable(3)">Stage 3</button>
+                <button onclick="filterStageTable(4)">Stage 4</button>
+            </div>
+
+            <table id="stages-table">
+                <thead>
+                    <tr>
+                        <th>RSA Stage</th>
+                        <th>When to undertake it</th>
+                        <th>Site visit requirements</th>
+                        <th>Attendees</th>
+                        <th>Invitees</th>
+                        <th>Drawings required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-stage="1">
+                        <td>1</td>
+                        [cite_start]<td>At the end of initial design [cite: 44]</td>
+                        [cite_start]<td>Daytime [cite: 44]</td>
+                        [cite_start]<td>RSA Team [cite: 44]</td>
+                        [cite_start]<td>None required [cite: 44]</td>
+                        [cite_start]<td>GA & SC [cite: 44]</td>
+                    </tr>
+                    <tr data-stage="2">
+                        <td>2</td>
+                        [cite_start]<td>At the end of detail design [cite: 44]</td>
+                        [cite_start]<td>Daytime [cite: 44]</td>
+                        [cite_start]<td>RSA Team [cite: 44]</td>
+                        [cite_start]<td>None required [cite: 44]</td>
+                        [cite_start]<td>Full drawing pack including.... [cite: 44]</td>
+                    </tr>
+                    <tr data-stage="3">
+                        <td>3</td>
+                        [cite_start]<td>Within one month from end of construction [cite: 44]</td>
+                        [cite_start]<td>Daytime and darkness [cite: 44]</td>
+                        [cite_start]<td>RSA Team [cite: 44]</td>
+                        [cite_start]<td>Police representative and maintaining agent [cite: 44]</td>
+                        [cite_start]<td>As built [cite: 44]</td>
+                    </tr>
+                    <tr data-stage="4">
+                        <td>4</td>
+                        [cite_start]<td>1-3 years post construction [cite: 44]</td>
+                        [cite_start]<td>If applicable [cite: 44]</td>
+                        [cite_start]<td>RSA Team [cite: 44]</td>
+                        [cite_start]<td>None required [cite: 44]</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            [cite_start]<button class="download-button" onclick="downloadFile('RSA audit template')">Download the RSA audit template [cite: 45]</button>
+        </section>
+
+        <section id="response" class="page sub-page">
+            [cite_start]<h2>Response report [cite: 11]</h2>
+            [cite_start]<p>A RSA response report shall be produced for stage 1, 2 and 3 RSAs[cite: 48]. [cite_start]NOTE A RSA response report is not be required for stage 4 RSAs[cite: 49].</p>
+            <ul>
+                [cite_start]<li>The design organisation shall manage the production of the RSA response report in collaboration with the Overseeing Organisation[cite: 50, 51].</li>
+                [cite_start]<li>The RSA response report shall include a summary of the scheme, the stage of RSA, the RSA report document reference and date of the RSA report it relates to[cite: 52, 53].</li>
+                [cite_start]<li>The RSA response report shall contain details of the representatives from the design organisation who prepared the RSA response report[cite: 54, 55].</li>
+                [cite_start]<li>The RSA response report shall contain a RSA decision log to include a reiteration of each road safety problem and recommendation made in the RSA report[cite: 56, 57].</li>
+                [cite_start]<li>For each RSA problem and recommendation, the design organisation shall do one of the following: [cite: 58]
+                    <ol>
+                        [cite_start]<li>accept the RSA problem and recommendation made by the RSA team[cite: 59];</li>
+                        [cite_start]<li>accept the RSA problem raised, but suggest an alternative solution, giving appropriate reasoning[cite: 60]; or</li>
+                        [cite_start]<li>disagree with the RSA problem and recommendation raised, giving appropriate reasoning for rejecting both[cite: 61, 62].</li>
+                    </ol>
+                </li>
+                [cite_start]<li>The RSA response report shall contain a response from the Overseeing Organisation and a RSA action for each problem agreed between the design organisation and Overseeing Organisation[cite: 63, 64].</li>
+                [cite_start]<li>The RSA response report shall be signed by the Overseeing Organisation and design organisation to indicate their agreement on the RSA actions[cite: 65, 66].</li>
+                [cite_start]<li>The RSA response report should be produced and finalised within one month of the issue of the RSA report[cite: 67, 68].</li>
+                [cite_start]<li>For each RSA action, either the design organisation or Overseeing Organisation shall be responsible for its implementation[cite: 70, 71].</li>
+            </ul>
+            [cite_start]<p class="note">NOTE Appendix F shows a RSA response report and RSA decision log template[cite: 69].</p>
+            [cite_start]<button class="download-button" onclick="downloadFile('RSA response report template')">Download the Response report template [cite: 72, 16]</button>
+        </section>
+
+        <section id="checklist" class="page sub-page">
+            [cite_start]<h2>RSA checklist [cite: 12]</h2>
+            [cite_start]<p>TBC [cite: 74]</p>
+            <div class="checklist-container">
+                [cite_start]<label><input type="checkbox"> DO has prepared the Audit Brief [cite: 74]</label>
+                [cite_start]<label><input type="checkbox"> DO has sent the Audit Brief and any relevant drawings to the Audit Team [cite: 74]</label>
+                [cite_start]<label><input type="checkbox"> OO has approved the Audit Brief [cite: 74]</label>
+                [cite_start]<label><input type="checkbox"> OO has checked the RSA Team CVs against requirements and approved the team [cite: 74]</label>
+                [cite_start]<label><input type="checkbox"> OO has determined the applicability of the RSA [cite: 74]</label>
+                [cite_start]<label><input type="checkbox" checked> The Audit Team has undertaken the RSA and invited the relevant parties to participate [cite: 74]</label>
+                [cite_start]<label><input type="checkbox"> The DO has prepared the response report and agreed a suitable action for each problem raised with the OO [cite: 74]</label>
+                [cite_start]<label><input type="checkbox"> The OO has commented within the response report and agreed a suitable action for each problem raised with the DO [cite: 74]</label>
+                [cite_start]<label><input type="checkbox"> The report has been issued back to the Audit Team for information only [cite: 74]</label>
+            </div>
+        </section>
+
     </div>
-  </header>
-  <main>
-    <section id="advice" class="content-section">
-      <h2>Getting Advice on Road Safety</h2>
-      <p>All design projects should undergo a Road Safety Review early in the design. The cost for this is minimal (1-2 hours of an expert's time), and ensures designers are aware of road safety issues early. This minimises potential issues and re-design. Contact the WSP road safety team to arrange this. They will ensure the team doing the reviews is different from the one doing the road safety audits to ensure the total independence of the latter from the design as per process.</p>
-      <p>At any time during the design process if you have any road safety concerns with your projects the WSP road safety team are here and available to offer an opinion, help and advice (again they will make sure independence of the RSA team is maintained).</p>
-      <div class="diagram">
-        <em>Process diagram placeholder</em>
-      </div>
-    </section>
-    <section id="overview" class="content-section" style="display:none;">
-      <h2>Overview Road Safety Audits</h2>
-      <p>TBC</p>
-    </section>
-    <section id="responsibilities" class="content-section" style="display:none;">
-      <h2>Responsibilities</h2>
-      <p>Everyone involved in the RSA process has different responsibilities.</p>
-      <label for="filter-resp">Filter:</label>
-      <select id="filter-resp">
-        <option>Design Organisation</option>
-        <option>Overseeing Organisation</option>
-        <option>RSA Team</option>
-      </select>
-      <!-- Dummy Table -->
-      <table border="1">
-        <tr><th>Role</th><th>Responsibility</th></tr>
-        <tr><td>Design Org</td><td>Dummy responsibility 1</td></tr>
-        <tr><td>Overseeing Org</td><td>Dummy responsibility 2</td></tr>
-        <tr><td>RSA Team</td><td>Dummy responsibility 3</td></tr>
-      </table>
-    </section>
-    <section id="applicability" class="content-section" style="display:none;">
-      <h2>Applicability of RSA</h2>
-      <!-- Dummy Table -->
-      <table border="1">
-        <tr><th>Stage</th><th>Applicability</th></tr>
-        <tr><td>Stage 1</td><td>Dummy applicability 1</td></tr>
-        <tr><td>Stage 2</td><td>Dummy applicability 2</td></tr>
-      </table>
-    </section>
-    <section id="team" class="content-section" style="display:none;">
-      <h2>RSA Team Requirements</h2>
-      <!-- Dummy Table -->
-      <table border="1">
-        <tr><th>Requirement</th><th>Description</th></tr>
-        <tr><td>Dummy 1</td><td>Dummy desc 1</td></tr>
-      </table>
-    </section>
-    <section id="brief" class="content-section" style="display:none;">
-      <h2>Audit Brief</h2>
-      <button>Download the brief template</button>
-      <button>Download the RSA audit template</button>
-      <p>TBC</p>
-    </section>
-    <section id="stages" class="content-section" style="display:none;">
-      <h2>RSA Stages</h2>
-      <label for="filter-stage">What RS stage do you need?</label>
-      <select id="filter-stage">
-        <option>Stage 1</option>
-        <option>Stage 2</option>
-        <option>Stage 3</option>
-      </select>
-      <!-- Dummy Table -->
-      <table border="1">
-        <tr><th>Stage</th><th>Description</th></tr>
-        <tr><td>Stage 1</td><td>Dummy desc 1</td></tr>
-      </table>
-      <button>Download the RSA audit template</button>
-    </section>
-    <section id="response" class="content-section" style="display:none;">
-      <h2>Response Report</h2>
-      <p>A RSA response report shall be produced for stage 1, 2 and 3 RSAs. <br>
-      NOTE: A RSA response report is not required for stage 4 RSAs. <br>
-      ... (rest of your text here) ...
-      </p>
-      <button>Download the Response report template</button>
-    </section>
-    <section id="checklist" class="content-section" style="display:none;">
-      <h2>RSA Checklist</h2>
-      <!-- Dummy Table -->
-      <table border="1">
-        <tr><th>Checklist Item</th><th>Status</th></tr>
-        <tr><td>Dummy item 1</td><td>Dummy status 1</td></tr>
-      </table>
-    </section>
-    <section id="downloads" class="content-section" style="display:none;">
-      <h2>Downloads</h2>
-      <ul>
-        <li>rsa-exceptions-form.docxRSA exceptions form</a></li>
-        <li><a href="rsa-audit-templateaudit template</a></li>
-        <li>rsa-response-report-template.docxRSA response report template</a></li>
-      </ul>
-    </section>
-  </main>
-  script.js</script>
+
+    <script src="scripts.js"></script>
 </body>
 </html>
