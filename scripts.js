@@ -12,8 +12,8 @@ function showPage(pageId) {
         // Scroll to the top of the content area
         window.scrollTo(0, 0);
 
-        // If a main button was clicked, update the sub-navigation visibility
-        if (pageId !== 'home' && pageId !== 'advice') {
+        // Ensure the main 'overview' page is shown for any sub-pages
+        if (pageId === 'responsibilities' || pageId === 'applicability' || pageId === 'teamreqs' || pageId === 'auditbrief' || pageId === 'stages' || pageId === 'response' || pageId === 'checklist') {
             document.getElementById('overview').classList.add('active-page');
         }
     }
@@ -51,20 +51,18 @@ function filterStageTable(stage) {
     });
 }
 
-// Dummy function for the download buttons
+// Dummy function for the download buttons (the main functionality is now in the HTML links)
 function downloadFile(templateName) {
-    alert(`Downloading: ${templateName}\n\nNOTE: You will need to implement the actual file download logic here (e.g., linking to a file hosted on GitHub).`);
+    // This is for the in-page download buttons, which should use the same logic as the nav dropdown links
+    alert(`Initiating download for: ${templateName}\n\nNOTE: The actual file paths must be correct in the HTML <a> tags for the download to work.`);
 }
 
-// Set the initial page load to the home screen
+// Set the initial page load
 document.addEventListener('DOMContentLoaded', () => {
     // Check if a hash is present in the URL (for deep linking)
     const hash = window.location.hash.substring(1);
-    const initialPage = hash || 'home';
-    showPage(initialPage);
     
-    // Ensure the main 'overview' page is shown for any sub-pages
-    if (document.querySelector('.sub-page.active-page')) {
-        document.getElementById('overview').classList.add('active-page');
-    }
+    // Default to the main 'home' section if no hash, as the content still starts there.
+    const initialPage = hash || 'home'; 
+    showPage(initialPage);
 });
