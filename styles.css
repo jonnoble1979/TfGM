@@ -170,6 +170,79 @@ p { line-height: 1.6; color: #475569; }
     margin-bottom: 20px;
 }
 
+
+
+/* --- TWO-COLUMN LAYOUT: main content + right sidebar --- */
+#main-layout {
+  /* Constrain and center the whole two-column area (content + sidebar) */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;                 /* matches your existing spacing */
+
+  /* Two columns: flexible main + fixed sidebar */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Let the main content shrink without forcing the sidebar to wrap */
+#content {
+  /* override previous centering meant for single-column layout */
+  margin: 0;            /* was: 0 auto */
+  max-width: none;      /* was: 1200px */
+  min-width: 0;         /* prevents overflow from long words/tables */
+  /* keep your existing padding and min-height from your file */
+}
+
+/* Right sidebar: fixed width + sticky (optional) */
+#definitions-sidebar {
+  background: #fff;
+  border-left: 1px solid #e2e8f0;
+  padding-left: 16px;
+
+  /* Stays visible as you scroll (works even if your nav isn't fixed) */
+  position: sticky;
+  top: 12px;                    /* adjust if you later make the nav sticky */
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+}
+
+/* Tidy up the search UI inside the sidebar (optional) */
+.definition-search-group { position: relative; margin: 0 0 12px; }
+.definition-search-group input {
+  width: 100%;
+  padding: 10px 36px 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+.definition-search-group .search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Responsive: stack columns on tablets/phones */
+@media (max-width: 768px) {
+  #main-layout {
+    grid-template-columns: 1fr;   /* single column */
+    padding: 0 10px;              /* mirrors your mobile padding */
+  }
+  #definitions-sidebar {
+    position: static;
+    max-height: none;
+    border-left: none;
+    padding-left: 0;
+    margin-top: 12px;
+  }
+  #content {
+    max-width: 100%;
+  }
+}
+
+
 /* Clickable term styling */
 .term-link {
     cursor: pointer;
