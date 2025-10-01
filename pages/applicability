@@ -1,0 +1,7 @@
+  <h2>2. Applicability of RSA</h2>
+            <p>Where there are physical changes to the highway impacting on road user behaviour or resulting in a change to the outcome of a collision on the trunk road and motorway network, road safety audit (RSA) shall apply, regardless of the procurement method.</p>
+            <p>Temporary traffic management and temporary changes to the highway not associated with the construction of a highway scheme, and that last longer than 6 months in duration, are considered to be physical changes to the highway.</p>
+            <p>RSA shall not apply where a physical change to the highway will not impact on road user behaviour, or change the outcome of a collision on the trunk road and motorway network.</p>
+            <p>The Overseeing Organisation shall produce an exemption file note to be kept on the scheme file (or equivalent) where there is no need to apply RSA on the trunk road and motorway network.</p>
+            <p>An exemption file note template is provided in appendix A.</p>
+            <button class="download-button" onclick="downloadFile('RSA exceptions form')">Download the exemption file note here</button>
