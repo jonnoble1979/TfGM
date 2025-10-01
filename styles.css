@@ -1,3 +1,4 @@
+
 /* --- GLOBAL LAYOUT --- */
 body {
     font-family: 'Inter', sans-serif;
@@ -25,11 +26,12 @@ body {
     border-radius: 6px;
     transition: background-color 0.2s;
     font-weight: 500;
-    white-space: nowrap; /* Prevent menu items from wrapping awkwardly */
+    white-space: nowrap;
 }
 
 #top-nav a:hover, .dropbtn:hover {
-    background-color: #1e293b; /* Darker slate on hover */
+    background: linear-gradient(90deg, #1e90ff 0%, #38bdf8 100%);
+    color: white;
 }
 
 /* Dropdown specific styles */
@@ -51,28 +53,28 @@ body {
     position: absolute;
     background-color: #f9f9f9;
     min-width: 220px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.12);
     z-index: 10;
     border-radius: 8px;
     overflow: hidden;
-    right: 0; /* Align to the right of the button */
-    top: 100%; /* Position below the button */
+    right: 0;
+    top: 100%;
+    border: 1px solid #cbd5e1;
 }
 
 .dropdown-content a {
-    /* FIX: Ensures dark text (#334155) on light background (#f9f9f9) */
-    
     color: #334155 !important;
-    background-color: #f9f9f9 !important;
-
     padding: 12px 16px;
     text-decoration: none;
     display: block;
     border-bottom: 1px solid #eee;
+    background-color: #f9f9f9;
+    transition: background 0.2s, color 0.2s;
 }
 
 .dropdown-content a:hover {
-    background-color: #e2e8f0;
+    background-color: #e0f2fe !important; /* Light blue on hover */
+    color: #004488 !important;
 }
 
 .dropdown:hover .dropdown-content {
@@ -90,15 +92,13 @@ body {
 }
 
 /* --- MAIN CONTENT LAYOUT --- */
-/* Center and constrain the single column content area for desktop readability */
 #content {
     max-width: 1200px;
-    margin: 0 auto; /* Center it */
+    margin: 0 auto;
     padding: 20px;
     min-height: 80vh;
 }
 
-/* Page Display Logic */
 .page {
     display: none;
     padding: 20px 0;
@@ -118,7 +118,7 @@ p { line-height: 1.6; color: #475569; }
     font-weight: 300;
     margin-bottom: 30px;
     padding: 15px;
-    background-color: #e0f2f1; /* Light cyan */
+    background-color: #e0f2f1;
     border-left: 5px solid #007bff;
     border-radius: 8px;
 }
@@ -131,19 +131,20 @@ p { line-height: 1.6; color: #475569; }
 
 .main-button {
     padding: 15px 30px;
-    background-color: #10b981; /* Teal */
+    background: linear-gradient(90deg, #38bdf8 0%, #1e90ff 100%);
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
     font-weight: 600;
-    transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 4px #047857;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px #0ea5e9;
 }
 
 .main-button:hover {
-    background-color: #047857;
+    background: linear-gradient(90deg, #60a5fa 0%, #38bdf8 100%);
+    color: #fff;
     transform: translateY(1px);
 }
 
@@ -153,7 +154,7 @@ p { line-height: 1.6; color: #475569; }
     margin-bottom: 20px;
 }
 
-/* Clickable term styling (New) */
+/* Clickable term styling */
 .term-link {
     cursor: pointer;
     color: #007bff;
@@ -172,18 +173,18 @@ table {
     border-collapse: collapse;
     margin-bottom: 20px;
     border-radius: 8px;
-    overflow: hidden; /* Ensures rounded corners clip table borders */
+    overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    table-layout: fixed; /* Fix table width for better responsiveness */
+    table-layout: fixed;
 }
 th, td {
     border: 1px solid #e2e8f0;
     padding: 12px;
     text-align: left;
-    word-wrap: break-word; /* Ensure content breaks if too long */
+    word-wrap: break-word;
 }
 th {
-    background-color: #cbd5e1; /* Light gray-blue header */
+    background-color: #cbd5e1;
     color: #1e293b;
     font-weight: 600;
 }
@@ -201,7 +202,7 @@ th {
     transition: background-color 0.2s ease;
 }
 .filter-group button:hover, .download-button:hover {
-    background-color: #0056b3;
+    background-color: #38bdf8;
 }
 
 /* Checklist Styling */
@@ -250,7 +251,6 @@ th {
 
 /* --- RESPONSIVENESS (Mobile First) --- */
 @media (max-width: 768px) {
-    /* Adjust Top Navigation for smaller screens */
     #top-nav {
         flex-direction: column;
         align-items: stretch;
@@ -274,7 +274,7 @@ th {
     }
 
     .dropdown-content {
-        position: static; /* Dropdown content flows naturally below the button */
+        position: static;
         min-width: 100%;
         box-shadow: none;
         border-top: 1px solid #1e293b;
@@ -282,21 +282,18 @@ th {
     }
 
     .arrow-down {
-        /* Hide the arrow on mobile when it stacks */
-        display: inline-block; /* Keep the arrow but ensure it's styled correctly */
-        border-color: #334155; /* Match content background */
+        display: inline-block;
+        border-color: #334155;
         transform: rotate(45deg);
     }
     .dropbtn:hover .arrow-down {
-        border-color: white; /* Make arrow white on hover */
+        border-color: white;
     }
 
-    /* Adjust main content padding */
     #content {
         padding: 10px;
     }
 
-    /* Adjust buttons */
     .button-group {
         flex-direction: column;
         gap: 10px;
@@ -304,34 +301,28 @@ th {
     
     .main-button {
         padding: 12px 20px;
-        width: 100%; /* Full width buttons on mobile */
+        width: 100%;
     }
 
-    /* Tables on mobile: force horizontal scroll or stack/wrap content */
     table, thead, tbody, th, td, tr {
         display: block;
     }
 
-    /* Hide table header (but still allow sorting) */
     thead tr {
         position: absolute;
         top: -9999px;
         left: -9999px;
     }
 
-    /* Table body styling for stacked cells */
     td {
-        /* Behave like a "row" */
         border: none;
         border-bottom: 1px solid #eee;
         position: relative;
-        padding-left: 50%; /* Space for the label */
+        padding-left: 50%;
         text-align: right;
     }
 
-    /* Create the label before the content in each cell */
     td:before {
-        /* Retrieve data-title set on the cell */
         content: attr(data-title);
         position: absolute;
         left: 6px;
@@ -342,6 +333,4 @@ th {
         font-weight: 600;
         color: #334155;
     }
-    /* We need to update the HTML to include data-title for this to work perfectly */
-
 }
