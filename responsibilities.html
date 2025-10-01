@@ -1,0 +1,52 @@
+  <h2>1. Responsibilities</h2>
+            <p>Everyone involved in the RSA process has different responsibilities.</p>
+
+            <div class="filter-group">
+                <button onclick="filterTable('all')">Show All</button>
+                <button onclick="filterTable('design')">Design Organisation</button>
+                <button onclick="filterTable('overseeing')">Overseeing Organisation</button>
+                <button onclick="filterTable('rsateam')">RSA Team</button>
+            </div>
+
+            <table id="responsibilities-table">
+                <thead>
+                    <tr>
+                        <th>Organisation</th>
+                        <th>Applicability of RSA</th>
+                        <th>RSA Team approval</th>
+                        <th>RSA brief</th>
+                        <th>RSA</th>
+                        <th>Response Report</th>
+                        <th>Log</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-org="overseeing">
+                        <td>Overseeing Organisation / Highway Authority</td>
+                        <td>OO to decide applicability of RSA Guidance on Tab 1. If RSA is not applicable fill in the exception report (download available on Tab 1)</td>
+                        <td>Receive CVs from RSA team and ensure the team is competent and meet the following requirements listed in Tab 2. Formally approve the RSA team</td>
+                        <td>Approve RSA brief</td>
+                        <td>N/A</td>
+                        <td>Respond to Design Organisation comments and agree action</td>
+                        <td>Check that the RSA has been logged and saved in the correct folder. [...]</td>
+                    </tr>
+                    <tr data-org="rsateam">
+                        <td>RSA Team</td>
+                        <td>If the RSA is not applicable check and sign the exception report</td>
+                        <td>Send your CV to the OO for approval using the template provided</td>
+                        <td>Ensure the information in the brief is complete</td>
+                        <td>Undertake RSA</td>
+                        <td>Read through the RR to ensure all issues have been understood</td>
+                        <td>Log the RSA report for your record</td>
+                    </tr>
+                    <tr data-org="design">
+                        <td>Design Organisation</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                        <td>Produce RSA brief using template on Tab 3 Once the OO has approved the brief send to the Audit Team alongside relevant drawings and audit and response report template on Tab 5</td>
+                        <td>N/A</td>
+                        <td>Produce the report using the template in Tab 5</td>
+                        <td>Long and save the RSA in the correct folder. [...]</td>
+                    </tr>
+                </tbody>
+            </table>
