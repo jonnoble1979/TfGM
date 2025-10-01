@@ -33,9 +33,33 @@
 
 
 
-  <section id="content">
-    <!-- Loaded content will appear here -->
-  </section>
+
+<div id="main-layout">
+  <div id="content">
+    <!-- Sections will be injected here -->
+  </div>
+  <aside id="definitions-sidebar">
+    <h3>Definitions</h3>
+    <div class="definition-search-group">
+      <input type="text" id="definition-search" placeholder="Search definitions..." oninput="filterDefinitionsSidebar()">
+      <span class="search-icon">
+        <!-- Inline SVG for magnifying glass -->
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="9" cy="9" r="7" stroke="#888" stroke-width="2"/>
+          <line x1="14.4142" y1="14.7071" x2="18" y2="18" stroke="#888" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </div>
+    <div class="definitions-table-container">
+      <table id="definitions-table">
+        <tbody id="definitions-list">
+          <!-- Definitions will be injected here by JS -->
+        </tbody>
+      </table>
+    </div>
+  </aside>
+</div>
+
 
 
 
