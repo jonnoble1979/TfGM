@@ -1,201 +1,182 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Greater Manchester Road Safety Audit (RSA) Procedure</title>
-    
-    <!-- Link to external styles.css -->
+    <!-- Link to the separate CSS file -->
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <!-- Top Navigation Bar -->
     <nav id="top-nav">
-        <a href="#home" onclick="showPage('home')">Overview</a>
-        <a href="#advice" onclick="showPage('advice')">Obtain road safety advice</a>
-        <a href="#overview" onclick="showPage('overview')">Overview Road Safety Audits</a>
+        <!-- Main Links calling showPage(pageId) -->
+        <a href="#" onclick="showPage('home')" data-page-id="home">Home</a>
+        <a href="#" onclick="showPage('advice')" data-page-id="advice">Obtain Road Safety Advice</a>
+        <a href="#" onclick="showPage('overview')" data-page-id="overview">Overview Road Safety Audits</a>
 
-        <!-- Secondary Navigation (RSA Sections) -->
-        <a href="#responsibilities" onclick="showPage('responsibilities')">1. Responsibilities</a>
-        <a href="#applicability" onclick="showPage('applicability')">2. Applicability of RSA</a>
-        <a href="#teamreqs" onclick="showPage('teamreqs')">3. RSA Team Requirements</a>
-        <a href="#auditbrief" onclick="showPage('auditbrief')">4. Audit Brief</a>
-        <a href="#stages" onclick="showPage('stages')">5. RSA stages</a>
-        <a href="#response" onclick="showPage('response')">6. Response report</a>
-        <a href="#checklist" onclick="showPage('checklist')">7. RSA checklist</a>
-
-        <!-- Downloads Dropdown -->
+        <!-- Procedure Dropdown -->
         <div class="dropdown">
-            <button class="dropbtn">Downloads <span class="arrow-down"></span></button>
+            <button class="dropbtn">Procedure <i class="arrow-down"></i></button>
             <div class="dropdown-content">
-                <a href="path/to/rsa_exceptions_form.doc" download>RSA exceptions form</a>
-                <a href="path/to/rsa_audit_template.doc" download>RSA audit template</a>
-                <a href="path/to/rsa_response_report_template.doc" download>RSA response report template</a>
+                <!-- Dropdown Links calling showPage(pageId) -->
+                <a href="#" onclick="showPage('responsibilities')" data-page-id="responsibilities">Responsibilities</a>
+                <a href="#" onclick="showPage('applicability')" data-page-id="applicability">Applicability of RSA</a>
+                <a href="#" onclick="showPage('team-requirements')" data-page-id="team-requirements">RSA Team Requirements</a>
+                <a href="#" onclick="showPage('audit-brief')" data-page-id="audit-brief">Audit Brief</a>
+                <a href="#" onclick="showPage('rsa-stages')" data-page-id="rsa-stages">RSA Stages</a>
+                <a href="#" onclick="showPage('response-report')" data-page-id="response-report">Response Report</a>
+                <a href="#" onclick="showPage('rsa-checklist')" data-page-id="rsa-checklist">RSA Checklist</a>
             </div>
         </div>
+        <a href="#" onclick="showPage('downloads')" data-page-id="downloads">Downloads</a>
     </nav>
 
-    <!-- Main Container for Content and Sidebar -->
+    <!-- Main Application Container -->
     <div class="main-container">
-        
+
         <!-- Main Content Area -->
         <div id="content">
 
-            <!-- Home Page -->
-            <section id="home" class="page active-page">
-                <div class="logo-container">
-                    <img src="https://placehold.co/150x80/334155/ffffff?text=TfGM+Logo" alt="Transport for Greater Manchester Logo" class="tfgm-logo">
+            <!-- ============================================== -->
+            <!-- PAGE: HOME -->
+            <!-- ============================================== -->
+            <div id="home" class="page active-page">
+                <img src="https://placehold.co/150x50/334155/ffffff?text=TfGM+Logo" alt="TfGM Logo" class="tfgm-logo">
+                <h1>RSA Guidance Tool: Undertaking a Road Safety Audit (RSA)</h1>
+                
+                <div class="intro-text">
+                    <p>Welcome to the RSA Guidance Tool. Please select what information you need below or use the navigation bar above to explore the detailed procedure.</p>
                 </div>
-                <h1>Greater Manchester Road Safety Audit (RSA) Procedure </h1>
-                <p class="intro-text">
-                    These updated procedure have been developed for all Greater Manchester Partners to ensure that <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSAs</span> are carried out in a consistent and systematic way within Greater Manchester and sets out the key principles for undertaking <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSAs</span>.
-                <br>
-                    They should apply to the Greater Manchester road network and for all other improvement schemes undertaken on Metrolink network and GM Bee Network Interchanges.
-                </p>
+
                 <div class="button-group">
-                    <button onclick="showPage('advice')" class="main-button">Obtain road safety advice</button>
-                    <button onclick="showPage('overview')" class="main-button">Undertake RSA</button>
+                    <button class="main-button" onclick="showPage('advice')">Obtain Road Safety Advice</button>
+                    <button class="main-button" onclick="showPage('overview')">Undertake RSA</button>
                 </div>
-            </section>
+                
+                <h2>Key Definitions</h2>
+                <p>Click on any of the blue, underlined <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">terms</span> to highlight their definition in the sidebar.</p>
+            </div>
 
-            <!-- Page: Obtain Road Safety Advice -->
-            <section id="advice" class="page">
-                <h2>Getting Advice on Road Safety</h2>
-                <p>All design projects should undergo a Road Safety Review early in the design. The cost for this is minimal (1-2 hours of an expert's time), and ensures designers are aware of road safety issues early. This minimises potential issues and re-design. Contact the WSP road safety team to arrange this. They will ensure the team doing the reviews is different from the one doing the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">road safety audits</span> to ensure the total independence of the latter from the design as per process.</p>
-                <p>At any time during the design process if you have any road safety concerns with your projects the WSP road safety team are here and available to offer an opinion, help and advice (again they will make sure independence of the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> team is maintained).</p>
-                <div class="flowchart">
-                    <img src="https://placehold.co/800x200/e0f2f1/334155?text=Flowchart+Diagram+Here" alt="Flowchart showing benefits of early safety review" style="max-width: 100%; border-radius: 8px;">
-                    <p class="time-box" style="margin-top: 15px; padding: 10px; background-color: #fef3c7; border-left: 3px solid #fbbf24; border-radius: 4px;">Time required for a safety review could be as little as 1 hour.</p>
-                </div>
-            </section>
+            <!-- ============================================== -->
+            <!-- PAGE: OBTAIN ROAD SAFETY ADVICE (advice) -->
+            <!-- ============================================== -->
+            <div id="advice" class="page">
+                <h1>Getting Advice on Road Safety</h1>
+                <p class="intro-text">All design projects should undergo a Road Safety Review early in the design. The cost for this is minimal (1-2 hours of an expert's time), and ensures designers are aware of road safety issues early. This minimises potential issues and re-design. Contact the WSP road safety team to arrange this. They will ensure the team doing the reviews is appropriately qualified to advise on road safety matters.</p>
+                
+                <h2>Review Benefits</h2>
+                <ul>
+                    <li>Identify potential risks early in the design phase.</li>
+                    <li>Minimize costly re-designs later in the project lifecycle.</li>
+                    <li>Ensure compliance with current road safety standards.</li>
+                </ul>
+            </div>
 
-            <!-- Page: Overview Road Safety Audits -->
-            <section id="overview" class="page sub-page">
-                <h2>Overview Road Safety Audits</h2>
-                <p>TBC</p>
-            </section>
+            <!-- ============================================== -->
+            <!-- PAGE: OVERVIEW ROAD SAFETY AUDITS (overview) -->
+            <!-- ============================================== -->
+            <div id="overview" class="page">
+                <h1>Overview: Road Safety Audits (RSA)</h1>
+                <p class="intro-text">A <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">Road Safety Audit (RSA)</span> is a formal process for ensuring new or improved roads and traffic schemes are designed and built with maximum safety for all road users, including pedestrians and cyclists.</p>
+                
+                <h2>Purpose of an RSA</h2>
+                <p>The primary purpose is to identify potential road safety hazards that may result in personal injury. The audit is independent of the design team and mandatory for relevant projects within Greater Manchester.</p>
 
-            <!-- Page: 1. Responsibilities -->
-            <section id="responsibilities" class="page sub-page">
-                <h2>1. Responsibilities</h2>
-                <p>Everyone involved in the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> process has different responsibilities.</p>
+                <h2>RSA Documentation</h2>
+                <p>The process generates two main documents:</p>
+                <ol>
+                    <li><strong>RSA Report:</strong> Produced by the independent RSA team, detailing identified problems and corresponding recommendations.</li>
+                    <li><strong><span class="term-link" onclick="filterDefinitions('RSA Response Report')">Response Report:</span></strong> Produced by the <span class="term-link" onclick="filterDefinitions('Design Organisation')">Design Organisation</span> detailing how they will address or reject each recommendation.</li>
+                </ol>
+            </div>
+            
+            <!-- ============================================== -->
+            <!-- PAGE: RESPONSIBILITIES (responsibilities) - TBC -->
+            <!-- ============================================== -->
+            <div id="responsibilities" class="page">
+                <h1>Responsibilities (TBC)</h1>
+                <p class="intro-text">This section will define the roles of the <span class="term-link" onclick="filterDefinitions('Client')">Client</span>, Design Organisation, and RSA Team throughout the audit process.</p>
+                
+                <h2>Who Does What?</h2>
+                <p>Use the filters below to view the key responsibilities for each organisation.</p>
 
-                <!-- Filter Buttons -->
                 <div class="filter-group">
                     <button onclick="filterTable('all')">Show All</button>
-                    <button onclick="filterTable('design')">Design Organisation</button>
-                    <button onclick="filterTable('overseeing')">Overseeing Organisation</button>
-                    <button onclick="filterTable('rsateam')"><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Team</button>
+                    <button onclick="filterTable('client')">Client</button>
+                    <button onclick="filterTable('designer')">Design Organisation</button>
+                    <button onclick="filterTable('auditor')">RSA Team</button>
                 </div>
 
-                <!-- Filterable Table -->
                 <table id="responsibilities-table">
                     <thead>
                         <tr>
+                            <th>Responsibility</th>
                             <th>Organisation</th>
-                            <th>Applicability of <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span></th>
-                            <th><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Team approval</th>
-                            <th><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> brief</th>
-                            <th><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span></th>
-                            <th>Response Report</th>
-                            <th>Log</th>
+                            <th>Stage</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-org="overseeing">
-                            <td>Overseeing Organisation / Highway Authority</td>
-                            <td>OO to decide applicability of <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Guidance on Tab 1. If <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> is not applicable fill in the exception report (download available on Tab 1)</td>
-                            <td>Receive CVs from <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> team and ensure the team is competent and meet the following requirements listed in Tab 2. Formally approve the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> team</td>
-                            <td>Approve <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> brief</td>
-                            <td>N/A</td>
-                            <td>Respond to Design Organisation comments and agree action</td>
-                            <td>Check that the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> has been logged and saved in the correct folder. [...]</td>
+                        <tr data-org="client">
+                            <td>Appoint the RSA Team and manage the process.</td>
+                            <td>Client</td>
+                            <td>All Stages</td>
                         </tr>
-                        <tr data-org="rsateam">
-                            <td><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Team</td>
-                            <td>If the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> is not applicable check and sign the exception report</td>
-                            <td>Send your CV to the OO for approval using the template provided</td>
-                            <td>Ensure the information in the brief is complete</td>
-                            <td>Undertake <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span></td>
-                            <td>Read through the RR to ensure all issues have been understood</td>
-                            <td>Log the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> report for your record</td>
-                        </tr>
-                        <tr data-org="design">
+                        <tr data-org="designer">
+                            <td>Prepare the scheme design and provide relevant data.</td>
                             <td>Design Organisation</td>
-                            <td>N/A</td>
-                            <td>N/A</td>
-                            <td>Produce <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> brief using template on Tab 3 Once the OO has approved the brief send to the Audit Team alongside relevant drawings and audit and response report template on Tab 5</td>
-                            <td>N/A</td>
-                            <td>Produce the report using the template in Tab 5</td>
-                            <td>Long and save the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> in the correct folder. [...]</td>
+                            <td>All Stages</td>
+                        </tr>
+                        <tr data-org="auditor">
+                            <td>Carry out the audit and produce the RSA Report.</td>
+                            <td>RSA Team</td>
+                            <td>All Stages</td>
+                        </tr>
+                        <tr data-org="designer">
+                            <td>Prepare the RSA Response Report.</td>
+                            <td>Design Organisation</td>
+                            <td>Stages 1-3</td>
                         </tr>
                     </tbody>
                 </table>
-            </section>
+            </div>
 
-            <!-- Page: 2. Applicability of RSA -->
-            <section id="applicability" class="page sub-page">
-                <h2>2. Applicability of <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span></h2>
-                <p>Where there are physical changes to the highway impacting on road user behaviour or resulting in a change to the outcome of a <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision</span> on the trunk road and motorway network, <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">road safety audit (RSA)</span> shall apply, regardless of the procurement method.</p>
-                <p>Temporary traffic management and temporary changes to the highway not associated with the construction of a highway scheme, and that last longer than 6 months in duration, are considered to be physical changes to the highway.</p>
-                <p><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> shall not apply where a physical change to the highway will not impact on road user behaviour, or change the outcome of a <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision</span> on the trunk road and motorway network.</p>
-                <p>The Overseeing Organisation shall produce an exemption file note to be kept on the scheme file (or equivalent) where there is no need to apply <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> on the trunk road and motorway network.</p>
-                <p>An exemption file note template is provided in appendix A.</p>
-                <button class="download-button" onclick="downloadFile('RSA exceptions form')">Download the exemption file note here</button>
-            </section>
+            <!-- ============================================== -->
+            <!-- PAGE: APPLICABILITY OF RSA (applicability) - TBC -->
+            <!-- ============================================== -->
+            <div id="applicability" class="page">
+                <h1>Applicability of RSA (TBC)</h1>
+                <p class="intro-text">Details on which projects require a full RSA and which may qualify for an exception or a simplified review.</p>
+                <p>TBC: Content about thresholds and scheme types will be added here.</p>
+            </div>
+            
+            <!-- ============================================== -->
+            <!-- PAGE: RSA TEAM REQUIREMENTS (team-requirements) - TBC -->
+            <!-- ============================================== -->
+            <div id="team-requirements" class="page">
+                <h1>RSA Team Requirements (TBC)</h1>
+                <p class="intro-text">Information on the qualification, experience, and independence requirements for team members conducting the Road Safety Audit.</p>
+                <p>TBC: Content about team qualifications and independence rules will be added here.</p>
+            </div>
+            
+            <!-- ============================================== -->
+            <!-- PAGE: AUDIT BRIEF (audit-brief) - TBC -->
+            <!-- ============================================== -->
+            <div id="audit-brief" class="page">
+                <h1>Audit Brief (TBC)</h1>
+                <p class="intro-text">The Audit Brief must clearly outline the project scope, the specific RSA stages required, and the documentation to be supplied by the Design Organisation.</p>
+                <p>TBC: Content detailing the mandatory content of the Audit Brief will be added here.</p>
+            </div>
 
-            <!-- Page: 3. RSA Team Requirements -->
-            <section id="teamreqs" class="page sub-page">
-                <h2>3. <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Team Requirements</h2>
-                <!-- RSA Team Competency Table -->
-                <table id="team-competency-table">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> team observer</th>
-                            <th><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> team member</th>
-                            <th><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> team leader</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Training</td>
-                            <td>10 days of formal <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision data analysis</span> or road safety engineering/road design training</td>
-                            <td>10 days of formal <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision data analysis</span> or road safety engineering/road design training</td>
-                            <td>10 days of formal <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision data analysis</span> or road safety engineering/road design training</td>
-                        </tr>
-                        <tr>
-                            <td>CPD</td>
-                            <td>N/A</td>
-                            <td>A minimum of 2 days CPD in the field of <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span>, <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision data analysis</span> or road safety engineering in the last 12 months</td>
-                            <td>A minimum of 2 days CPD in the field of <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span>, <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision data analysis</span> or road safety engineering in the last 12 months</td>
-                        </tr>
-                        <tr>
-                            <td>Experience</td>
-                            <td>1 year of <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision data analysis</span> or road safety engineering/road design experience</td>
-                            <td>2 years of <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision data analysis</span> or road safety engineering/road design experience <br> 5 <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSAs</span> completed within the last 24 months as team leader, member or observer</td>
-                            <td>4 years of <span class="term-link" onclick="filterDefinitions('Collision Investigation')">collision data analysis</span> or road safety engineering/road design experience <br> 5 <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSAs</span> completed within the last 12 months as team leader or member</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
+            <!-- ============================================== -->
+            <!-- PAGE: RSA STAGES (rsa-stages) - TBC -->
+            <!-- ============================================== -->
+            <div id="rsa-stages" class="page">
+                <h1>RSA Stages (TBC)</h1>
+                <p class="intro-text">The RSA process is divided into multiple stages that correspond to the lifecycle of the project. Use the filters to focus on a specific stage.</p>
 
-            <!-- Page: 4. Audit Brief -->
-            <section id="auditbrief" class="page sub-page">
-                <h2>4. Audit Brief</h2>
-                <p>TBC</p>
-                <button class="download-button" onclick="downloadFile('RSA audit template')">Download the brief template</button>
-                <p>TBC</p>
-                <button class="download-button" onclick="downloadFile('RSA audit template')">Download the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> audit template</button>
-            </section>
-
-            <!-- Page: 5. RSA stages -->
-            <section id="stages" class="page sub-page">
-                <h2>5. <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> stages</h2>
-                <p>Filter: “what RS stage do you need?”</p>
-
-                <!-- Filter Button Group -->
                 <div class="filter-group">
                     <button onclick="filterStageTable('all')">Show All Stages</button>
                     <button onclick="filterStageTable(1)">Stage 1</button>
@@ -204,115 +185,91 @@
                     <button onclick="filterStageTable(4)">Stage 4</button>
                 </div>
 
-                <!-- RSA Stages Table -->
                 <table id="stages-table">
                     <thead>
                         <tr>
-                            <th><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Stage</th>
-                            <th>When to undertake it</th>
-                            <th>Site visit requirements</th>
-                            <th>Attendees</th>
-                            <th>Invitees</th>
-                            <th>Drawings required</th>
+                            <th>Stage</th>
+                            <th>Description</th>
+                            <th>Timing</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr data-stage="1">
-                            <td>1</td>
-                            <td>At the end of initial design</td>
-                            <td>Daytime</td>
-                            <td><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Team</td>
-                            <td>None required</td>
-                            <td>GA & SC</td>
+                            <td><span class="term-link" onclick="filterDefinitions('RSA Stage 1')">Stage 1</span></td>
+                            <td>Preliminary Design: Audit of the design proposal.</td>
+                            <td>Before completion of preliminary design.</td>
                         </tr>
                         <tr data-stage="2">
-                            <td>2</td>
-                            <td>At the end of detail design</td>
-                            <td>Daytime</td>
-                            <td><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Team</td>
-                            <td>None required</td>
-                            <td>Full drawing pack including....</td>
+                            <td>Stage 2</td>
+                            <td>Detailed Design: Audit of the full working drawings and specifications.</td>
+                            <td>Before construction contract award.</td>
                         </tr>
                         <tr data-stage="3">
-                            <td>3</td>
-                            <td>Within one month from end of construction</td>
-                            <td>Daytime and darkness</td>
-                            <td><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Team</td>
-                            <td>Police representative and maintaining agent</td>
-                            <td>As built</td>
+                            <td>Stage 3</td>
+                            <td>Completion of Construction: Audit of the scheme upon completion, before opening to traffic.</td>
+                            <td>Before road opening.</td>
                         </tr>
                         <tr data-stage="4">
-                            <td>4</td>
-                            <td>1-3 years post construction</td>
-                            <td>If applicable</td>
-                            <td><span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Team</td>
-                            <td>None required</td>
-                            <td>N/A</td>
+                            <td><span class="term-link" onclick="filterDefinitions('RSA Stage 4')">Stage 4</span></td>
+                            <td>Monitoring: Audit carried out after 12 months of operation.</td>
+                            <td>12 months after the scheme is operational.</td>
                         </tr>
                     </tbody>
                 </table>
-                <button class="download-button" onclick="downloadFile('RSA audit template')">Download the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> audit template</button>
-            </section>
-
-            <!-- Page: 6. Response report -->
-            <section id="response" class="page sub-page">
-                <h2>6. Response report</h2>
-                <p>A <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report shall be produced for stage 1, 2 and 3 <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSAs</span>. NOTE A <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report is not be required for stage 4 <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSAs</span>.</p>
-                <ul>
-                    <li>The design organisation shall manage the production of the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report in collaboration with the Overseeing Organisation.</li>
-                    <li>The <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report shall include a summary of the scheme, the stage of <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span>, the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> report document reference and date of the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> report it relates to.</li>
-                    <li>The <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report shall contain details of the representatives from the design organisation who prepared the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report.</li>
-                    <li>The <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report shall contain a <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> decision log to include a reiteration of each road safety problem and recommendation made in the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> report.</li>
-                    <li>For each road safety problem and recommendation, the design organisation shall do one of the following:
-                        <ol>
-                            <li>accept the road safety problem and recommendation made by the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> team;</li>
-                            <li>accept the road safety problem raised, but suggest an alternative solution, giving appropriate reasoning; or</li>
-                            <li>disagree with the road safety problem and recommendation raised, giving appropriate reasoning for rejecting both.</li>
-                        </ol>
-                    </li>
-                    <li>The <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report shall contain a response from the Overseeing Organisation and a <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> action for each problem agreed between the design organisation and Overseeing Organisation.</li>
-                    <li>The <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report shall be signed by the Overseeing Organisation and design organisation to indicate their agreement on the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> actions.</li>
-                    <li>The <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report should be produced and finalised within one month of the issue of the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> report.</li>
-                    <li>For each <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> action, either the design organisation or Overseeing Organisation shall be responsible for its implementation.</li>
-                </ul>
-                <p class="note">NOTE Appendix F shows a <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> response report and <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> decision log template.</p>
-                <button class="download-button" onclick="downloadFile('RSA response report template')">Download the Response report template</button>
-            </section>
-
-            <!-- Page: 7. RSA checklist -->
-            <section id="checklist" class="page sub-page">
-                <h2>7. <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> checklist </h2>
-                <p>TBC</p>
-                <!-- RSA Checklist -->
-                <ul class="checklist-list">
-                    <li><label><input type="checkbox"> DO has prepared the Audit Brief</label></li>
-                    <li><label><input type="checkbox"> DO has sent the Audit Brief and any relevant drawings to the Audit Team</label></li>
-                    <li><label><input type="checkbox"> OO has approved the Audit Brief</label></li>
-                    <li><label><input type="checkbox"> OO has checked the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> Team CVs against requirements and approved the team</label></li>
-                    <li><label><input type="checkbox"> OO has determined the applicability of the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span></label></li>
-                    <li><label><input type="checkbox" checked> The Audit Team has undertaken the <span class="term-link" onclick="filterDefinitions('Road Safety Audit (RSA)')">RSA</span> and invited the relevant parties to participate</label></li>
-                    <li><label><input type="checkbox"> The DO has prepared the response report and agreed a suitable action for each problem raised with the OO</label></li>
-                    <li><label><input type="checkbox"> The OO has commented within the response report and agreed a suitable action for each problem raised with the DO</label></li>
-                    <li><label><input type="checkbox"> The report has been issued back to the Audit Team for information only</label></li>
-                </ul>
-            </section>
-        </div>
-
-        <!-- DEFINITIONS Sidebar -->
-        <aside id="definitions-sidebar">
-            <h3>DEFINITIONS</h3>
-            <!-- Search Input -->
-            <input type="search" id="definition-search" oninput="filterDefinitions(this.value)" placeholder="Search definitions...">
-            
-            <!-- Definitions will be rendered here by JavaScript -->
-            <div id="definitions-list">
-                <!-- Content injected here -->
             </div>
-        </aside>
-        
-    </div>
+            
+            <!-- ============================================== -->
+            <!-- PAGE: RESPONSE REPORT (response-report) - TBC -->
+            <!-- ============================================== -->
+            <div id="response-report" class="page">
+                <h1>Response Report (TBC)</h1>
+                <p class="intro-text">The <span class="term-link" onclick="filterDefinitions('RSA Response Report')">Response Report</span> must be completed by the <span class="term-link" onclick="filterDefinitions('Design Organisation')">Design Organisation</span> for Stages 1, 2, and 3.</p>
+                
+                <h2>Key Requirements</h2>
+                <ul class="checklist-list">
+                    <li><label><input type="checkbox">Must be submitted to the Client within 4 weeks of receiving the RSA Report.</label></li>
+                    <li><label><input type="checkbox">Must detail the decision on every single RSA recommendation.</label></li>
+                    <li><label><input type="checkbox">Must contain a decision log documenting acceptance, rejection, or proposal of an alternative solution.</label></li>
+                </ul>
+            </div>
+            
+            <!-- ============================================== -->
+            <!-- PAGE: RSA CHECKLIST (rsa-checklist) - TBC -->
+            <!-- ============================================== -->
+            <div id="rsa-checklist" class="page">
+                <h1>RSA Checklist (TBC)</h1>
+                <p class="intro-text">A summary of the key checks to be performed at various RSA stages.</p>
+                <p>TBC: Specific checklist items will be added here.</p>
+            </div>
+            
+            <!-- ============================================== -->
+            <!-- PAGE: DOWNLOADS (downloads) - TBC -->
+            <!-- ============================================== -->
+            <div id="downloads" class="page">
+                <h1>Downloads</h1>
+                <p class="intro-text">Download the official templates and forms required for the Road Safety Audit process in Greater Manchester.</p>
+                
+                <div class="button-group">
+                    <button class="download-button" onclick="downloadFile('RSA Exceptions Form')">RSA Exceptions Form</button>
+                    <button class="download-button" onclick="downloadFile('RSA Audit Template')">RSA Audit Template</button>
+                    <button class="download-button" onclick="downloadFile('RSA Response Report Template')">RSA Response Report Template</button>
+                </div>
+            </div>
 
-    <!-- Link to external script.js -->
+        </div> <!-- End of #content -->
+
+        <!-- Definitions Sidebar -->
+        <div id="definitions-sidebar">
+            <h3>Key Definitions</h3>
+            <input type="search" id="definition-search" oninput="filterDefinitions()" placeholder="Search definitions...">
+            <div id="definitions-list">
+                <!-- Definitions will be rendered here by script.js -->
+            </div>
+        </div>
+        
+    </div> <!-- End of .main-container -->
+
+    <!-- Link to the separate JS file -->
     <script src="script.js"></script>
 </body>
 </html>
