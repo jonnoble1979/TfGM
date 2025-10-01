@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RSA Guidance Tool</title>
+  styles.css
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="#advice" onclick="showSection('>
+      <li>#overviewOverview Road Safety Audits</a></li>
+      <li><a href="#responsResponsibilities</a></li>
+      <li>#applicabilityApplicability of RSA</a></li>
+      <li>#teamRSA Team Requirements</a></li>
+      <li>#briefAudit Brief</a></li>
+      <li>#stagesRSA Stages</a></li>
+      <li><a href="#responseReport</a></li>
+      <li>#checklistRSA Checklist</a></li>
+      <li><a href="#downloads" onclick="showSection('downloadseader>
+    <img src="TfGM-logo.png" alt="Transport for Greater Manchester Logo" class="A)</h1>
+    <p>Welcome to the RSA Guidance Tool, please select what information you need below.</p>
+    <div class="button-row">
+      <button onclick="showSection('advice')">Obtain road safety advice</button>
+      <button onclick="showSection('overview')">Undertake RSA</button>
+    </div>
+  </header>
+  <main>
+    <section id="advice" class="content-section">
+      <h2>Getting Advice on Road Safety</h2>
+      <p>All design projects should undergo a Road Safety Review early in the design. The cost for this is minimal (1-2 hours of an expert's time), and ensures designers are aware of road safety issues early. This minimises potential issues and re-design. Contact the WSP road safety team to arrange this. They will ensure the team doing the reviews is different from the one doing the road safety audits to ensure the total independence of the latter from the design as per process.</p>
+      <p>At any time during the design process if you have any road safety concerns with your projects the WSP road safety team are here and available to offer an opinion, help and advice (again they will make sure independence of the RSA team is maintained).</p>
+      <div class="diagram">
+        <em>Process diagram placeholder</em>
+      </div>
+    </section>
+    <section id="overview" class="content-section" style="display:none;">
+      <h2>Overview Road Safety Audits</h2>
+      <p>TBC</p>
+    </section>
+    <section id="responsibilities" class="content-section" style="display:none;">
+      <h2>Responsibilities</h2>
+      <p>Everyone involved in the RSA process has different responsibilities.</p>
+      <label for="filter-resp">Filter:</label>
+      <select id="filter-resp">
+        <option>Design Organisation</option>
+        <option>Overseeing Organisation</option>
+        <option>RSA Team</option>
+      </select>
+      <!-- Dummy Table -->
+      <table border="1">
+        <tr><th>Role</th><th>Responsibility</th></tr>
+        <tr><td>Design Org</td><td>Dummy responsibility 1</td></tr>
+        <tr><td>Overseeing Org</td><td>Dummy responsibility 2</td></tr>
+        <tr><td>RSA Team</td><td>Dummy responsibility 3</td></tr>
+      </table>
+    </section>
+    <section id="applicability" class="content-section" style="display:none;">
+      <h2>Applicability of RSA</h2>
+      <!-- Dummy Table -->
+      <table border="1">
+        <tr><th>Stage</th><th>Applicability</th></tr>
+        <tr><td>Stage 1</td><td>Dummy applicability 1</td></tr>
+        <tr><td>Stage 2</td><td>Dummy applicability 2</td></tr>
+      </table>
+    </section>
+    <section id="team" class="content-section" style="display:none;">
+      <h2>RSA Team Requirements</h2>
+      <!-- Dummy Table -->
+      <table border="1">
+        <tr><th>Requirement</th><th>Description</th></tr>
+        <tr><td>Dummy 1</td><td>Dummy desc 1</td></tr>
+      </table>
+    </section>
+    <section id="brief" class="content-section" style="display:none;">
+      <h2>Audit Brief</h2>
+      <button>Download the brief template</button>
+      <button>Download the RSA audit template</button>
+      <p>TBC</p>
+    </section>
+    <section id="stages" class="content-section" style="display:none;">
+      <h2>RSA Stages</h2>
+      <label for="filter-stage">What RS stage do you need?</label>
+      <select id="filter-stage">
+        <option>Stage 1</option>
+        <option>Stage 2</option>
+        <option>Stage 3</option>
+      </select>
+      <!-- Dummy Table -->
+      <table border="1">
+        <tr><th>Stage</th><th>Description</th></tr>
+        <tr><td>Stage 1</td><td>Dummy desc 1</td></tr>
+      </table>
+      <button>Download the RSA audit template</button>
+    </section>
+    <section id="response" class="content-section" style="display:none;">
+      <h2>Response Report</h2>
+      <p>A RSA response report shall be produced for stage 1, 2 and 3 RSAs. <br>
+      NOTE: A RSA response report is not required for stage 4 RSAs. <br>
+      ... (rest of your text here) ...
+      </p>
+      <button>Download the Response report template</button>
+    </section>
+    <section id="checklist" class="content-section" style="display:none;">
+      <h2>RSA Checklist</h2>
+      <!-- Dummy Table -->
+      <table border="1">
+        <tr><th>Checklist Item</th><th>Status</th></tr>
+        <tr><td>Dummy item 1</td><td>Dummy status 1</td></tr>
+      </table>
+    </section>
+    <section id="downloads" class="content-section" style="display:none;">
+      <h2>Downloads</h2>
+      <ul>
+        <li>rsa-exceptions-form.docxRSA exceptions form</a></li>
+        <li><a href="rsa-audit-templateaudit template</a></li>
+        <li>rsa-response-report-template.docxRSA response report template</a></li>
+      </ul>
+    </section>
+  </main>
+  script.js</script>
+</body>
+</html>
