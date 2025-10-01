@@ -28,7 +28,23 @@ body {
     font-weight: 500;
     white-space: nowrap;
 }
-
+#top-nav button, .dropbtn {
+    color: white;
+    background: transparent;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+}
+#top-nav button:hover, .dropbtn:hover {
+    background: linear-gradient(90deg, #1e90ff 0%, #38bdf8 100%);
+    color: white;
+}
 #top-nav a:hover, .dropbtn:hover {
     background: linear-gradient(90deg, #1e90ff 0%, #38bdf8 100%);
     color: white;
