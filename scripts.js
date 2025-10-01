@@ -1,21 +1,15 @@
 // Function to switch between main pages
 function showPage(pageId) {
-    // Hide all pages
+    // Hide ALL pages (ensuring only one is visible)
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active-page');
     });
 
-    // Show the requested page
+    // Show ONLY the requested page
     const newPage = document.getElementById(pageId);
     if (newPage) {
         newPage.classList.add('active-page');
-        // Scroll to the top of the content area
         window.scrollTo(0, 0);
-
-        // Ensure the main 'overview' page is shown for any sub-pages
-        if (pageId === 'responsibilities' || pageId === 'applicability' || pageId === 'teamreqs' || pageId === 'auditbrief' || pageId === 'stages' || pageId === 'response' || pageId === 'checklist') {
-            document.getElementById('overview').classList.add('active-page');
-        }
     }
 }
 
@@ -51,9 +45,8 @@ function filterStageTable(stage) {
     });
 }
 
-// Dummy function for the download buttons (the main functionality is now in the HTML links)
+// Dummy function for the download buttons
 function downloadFile(templateName) {
-    // This is for the in-page download buttons, which should use the same logic as the nav dropdown links
     alert(`Initiating download for: ${templateName}\n\nNOTE: The actual file paths must be correct in the HTML <a> tags for the download to work.`);
 }
 
@@ -62,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check if a hash is present in the URL (for deep linking)
     const hash = window.location.hash.substring(1);
     
-    // Default to the main 'home' section if no hash, as the content still starts there.
+    // Default to the main 'home' section if no hash
     const initialPage = hash || 'home'; 
     showPage(initialPage);
 });
