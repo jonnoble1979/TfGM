@@ -1,4 +1,4 @@
-* --- GLOBAL LAYOUT --- */
+/* --- GLOBAL LAYOUT --- */
 body {
     font-family: 'Inter', sans-serif;
     margin: 0;
@@ -268,4 +268,69 @@ th {
     margin-right: 15px;
     width: 18px;
     height: 18px;
+}
+
+/* --- RESPONSIVENESS (Mobile First) --- */
+@media (max-width: 768px) {
+    /* Adjust Top Navigation for smaller screens */
+    #top-nav {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+    }
+
+    #top-nav a, .dropbtn {
+        text-align: center;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .dropdown {
+        width: 100%;
+        text-align: center;
+    }
+
+    .dropdown-content {
+        position: static; /* Dropdown content flows naturally below the button */
+        min-width: 100%;
+        box-shadow: none;
+        border-top: 1px solid #1e293b;
+        right: auto;
+    }
+
+    .arrow-down {
+        /* Hide the arrow on mobile when it stacks */
+        display: none;
+    }
+
+    /* Adjust main content and sidebar for smaller screens (single column) */
+    .main-container {
+        flex-direction: column;
+        padding: 0 10px;
+    }
+
+    #content {
+        padding-right: 0;
+        order: 2; /* Content below sidebar */
+    }
+
+    #definitions-sidebar {
+        position: static; /* Remove sticky on mobile */
+        max-height: none;
+        border-left: none;
+        border-bottom: 1px solid #e2e8f0;
+        order: 1; /* Sidebar above content */
+    }
+
+    #definitions-sidebar input[type="search"] {
+        margin-bottom: 10px;
+    }
+
+    .main-button {
+        padding: 12px 20px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
 }
