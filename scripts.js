@@ -14,6 +14,23 @@ const DEFINITIONS = {
     }
 };
 
+
+// --- loads HTML into each section  //
+
+
+
+  function loadSection(file) {
+    fetch(file)
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('content').innerHTML = html;
+      })
+      .catch(err => console.error('Error loading section:', err));
+  }
+
+
+
+
 // --- DEFINITIONS RENDERING AND FILTERING LOGIC ---
 
 // Function to render all or filtered definitions
