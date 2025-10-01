@@ -19,14 +19,46 @@ const DEFINITIONS = {
 
 
 
-  function loadSection(file) {
-    fetch(file)
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('content').innerHTML = html;
-      })
-      .catch(err => console.error('Error loading section:', err));
-  }
+
+function showPage(pageId, filePath) {
+    // Hide all sections
+    document.querySelectorAll('#content > section').forEach(sec => sec.style.display = 'none');
+
+    // If section already loaded, just show it
+    let section = document.getElementById(pageId);
+    if (section) {
+        section.style.display = 'block';
+        window.scrollTo(0, 0);
+        return;
+    }
+
+    // Otherwise, fetch and inject it
+    fetch(filePath)
+        .then(response => {
+            if (!response.ok) throw new Error('Section not found');
+            return response.text();
+        })
+        .then(html => {
+            const sec = document.createElement('section');
+            sec.id = pageId;
+            sec.className = 'page active-page';
+            sec.innerHTML = html;
+            document.getElementById('content').appendChild(sec);
+            // Hide others, show this one
+            document.querySelectorAll('#content > section').forEach(s => s.style.display = 'none');
+            sec.style.display = 'block';
+            window.scrollTo(0, 0);
+        })
+        .catch(err => {
+            document.getElementById('content').innerHTML = "<p class='note'>Sorry, that section could not be loaded.</p>";
+        });
+}
+
+// Optionally, load a default section on page load
+window.addEventListener('DOMContentLoaded', function() {
+    showPage('home', 'pages/home.html');
+});
+
 
 
 
@@ -81,7 +113,7 @@ function filterDefinitions(searchTerm) {
 }
 
 // --- PAGE NAVIGATION LOGIC ---
-function showPage(pageId) {
+function showPageOld(pageId) {
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active-page');
     });
