@@ -1,70 +1,62 @@
 
 :root {
-  /* One color for both icon + label (or set to currentColor to inherit) */
-  --mandy-accent: #2563eb;
-  /* Make the symbol bigger/smaller (typical: 2.2em–3.2em) */
-  --mandy-icon-size: 2.8em;
+  /* Triangle size (independent of text size) */
+  --mandy-icon-size: 2.8em; /* try 2.4–3.2em */
 }
 
-/* Your paragraph container stays as you had it (grid, subtle frame, etc.) */
+/* Your paragraph container: keep your existing padding/border/background */
 :where(p).mandatory {
   display: grid;
   grid-template-columns: max-content 1fr; /* [badge] [text] */
   column-gap: .6rem;
   align-items: start;
 
-  /* keep your existing padding/border/background/transition here */
+  /* Make the badge follow this color (or set to your brand token) */
+  color: var(--mandy-accent, #2563eb);
 }
 
-/* Ensure the paragraph’s real content sits in column 2 */
-:where(p).mandatory > * {
-  grid-column: 2;
-}
+/* Ensure the paragraph’s actual content sits in column 2 */
+:where(p).mandatory > * { grid-column: 2; }
 
-/* Both pseudo-elements occupy the same grid cell so they stay together */
+/* Both pseudos share the same grid cell so they stay together */
 :where(p).mandatory::before,
 :where(p).mandatory::after {
   grid-column: 1;
   grid-row: 1;
   justify-self: center;
   align-self: start;
-  color: var(--mandy-accent); /* same color for icon + label */
+  color: inherit; /* same color for icon + label */
 }
 
-/* ICON (mask paints with currentColor, not a background image) */
+/* ICON (mask paints with currentColor; URL is fully encoded, one line) */
 :where(p).mandatory::before {
   content: "";
   width: var(--mandy-icon-size);
   height: var(--mandy-icon-size);
 
-  /* Paint icon with the same color as the text */
+  /* Paint the icon with the same color as the text */
   background-color: currentColor;
 
-  /* Use mask so we can color it reliably across browsers */
+  /* The mask reveals the triangle and knocks out the exclamation mark */
   -webkit-mask: center / contain no-repeat
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E
-         %3Cpath fill='%23fff' d='M12 2 L22 20 H2 Z'/%3E
-         %3Crect x='11' y='7.5' width='2' height='7' fill='%23000'/%3E
-         %3Crect x='11' y='16.5' width='2' height='2' fill='%23000'/%3E
-       %3C/svg%3E");
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 2L22 20H2z'/%3E%3Crect x='11' y='7' width='2' height='7' fill='%23000'/%3E%3Crect x='11' y='16' width='2' height='2' fill='%23000'/%3E%3C/svg%3E");
   mask: center / contain no-repeat
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E
-         %3Cpath fill='%23fff' d='M12 2 L22 20 H2 Z'/%3E
-         %3Crect x='11' y='7.5' width='2' height='7' fill='%23000'/%3E
-         %3Crect x='11' y='16.5' width='2' height='2' fill='%23000'/%3E
-       %3C/svg%3E");
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 2L22 20H2z'/%3E%3Crect x='11' y='7' width='2' height='7' fill='%23000'/%3E%3Crect x='11' y='16' width='2' height='2' fill='%23000'/%3E%3C/svg%3E");
 }
 
-/* LABEL (visible text — not masked) */
+/* LABEL (visible text — sits just under the icon) */
 :where(p).mandatory::after {
-  content: "Mandatory";    /* no uppercase */
+  content: "Mandatory";        /* no uppercase */
   display: block;
   text-align: center;
   font-weight: 700;
-  font-size: .8em;         /* keep this as your label size */
+  font-size: .8em;             /* label size */
   line-height: 1.1;
   letter-spacing: .01em;
 
-  /* Push the label just below the icon in the same cell */
-  margin-top: calc(var(--mandy-icon-size) + .15rem);
+  /* Place below the icon height with a tiny gap */
+  margin-top: calc(var(--mandy-icon-size) + .18rem);
+
+  /* Ensure it paints over the icon block if they overlap */
+  z-index: 1;
 }
