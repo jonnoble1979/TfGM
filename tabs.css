@@ -1,19 +1,21 @@
 
 /* ----- Tabs (ID-agnostic) ----- */
 
+
 .tabs {
   --tabs-accent: var(--accent-start);
   --tabs-bg: var(--nav-bg);
   --tabs-text: var(--text-primary);
   --tabs-muted: var(--text-secondary);
-  --tabs-border: var(--border-light);
+  --tabs-border: var(--brand-blue); /* ← updated to match nav bar */
 
   background: var(--tabs-bg);
-  border: 4px solid var(--tabs-border); /* ← increased from 1px to 2px */
+  border: 2px solid var(--tabs-border); /* thicker and now brand-blue */
   border-radius: 10px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   overflow: clip;
 }
+
 
 
 /* Controls (tab buttons) */
