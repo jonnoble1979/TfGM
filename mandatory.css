@@ -1,3 +1,5 @@
+:root { --mandy-icon-scale: 1.6; } /* 1.0 = same size as text *
+
 
 /* --- MANDATORY PARAGRAPH — one box, inline with text using CSS Grid --- */
 :where(p).mandatory {
@@ -18,6 +20,13 @@
     border-color .2s ease,
     box-shadow .2s ease,
     transform .2s ease;
+}
+
+
+:where(p).mandatory::before { font-size: 0.8em; line-height: 1.1; }
+:where(p).mandatory::before::first-line {
+  font-size: calc(1em * var(--mandy-icon-scale));
+  line-height: 1;
 }
 
 /* Single pseudo-element that contains BOTH the icon and the word (stacked) */
