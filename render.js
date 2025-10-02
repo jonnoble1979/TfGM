@@ -86,7 +86,6 @@ async function loadDefinitions() {
 }
 
 // ---------- Rendering ----------
-
 function renderDefinitions(filterTerm = '') {
   const tbody = document.getElementById('definitions-list');
   if (!tbody) return;
@@ -97,7 +96,7 @@ function renderDefinitions(filterTerm = '') {
     return;
   }
 
-  // No data at all (e.g., JSON empty or all rows filtered out by normalization)
+  // No data at all
   if (DEFINITIONS.length === 0) {
     tbody.innerHTML = `<tr><td colspan="2">No definitions available.</td></tr>`;
     return;
@@ -121,7 +120,7 @@ function renderDefinitions(filterTerm = '') {
     return;
   }
 
-  // NOTE: removed inline width and added classes for targeted CSS
+  // Build rows
   tbody.innerHTML = filtered.map(d => `
     <tr class="definition-item" data-term="${escapeAttr(d.term)}">
       <th scope="row" class="term">${escapeHtml(d.term)}</th>
@@ -129,7 +128,6 @@ function renderDefinitions(filterTerm = '') {
     </tr>
   `).join('');
 }
-
 
 // Keep your inline handler working
 function filterDefinitionsSidebar() {
@@ -141,18 +139,7 @@ function filterDefinitionsSidebar() {
 document.addEventListener('DOMContentLoaded', () => {
   loadDefinitions();
 
-  // If you also want an event listener (not just inline HTML oninput)
-  const input = document.getElementById('definition-search');
-  if (input) {
-    input.addEventListener('input', (e) => renderDefinitions(e.target.value));
-  }
-});
-
-//for the render
-document.addEventListener('DOMContentLoaded', () => {
-  loadDefinitions();
-
-  // Keep the inline handler working
+  // Search input listener
   const input = document.getElementById('definition-search');
   if (input) {
     input.addEventListener('input', (e) => renderDefinitions(e.target.value));
@@ -162,8 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const list = document.getElementById('definitions-list');
   if (list) {
     const table = list.closest('table');
-    if (table) {
-      table.classList.add('definitions-table');
-    }
+    if (table) table.classList.add('definitions-table');
   }
-
+});
