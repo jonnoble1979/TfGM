@@ -114,3 +114,12 @@
     transition: none;
   }
 }
+
+
+.mandatory a[href^="mailto:"] {
+    display: inline;           /* override block display */
+    white-space: nowrap;       /* keep email on one line */
+    color: var(--link-color);
+    text-decoration: underline;
+}
+
