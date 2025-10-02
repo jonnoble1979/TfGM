@@ -47,16 +47,37 @@ body {
 }
 
 /* --- NAVIGATION BAR --- */
+
+/* --- NAVIGATION BAR (Modern Sticky) --- */
 #top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     background-color: var(--nav-bg);
     color: white;
-    padding: 10px 20px;
+    padding: 14px 20px; /* default height */
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transition: padding 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
+
+/* Shrink state (we'll toggle this with JS) */
+#top-nav.shrink {
+    padding: 6px 20px; /* smaller height */
+    background-color: var(--brand-blue); /* stays same or slightly darker if you want */
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+
+/* Ensure body content doesn't hide behind nav */
+body {
+    padding-top: 64px; /* matches default nav height */
+}
+
 
 #top-nav a, .dropbtn {
     color: white;
