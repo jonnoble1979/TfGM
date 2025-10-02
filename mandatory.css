@@ -1,105 +1,85 @@
 
-/* =========================
-   Mandatory paragraph badge
-   ========================= */
-
 :root {
-  /* Accent for triangle + label */
+  /* Accent color for triangle + label */
   --mandy-accent: #2563eb;
 
-  /* Triangle size (independent of text size) */
-  --mandy-icon-size: 2.2em;    /* try 2.0–2.8em */
+  /* Triangle size */
+  --mandy-icon-size: 2.2em;    /* try 2.0–2.4em */
 
-  /* Gap between triangle and label (increase if still too tight) */
-  --mandy-gap: .28rem;
+  /* Gap between triangle and label */
+  --mandy-gap: 0.5rem;         /* increased for clear separation */
 
-  /* Subtle paragraph frame tokens (fallbacks) */
+  /* Paragraph frame tokens */
   --mandy-border: rgba(37, 99, 235, .30);
   --mandy-bg: rgba(37, 99, 235, .04);
   --mandy-border-hover: rgba(37, 99, 235, .45);
   --mandy-bg-hover: rgba(37, 99, 235, .06);
 }
 
-/* --- Mandatory paragraph container --- */
+/* Container */
 :where(p).mandatory {
-  /* Layout: [badge] [text] */
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: start;
   column-gap: .6rem;
 
-  /* Subtle frame (not buttony) */
   padding: 8px 12px;
   border: 1px solid var(--mandy-border);
   border-radius: 8px;
   background: var(--mandy-bg);
 
   transition: background-color .2s ease, border-color .2s ease;
-
-  /* (Optional) expose current bg token if you ever want the "!" to match bg */
-  --mandy-bg-current: var(--mandy-bg);
-  /* White exclamation mark (as requested) */
-  --mandy-symbol-color: #fff;
 }
 
-/* Hover/focus — keep subtle */
+/* Hover */
 :where(p).mandatory:hover,
 :where(p).mandatory:focus-within {
   background: var(--mandy-bg-hover);
   border-color: var(--mandy-border-hover);
-
-  /* Keep for future use if you ever want the "!" to match the hover bg */
-  --mandy-bg-current: var(--mandy-bg-hover);
 }
 
-/* Ensure actual paragraph content stays in column 2 */
+/* Text content in column 2 */
 :where(p).mandatory > * {
   grid-column: 2;
 }
 
-/* Badge parts share the same grid cell so they stay together on the left */
+/* Badge parts share same grid cell */
 :where(p).mandatory::before,
 :where(p).mandatory::after {
   grid-column: 1;
   grid-row: 1;
   justify-self: center;
   align-self: start;
-  pointer-events: none; /* never block paragraph hover */
+  pointer-events: none;
 }
 
-/* ICON = triangle in accent color, white "!" drawn on top */
+/* ICON = triangle + white “!” */
 :where(p).mandatory::before {
   content: "";
   width: var(--mandy-icon-size);
   height: var(--mandy-icon-size);
-
-  /* Triangle fill (same color as label) */
   background-color: var(--mandy-accent);
 
-  /* Draw the "!" (white) using two background layers */
+  /* Smaller “!” using gradients */
   background-image:
-    /* vertical bar */
-    linear-gradient(var(--mandy-symbol-color), var(--mandy-symbol-color)),
-    /* dot */
-    radial-gradient(circle, var(--mandy-symbol-color) 60%, transparent 61%);
+    linear-gradient(#fff, #fff), /* bar */
+    radial-gradient(circle, #fff 60%, transparent 61%); /* dot */
   background-repeat: no-repeat;
 
-  /* Sizes (bar width × height; dot diameter × diameter) */
+  /* Make the bar thinner and shorter, dot smaller */
   background-size:
-    10% 46%,   /* thinner bar; increase to 12% if you want it bolder */
-    12% 12%;
-  /* Positions (centered) */
+    8% 40%,    /* bar: width × height */
+    8% 8%;     /* dot: diameter */
   background-position:
-    50% 42%,   /* bar: ~42% from top */
-    50% 82%;   /* dot: near bottom */
+    50% 40%,   /* bar position */
+    50% 78%;   /* dot position */
 
-  /* Shape the square into a triangle */
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }
 
-/* LABEL = “Mandatory”, placed below the triangle with an explicit gap */
+/* LABEL = “Mandatory” below triangle */
 :where(p).mandatory::after {
-  content: "Mandatory";        /* no uppercase */
+  content: "Mandatory";
   display: block;
   text-align: center;
   color: var(--mandy-accent);
@@ -108,14 +88,6 @@
   line-height: 1.1;
   letter-spacing: .01em;
 
-  /* Reserve space above the text: triangle height + gap */
+  /* Push it down by triangle height + extra gap */
   padding-top: calc(var(--mandy-icon-size) + var(--mandy-gap));
-
-  /* Ensure it paints above the icon if edges touch */
-  z-index: 1;
-}
-
-/* Respect reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  :where(p).mandatory { transition: none; }
 }
