@@ -86,6 +86,7 @@ async function loadDefinitions() {
 }
 
 // ---------- Rendering ----------
+
 function renderDefinitions(filterTerm = '') {
   const tbody = document.getElementById('definitions-list');
   if (!tbody) return;
@@ -120,13 +121,15 @@ function renderDefinitions(filterTerm = '') {
     return;
   }
 
+  // NOTE: removed inline width and added classes for targeted CSS
   tbody.innerHTML = filtered.map(d => `
     <tr class="definition-item" data-term="${escapeAttr(d.term)}">
-      <th scope="row" style="width:35%">${escapeHtml(d.term)}</th>
-      <td>${escapeHtml(d.definition)}</td>
+      <th scope="row" class="term">${escapeHtml(d.term)}</th>
+      <td class="definition">${escapeHtml(d.definition)}</td>
     </tr>
   `).join('');
 }
+
 
 // Keep your inline handler working
 function filterDefinitionsSidebar() {
@@ -144,3 +147,23 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('input', (e) => renderDefinitions(e.target.value));
   }
 });
+
+//for the render
+document.addEventListener('DOMContentLoaded', () => {
+  loadDefinitions();
+
+  // Keep the inline handler working
+  const input = document.getElementById('definition-search');
+  if (input) {
+    input.addEventListener('input', (e) => renderDefinitions(e.target.value));
+  }
+
+  // 🔖 Add a scoping class to the sidebar defs table (no HTML change needed)
+  const list = document.getElementById('definitions-list');
+  if (list) {
+    const table = list.closest('table');
+    if (table) {
+      table.classList.add('definitions-table');
+    }
+  }
+
