@@ -1,198 +1,110 @@
+
 [
   {
-    "term": "DEFINITIONS",
-    "definition": "Road Safety Audit (RSA)",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Road Safety Audit (RSA)",
+    "definition": "An RSA is the staged evaluation of the changes to the highway during design, implementation and subsequent operation. It seeks to identify potential road safety hazards that may result in personal injury for any type of road user and to suggest measures to eliminate or mitigate those problems. This evaluation is carried out during the design stages (Stages 1 & 2), as closely as possible after the measures become operational (Stage 3), and with 12 months of validated Personal Injury Collision data to enable an accurate comparison between the ‘pre-construction period’ and control data for the ‘post-construction period’ after the scheme becomes operational (Stage 4)."
   },
   {
-    "term": "An RSA is the staged evaluation of the changes to the highway during design, implementation and subsequent operation. It seeks to identify potential road safety hazards that may result in personal injury for any type of road user and to suggest measures to eliminate or mitigate those problems. This evaluation is carried out during the design stages (Stages 1 & 2), as closely as possible after the measures become operational (Stage 3), and with 12 months of validated Personal Injury Collision data to enable an accurate comparison between the ‘pre-construction period’ and control data for the ‘post-construction period’ after the scheme becomes operational (Stage 4).",
-    "definition": "Client",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Client",
+    "definition": "The relevant Greater Manchester highway/roads authority under their statutory duty for road user safety. The Client may not commission and pay for the audit (e.g. for developer-led schemes) but they are the ones who require the audit to be undertaken. If the project is a local authority or developer-led, designated Scheme Manager will be identified in the relevant organisation."
   },
   {
-    "term": "The relevant Greater Manchester highway/roads authority under their statutory duty for road user safety.  The Client may not commission and pay for the audit (e.g. for developer-led schemes) but they are the ones who require the audit to be undertaken.  If the project is a local authority or developer-led, designated Scheme Manager will be identified in the relevant organisation.",
-    "definition": "Collision Investigation",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Collision Investigation",
+    "definition": "The collection and examination of validated historical collision data over a period of time in order to identify common trends and factors which may have contributed to the collisions. This could also include the detailed forensic investigation of single collisions, any provisional collision data and operational incident data that may be available."
   },
   {
-    "term": "The collection and examination of validated historical collision data over a period of time in order to identify common trends and factors which may have contributed to the collisions. This could also include the detailed forensic investigation of single collisions, any provisional collision data and operational incident data that may be available.",
-    "definition": "Design Organisation",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Design Organisation",
+    "definition": "The organisation(s) commissioned to undertake the various phases of scheme preparation."
   },
   {
-    "term": "The organisation(s) commissioned to undertake the various phases of scheme preparation.",
-    "definition": "Design Team",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Design Team",
+    "definition": "The group within the Design Organisation undertaking the various phases of scheme preparation."
   },
   {
-    "term": "The group within the Design Organisation undertaking the various phases of scheme preparation.",
-    "definition": "Design Scheme Manager",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Design Scheme Manager",
+    "definition": "A person within the Design Team responsible for managing the scheme design and co-ordinating the input of the various design disciplines. They will need to liaise with the Highway Authority Authorising Officer as to the acceptability or otherwise of the design team solutions and agree on the final response to be approved by the Client."
   },
   {
-    "term": "A person within the Design Team responsible for managing the scheme design and co-ordinating the input of the various design disciplines.  They will need to liaise with the Highway Authority Authorising Officer as to the acceptability or otherwise of the design team solutions and agree on the final response to be approved by the Client",
-    "definition": "Improvement Schemes",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Improvement Schemes",
+    "definition": "All works that involve construction of new highway or permanent change to the existing highway/street layout or features."
   },
   {
-    "term": "All works that involve construction of new highway or permanent change to the existing highway/street layout or features.",
-    "definition": "Interim RSA",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Interim RSA",
+    "definition": "The application of RSA to the whole or part of an Improvement Scheme at any time during its design and construction. Interim RSA is neither mandatory nor a substitute for the Stage 1, 2 and 3 RSAs."
   },
   {
-    "term": "The application of RSA to the whole or part of an Improvement Scheme at any time during its design and construction. Interim RSA is neither mandatory nor a substitute for the Stage 1, 2 and 3 RSAs.",
-    "definition": "‘Like-for-like’ Maintenance Schemes",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "‘Like-for-like’ Maintenance Schemes",
+    "definition": "A scheme or highway feature proposed as maintenance works, that solely involves the replacement or refurbishment of a highway feature with a corresponding feature, which as a minimum, will appear the same, be located in the same position, perform the same and be constructed of comparable materials as the feature it replaces."
   },
   {
-    "term": "A scheme or highway feature proposed as maintenance works, that solely involves the replacement or refurbishment of a highway feature with a corresponding feature, which as a minimum, will appear the same, be located in the same position, perform the same and be constructed of comparable materials as the feature it replaces.",
-    "definition": "Maintaining Agent",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Maintaining Agent",
+    "definition": "The organisation with overall responsibility for carrying out activities associated with the operation and upkeep of the highway network; and/or other appropriate transport infrastructure (e.g. Metrolink)."
   },
   {
-    "term": "The organisation with overall responsibility for carrying out activities associated with the operation and upkeep of the highway network; and/or other appropriate transport infrastructure (e.g. Metrolink).",
-    "definition": "Non-Motorised Users (NMUs)",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Non-Motorised Users (NMUs)",
+    "definition": "NMUs are considered to be people walking, wheeling, cycling and equestrian users. The term NMU also includes disabled people and wheelchair users."
   },
   {
-    "term": "NMUs are considered to be people walking, wheeling, cycling and equestrian users. The term NMU also includes disabled people and wheelchair users.",
-    "definition": "Overseeing Organisation",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Overseeing Organisation",
+    "definition": "The relevant highway or road authority responsible for the Improvement Scheme to be Road Safety Audited, or in the case of developer-led or third-party organisation promoted schemes, the highway authority responsible for the road affected by the proposed Improvement Scheme. In some instances TfGM will be the Overseeing Organisation for TfGM sponsored schemes such as Metrolink or transport interchanges."
   },
   {
-    "term": "The relevant highway or road authority responsible for the Improvement Scheme to be Road Safety Audited, or in the case of developer-led or third-party organisation promoted schemes, the highway authority responsible for the road affected by the proposed Improvement Scheme. In some instances TfGM will be the Overseeing Organisation for TfGM sponsored schemes such as Metrolink or transport interchanges.",
-    "definition": "Overseeing Organisation Specialist",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Overseeing Organisation Specialist",
+    "definition": "A person from the Overseeing Organisation that has the appropriate training, skills and experience in the Road Safety discipline. For TfGM this may be an appropriate person from the Safer Roads Group. Overseeing Organisations may choose to consult a TfGM Overseeing Organisation Specialist where required."
   },
   {
-    "term": "A person from the Overseeing Organisation that has the appropriate training, skills and experience in the Road Safety discipline. For TfGM this may be an appropriate person from the Safer Roads Group. Overseeing Organisations may choose to consult a TfGM Overseeing Organisation Specialist where required.",
-    "definition": "Scheme Manager",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "Scheme Manager",
+    "definition": "A person from the Overseeing Organisation (previously known as Project Sponsor) who undertakes the day to day management of the audit process. If the project is developer-led there will need to be an additional liaison between the developer and responsible Highway Authority Authorising Officer (probably either a Highways development control officer or network engineer) who is responsible for ensuring the highway authority is satisfied with the scope and quality of the audit."
   },
   {
-    "term": "A person from the Overseeing Organisation (previously known as Project Sponsor) who undertakes the day to day management of the audit process.  If the project is developer-led there will need to be an additional liaison between the developer and responsible Highway Authority Authorising Officer(probably either a Highways development control officer or network engineer) who is responsible for ensuring the highway authority is satisfied with the scope and quality of the audit.  .",
-    "definition": "RSA Brief",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "RSA Brief",
+    "definition": "The instructions to the RSA Team defining the scope and details of the scheme to be Road Safety Audited, including sufficient information for the RSA to be undertaken."
   },
   {
-    "term": "The instructions to the RSA Team defining the scope and details of the scheme to be Road Safety Audited, including sufficient information for the RSA to be undertaken.",
-    "definition": "RSA Report",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "RSA Report",
+    "definition": "The report produced by the RSA Team describing the road safety related problems identified by the RSA Team and the recommended solutions to those problems."
   },
   {
-    "term": "The report produced by the RSA Team describing the road safety related problems identified by the RSA Team and the recommended solutions to those problems.",
-    "definition": "RSA Response Report",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
-  },
-  {
-    "term": "A joint report produced by the design organisation and Overseeing Organisation following RSA Stages 1, 2 and 3. The report includes both a design organisation and Overseeing Organisation response to each problem and recommendation raised in the RSA report.",
-    "definition": "NOTE 1: The RSA decision log is part of the RSA response report.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
-  },
-  {
-    "term": "NOTE 2: The RSA response report is produced collaboratively by the design organisation and Overseeing Organisation.",
-    "definition": "NOTE 3: An RSA response report is not produced for Stage 4 RSAs.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "term": "RSA Response Report",
+    "definition": "A joint report produced by the design organisation and Overseeing Organisation following RSA Stages 1, 2 and 3. The report includes both a design organisation and Overseeing Organisation response to each problem and recommendation raised in the RSA report. NOTE 1: The RSA decision log is part of the RSA response report. NOTE 2: The RSA response report is produced collaboratively by the design organisation and Overseeing Organisation. NOTE 3: An RSA response report is not produced for Stage 4 RSAs."
   },
   {
     "term": "RSA Site Visit",
-    "definition": "A visit to the location of a proposed or completed scheme by the RSA team and other invitees.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "definition": "A visit to the location of a proposed or completed scheme by the RSA team and other invitees."
   },
   {
     "term": "RSA Team",
-    "definition": "A team that works together on all aspects of the RSA, independent of the Design Team and approved for a particular RSA by the Scheme Manager on behalf of the Overseeing Organisation. The RSA Team shall comprise a minimum of two persons (an Audit Team Leader and Team Member). The individuals within the RSA Team may be drawn from the Design Organisation or from other organisations.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "definition": "A team that works together on all aspects of the RSA, independent of the Design Team and approved for a particular RSA by the Scheme Manager on behalf of the Overseeing Organisation. The RSA Team shall comprise a minimum of two persons (an Audit Team Leader and Team Member). The individuals within the RSA Team may be drawn from the Design Organisation or from other organisations."
   },
   {
     "term": "RSA Team Leader",
-    "definition": "A person with the appropriate training, skills and experience who is approved for a particular RSA by the Scheme Manager on behalf of the Overseeing Organisation. The RSA Team Leader has overall responsibility for carrying out the RSA and managing the RSA Team.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "definition": "A person with the appropriate training, skills and experience who is approved for a particular RSA by the Scheme Manager on behalf of the Overseeing Organisation. The RSA Team Leader has overall responsibility for carrying out the RSA and managing the RSA Team."
   },
   {
     "term": "RSA Team Member",
-    "definition": "A member of the RSA Team with the appropriate training, skills and experience necessary for the RSA of a specific scheme, reporting to the RSA Team Leader.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "definition": "A member of the RSA Team with the appropriate training, skills and experience necessary for the RSA of a specific scheme, reporting to the RSA Team Leader."
   },
   {
     "term": "RSA Team Observer",
-    "definition": "A person with the appropriate training, skills and experience accompanying the RSA Team to observe and gain experience of the RSA process.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "definition": "A person with the appropriate training, skills and experience accompanying the RSA Team to observe and gain experience of the RSA process."
   },
   {
     "term": "Road Safety Engineering",
-    "definition": "The design and implementation of Improvement Schemes intended to reduce the number and severity of road safety matters. E.g. any element of the road environment that could potentially contribute to a road injury traffic collision and/or other available operational incident data.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "definition": "The design and implementation of Improvement Schemes intended to reduce the number and severity of road safety matters. E.g. any element of the road environment that could potentially contribute to a road injury traffic collision and/or other available operational incident data."
   },
   {
     "term": "Road Traffic Collision",
-    "definition": "A road injury collision involving human injury or death between road users or between a road user and a feature on or adjacent to the highway.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "definition": "A road injury collision involving human injury or death between road users or between a road user and a feature on or adjacent to the highway."
   },
   {
     "term": "Specialist Advisor",
-    "definition": "A person approved by the Scheme Manager to provide specialist independent advice to the RSA Team, should the scheme include complex features outside the experience of the RSA Team Members, e.g. a complex traffic signal controlled junction or Metrolink etc.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "definition": "A person approved by the Scheme Manager to provide specialist independent advice to the RSA Team, should the scheme include complex features outside the experience of the RSA Team Members, e.g. a complex traffic signal controlled junction or Metrolink etc."
   },
   {
     "term": "Third Party Organisations",
-    "definition": "Organisations such as a developer, a developer’s consultant, a local authority, Statutory Undertaker or other private organisation that could be promoting an Improvement Scheme on the Overseeing Organisation’s road network.",
-    "OverseeingOrganisation": true,
-    "Client": true,
-    "RSATeam": true
+    "definition": "Organisations such as a developer, a developer’s consultant, a local authority, Statutory Undertaker or other private organisation that could be promoting an Improvement Scheme on the Overseeing Organisation’s road network."
+  },
+  {
+    "term": "Transport for Greater Manchester (TfGM)",
+    "definition": "Transport for Greater Manchester (TfGM) is the Transport Authority with a mandate of shared responsibility for the management of the Greater Manchester road network. Within the scope of this procedure it is their responsibility to provide advice and guidance to Overseeing Organisations and Third Parties and to maintain a record of all RSA reports that fall within the scope of this procedure. In some instances TfGM will be the Overseeing Organisation for TfGM sponsored schemes such as Metrolink or transport interchanges."
   }
-]
