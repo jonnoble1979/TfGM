@@ -1,18 +1,20 @@
 
 /* ----- Tabs (ID-agnostic) ----- */
+
 .tabs {
-  --tabs-accent: var(--accent-start); /* keep accent for buttons */
-  --tabs-bg: var(--nav-bg);           /* nav bar background */
+  --tabs-accent: var(--accent-start);
+  --tabs-bg: var(--nav-bg);
   --tabs-text: var(--text-primary);
   --tabs-muted: var(--text-secondary);
   --tabs-border: var(--border-light);
 
-  background: var(--tabs-bg); /* nav bar color */
-  border: 1px solid var(--tabs-border);
+  background: var(--tabs-bg);
+  border: 2px solid var(--tabs-border); /* ← increased from 1px to 2px */
   border-radius: 10px;
   box-shadow: 0 1px 2px rgba(0,0,0,0.05);
   overflow: clip;
 }
+
 
 /* Controls (tab buttons) */
 .tabs > .tabs__controls {
