@@ -295,7 +295,30 @@ th {
         font-weight: 600;
         color: var(--text-secondary);
     }
+    
 }
+
+    
+/* --- BULLET LIST STYLING --- */
+ul {
+    margin: 1em 0 1.5em 1.5em; /* extra breathing room */
+    padding-left: 1.2em;       /* indent bullets nicely */
+    list-style-type: disc;     /* clean bullet style */
+}
+
+ul li {
+    margin-bottom: 0.6em;      /* space between items */
+    line-height: 1.6;          /* improve readability */
+    color: var(--text-body);   /* softer text color */
+    font-size: 0.95rem;        /* slightly smaller for elegance */
+}
+
+/* Optional: lighter bullet color */
+ul li::marker {
+    color: var(--brand-blue);  /* or try #60a5fa for accent */
+    font-size: 1.1em;          /* slightly larger bullet */
+}
+
 
 
 
