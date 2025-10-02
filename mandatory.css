@@ -1,62 +1,79 @@
 
-:root {
-  /* Triangle size (independent of text size) */
-  --mandy-icon-size: 2.8em; /* try 2.4–3.2em */
-}
-
-/* Your paragraph container: keep your existing padding/border/background */
+/* 1) Set an accent and current background token the icon can “see” */
 :where(p).mandatory {
+  /* Your existing grid, padding, border, background … */
   display: grid;
-  grid-template-columns: max-content 1fr; /* [badge] [text] */
+  grid-template-columns: max-content 1fr;
   column-gap: .6rem;
   align-items: start;
 
-  /* Make the badge follow this color (or set to your brand token) */
+  /* Accent used for both the triangle and the label text */
   color: var(--mandy-accent, #2563eb);
+
+  /* Exclamation mark should match the paragraph background.
+     We expose a 'current' bg token so hover can update it cleanly. */
+  --mandy-bg-current: var(--mandy-bg, transparent);
 }
 
-/* Ensure the paragraph’s actual content sits in column 2 */
+/* If you change bg on hover/focus, update the 'current bg' too */
+:where(p).mandatory:hover,
+:where(p).mandatory:focus-within {
+  --mandy-bg-current: var(--mandy-bg-hover, var(--mandy-bg, transparent));
+}
+
+/* Keep paragraph content in column 2 */
 :where(p).mandatory > * { grid-column: 2; }
 
-/* Both pseudos share the same grid cell so they stay together */
+/* 2) Icon (triangle) + label share the same grid cell so they stay together */
 :where(p).mandatory::before,
 :where(p).mandatory::after {
   grid-column: 1;
   grid-row: 1;
   justify-self: center;
   align-self: start;
-  color: inherit; /* same color for icon + label */
 }
 
-/* ICON (mask paints with currentColor; URL is fully encoded, one line) */
+/* 3) Triangle with a “knockout” exclamation mark in bg color */
 :where(p).mandatory::before {
   content: "";
+  /* Triangle size — make it bigger/smaller here */
+  --mandy-icon-size: 2.8em;
   width: var(--mandy-icon-size);
   height: var(--mandy-icon-size);
 
-  /* Paint the icon with the same color as the text */
+  /* Triangle color = same as text */
   background-color: currentColor;
 
-  /* The mask reveals the triangle and knocks out the exclamation mark */
-  -webkit-mask: center / contain no-repeat
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 2L22 20H2z'/%3E%3Crect x='11' y='7' width='2' height='7' fill='%23000'/%3E%3Crect x='11' y='16' width='2' height='2' fill='%23000'/%3E%3C/svg%3E");
-  mask: center / contain no-repeat
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 2L22 20H2z'/%3E%3Crect x='11' y='7' width='2' height='7' fill='%23000'/%3E%3Crect x='11' y='16' width='2' height='2' fill='%23000'/%3E%3C/svg%3E");
+  /* Knockout “!” drawn as two gradient layers in the paragraph bg color */
+  background-image:
+    /* vertical bar of the exclamation mark */
+    linear-gradient(var(--mandy-bg-current), var(--mandy-bg-current)),
+    /* dot of the exclamation mark */
+    radial-gradient(circle, var(--mandy-bg-current) 60%, transparent 61%);
+  background-repeat: no-repeat;
+  /* Sizes relative to triangle — tweak to taste */
+  background-size:
+    12% 46%,   /* bar: width × height */
+    12% 12%;   /* dot: diameter × diameter */
+  background-position:
+    50% 42%,   /* bar: centered, about 42% from top */
+    50% 82%;   /* dot: centered, near bottom */
+
+  /* Clip the square into a triangle */
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }
 
-/* LABEL (visible text — sits just under the icon) */
+/* 4) Label below the icon (same color as triangle) */
 :where(p).mandatory::after {
-  content: "Mandatory";        /* no uppercase */
+  content: "Mandatory";      /* no uppercase */
   display: block;
   text-align: center;
+  color: currentColor;
   font-weight: 700;
-  font-size: .8em;             /* label size */
+  font-size: .8em;
   line-height: 1.1;
   letter-spacing: .01em;
 
-  /* Place below the icon height with a tiny gap */
+  /* Sit just under the icon with a small gap */
   margin-top: calc(var(--mandy-icon-size) + .18rem);
-
-  /* Ensure it paints over the icon block if they overlap */
-  z-index: 1;
 }
