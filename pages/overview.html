@@ -10,12 +10,14 @@
     <input type="radio" name="overview-tab" id="overview-tab-1" checked aria-controls="panel-rsa-1">
     <input type="radio" name="overview-tab" id="overview-tab-2" aria-controls="panel-rsa-2">
     <input type="radio" name="overview-tab" id="overview-tab-3" aria-controls="panel-rsa-3">
-
+<input type="radio" name="overview-tab" id="overview-tab-4" aria-controls="panel-rsa-4">
+              
     <!-- Tab buttons -->
     <div class="tabs__controls">
       <label class="tabs__label" for="overview-tab-1" role="tab" id="tab-rsa-1-label" aria-controls="panel-rsa-1" aria-selected="true">Schemes to be audited</label>
       <label class="tabs__label" for="overview-tab-2" role="tab" id="tab-rsa-2-label" aria-controls="panel-rsa-2" aria-selected="false">Scope of the audit</label>
       <label class="tabs__label" for="overview-tab-3" role="tab" id="tab-rsa-3-label" aria-controls="panel-rsa-3" aria-selected="false">Scope of audit report</label>
+<label class="tabs__label" for="overview-tab-4" role="tab" id="tab-rsa-4-label" aria-controls="panel-rsa-3" aria-selected="false">Audit stages</label>
     </div>
 
     <!-- Panels -->
@@ -130,5 +132,63 @@
     </div>
   </div>
 </section>
+
+      <!-- Panel 3 -->
+      <section id="panel-rsa-3" class="tabs__panel" role="tabpanel" aria-labelledby="tab-rsa-3-label">
+                       
+<h2>RSA Stages</h2>
+<p>Stages, timings, site visit requirements, attendees, and drawings required.</p>
+
+<div class="filter-group" style="margin: 0 0 12px 0; display: flex; gap: 8px; flex-wrap: wrap;">
+  <button type="button" onclick="filterStage('all')" data-filter="all" class="is-active">Show All</button>
+  <button type="button" onclick="filterStage('1')" data-filter="1">Stage 1</button>
+  <button type="button" onclick="filterStage('2')" data-filter="2">Stage 2</button>
+  <button type="button" onclick="filterStage('3')" data-filter="3">Stage 3</button>
+  <button type="button" onclick="filterStage('4')" data-filter="4">Stage 4</button>
+</div>
+
+<table id="rsa-stages-table">
+  <thead>
+    <tr>
+      <th>RSA Stage</th>
+      <th>When to undertake it</th>
+      <th>Site visit requirements</th>
+      <th>Attendees</th>
+      <th>Drawings required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-stage="1">
+      <td>1</td>
+      <td>At the end of initial design</td>
+      <td>Daytime</td>
+      <td>RSA Team</td>
+      <td>GA &amp; SC</td>
+    </tr>
+    <tr data-stage="2">
+      <td>2</td>
+      <td>At the end of detail design</td>
+      <td>Daytime</td>
+      <td>RSA Team</td>
+      <td>For construction pack</td>
+    </tr>
+    <tr data-stage="3">
+      <td>3</td>
+      <td>Within one month from end of construction</td>
+      <td>Daytime and darkness</td>
+      <td>RSA Team, Police representative and maintaining agent</td>
+      <td>As builts or final construction pack</td>
+    </tr>
+    <tr data-stage="4">
+      <td>4</td>
+      <td>1–3 years post construction</td>
+      <td>If applicable</td>
+      <td>RSA Team</td>
+      <td>GA</td>
+    </tr>
+  </tbody>
+</table>
+ 
+      </section>
 <!-- =================== End RSA Tabs Component =================== -->
 
