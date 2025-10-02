@@ -1,25 +1,34 @@
 
-/* --- MANDATORY PARAGRAPH --- */
+/* --- MANDATORY PARAGRAPH (robust, inside-left) --- */
 
-
-/* Paragraph with a left-side mandatory badge (icon over word) */
 :where(p).mandatory {
   position: relative;
 
-  /* Horizontal center of the badge relative to the paragraph’s content box.
-     Negative values push it outside to the left. */
-  --badge-center-x: -120px;
+  /* Sizing & spacing */
+  --icon-size: 26px; /* circle diameter */
+  --gap: 6px;        /* space between icon and word */
+  --badge-inset-x: 10px; /* distance between paragraph's left edge and badge center */
 
-  /* Sizes */
-  --icon-size: 26px;  /* circle diameter */
-  --gap: 6px;         /* space between icon and text */
+  /* Make room so text doesn't overlap the badge */
+  padding-left: calc(var(--badge-inset-x) + var(--icon-size) + 12px);
+
+  /* Base visuals + safe fallbacks (so hover always works) */
+  background: var(--mandy-bg, transparent);
+  border: 1px solid var(--mandy-border, transparent);
+  border-radius: 8px;
+
+  transition:
+    background-color .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease,
+    transform .2s ease;
 }
 
-/* ⚠ in a blue circle (top) */
+/* ⚠ in a blue circle (top) — centered above the word */
 :where(p).mandatory::before {
   content: "⚠";
   font-weight: 900;
-  font-size: 0.95rem;             /* adjust if you want a larger/smaller triangle */
+  font-size: 0.95rem; /* adjust icon glyph size independently */
   color: #fff;
 
   width: var(--icon-size);
@@ -27,52 +36,66 @@
   line-height: var(--icon-size);
   text-align: center;
   border-radius: 50%;
-  background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
-  box-shadow: 0 0 0 2px var(--mandy-bg);
+
+  /* Gradient with safe fallbacks */
+  background: linear-gradient(
+    90deg,
+    var(--accent-start, #3b82f6) 0%,
+    var(--accent-end,   #2563eb) 100%
+  );
+
+  /* Ring uses page/bg color; fallback ensures it's visible */
+  box-shadow: 0 0 0 2px var(--mandy-bg, #fff);
 
   position: absolute;
-  left: var(--badge-center-x);    /* shared center X */
+  left: calc(var(--badge-inset-x) + (var(--icon-size) / 2)); /* shared center X */
   top: 50%;
-  /* Place the icon so its bottom is just above the middle line, leaving a gap */
   transform: translate(-50%, calc(-100% - var(--gap)));
+  z-index: 1; /* ensure above paragraph bg/border */
 }
 
-/* "Mandatory" under the icon (centered under the same X) */
+/* "Mandatory" under the icon (same center X) */
 :where(p).mandatory::after {
   content: "Mandatory";
   font-weight: 700;
-  font-size: 80%;                 /* ~80% of your current size */
+  font-size: 80%; /* ~80% of current */
   color: #fff;
-  padding: 2px 6px;               /* small pill */
+  padding: 2px 6px;
   line-height: 1.2;
   border-radius: 6px;
   white-space: nowrap;
 
-  background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
-  box-shadow: 0 0 0 2px var(--mandy-bg);
+  background: linear-gradient(
+    90deg,
+    var(--accent-start, #3b82f6) 0%,
+    var(--accent-end,   #2563eb) 100%
+  );
+  box-shadow: 0 0 0 2px var(--mandy-bg, #fff);
 
   position: absolute;
-  left: var(--badge-center-x);    /* shared center X */
+  left: calc(var(--badge-inset-x) + (var(--icon-size) / 2)); /* shared center X */
   top: calc(50% + var(--gap));
   transform: translateX(-50%);
+  z-index: 1;
 }
 
-
-
+/* Hover/focus visuals with safe fallbacks */
 :where(p).mandatory:hover,
 :where(p).mandatory:focus-within {
-    background: var(--mandy-bg-hover);
-    border-color: var(--mandy-border-hover);
-    box-shadow: 0 0 0 3px var(--mandy-ring);
-    transform: translateY(-1px);
+  background: var(--mandy-bg-hover, rgba(37, 99, 235, 0.06));
+  border-color: var(--mandy-border-hover, rgba(37, 99, 235, 0.5));
+  box-shadow: 0 0 0 3px var(--mandy-ring, rgba(37, 99, 235, 0.25));
+  transform: translateY(-1px);
 }
+
+/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-    :where(p).mandatory {
-        transition: none;
-        transform: none;
-    }
-    :where(p).mandatory:hover,
-    :where(p).mandatory:focus-within {
-        box-shadow: none;
-    }
+  :where(p).mandatory {
+    transition: none;
+    transform: none;
+  }
+  :where(p).mandatory:hover,
+  :where(p).mandatory:focus-within {
+    box-shadow: none;
+  }
 }
