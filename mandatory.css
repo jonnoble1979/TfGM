@@ -51,7 +51,6 @@
 }
 
 
-:where(p).mandatory::before { font-size: 0.8em; line-height: 1.1; }
 :where(p).mandatory::before::first-line {
   font-size: calc(1em * var(--mandy-icon-scale));
   line-height: 1;
