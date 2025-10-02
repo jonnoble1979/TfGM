@@ -1,12 +1,27 @@
 
 /* --- MANDATORY PARAGRAPH --- */
 
-/* Top icon (blue circle with warning triangle) */
+
+/* Paragraph with a left-side mandatory badge (icon over word) */
+:where(p).mandatory {
+  position: relative;
+
+  /* Horizontal center of the badge relative to the paragraph’s content box.
+     Negative values push it outside to the left. */
+  --badge-center-x: -120px;
+
+  /* Sizes */
+  --icon-size: 26px;  /* circle diameter */
+  --gap: 6px;         /* space between icon and text */
+}
+
+/* ⚠ in a blue circle (top) */
 :where(p).mandatory::before {
   content: "⚠";
   font-weight: 900;
-  font-size: 0.95rem;         /* icon size */
+  font-size: 0.95rem;             /* adjust if you want a larger/smaller triangle */
   color: #fff;
+
   width: var(--icon-size);
   height: var(--icon-size);
   line-height: var(--icon-size);
@@ -16,30 +31,32 @@
   box-shadow: 0 0 0 2px var(--mandy-bg);
 
   position: absolute;
-  left: var(--badge-left);
-  /* Center the combined icon+label vertically against the paragraph line */
-  top: calc(50% - (var(--icon-size) + var(--gap))/2);
+  left: var(--badge-center-x);    /* shared center X */
+  top: 50%;
+  /* Place the icon so its bottom is just above the middle line, leaving a gap */
+  transform: translate(-50%, calc(-100% - var(--gap)));
 }
 
-/* Word under the icon */
+/* "Mandatory" under the icon (centered under the same X) */
 :where(p).mandatory::after {
   content: "Mandatory";
   font-weight: 700;
-  font-size: 80%;             /* ~80% of current */
+  font-size: 80%;                 /* ~80% of your current size */
   color: #fff;
-  padding: 2px 6px;
+  padding: 2px 6px;               /* small pill */
   line-height: 1.2;
   border-radius: 6px;
-  background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
-  box-shadow: 0 0 0 2px var(--mandy-bg);
   white-space: nowrap;
 
+  background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
+  box-shadow: 0 0 0 2px var(--mandy-bg);
+
   position: absolute;
-  /* Center label under the icon */
-  left: calc(var(--badge-left) + (var(--icon-size) / 2));
-  top: calc(50% + var(--icon-size)/2 + var(--gap));
+  left: var(--badge-center-x);    /* shared center X */
+  top: calc(50% + var(--gap));
   transform: translateX(-50%);
 }
+
 
 
 :where(p).mandatory:hover,
