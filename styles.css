@@ -492,3 +492,66 @@ th {
         color: var(--text-secondary);
     }
 }
+
+/* --- SIDEBAR DEFINITIONS: stack Term above Definition --- */
+
+/* Tag the definitions table (we add this class via JS) */
+#definitions-sidebar .definitions-table {
+  width: 100%;
+  border: 0;
+  box-shadow: none;
+  table-layout: auto;
+}
+
+/* Hide header for the sidebar list */
+#definitions-sidebar .definitions-table thead {
+  display: none;
+}
+
+#definitions-sidebar #definitions-list tr.definition-item {
+  display: block;                    /* vertical stack per row */
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+#definitions-sidebar #definitions-list tr.definition-item:last-child {
+  border-bottom: 0;
+}
+
+#definitions-sidebar #definitions-list th.term,
+#definitions-sidebar #definitions-list td.definition {
+  display: block;                    /* stack cells */
+  border: 0;
+  padding: 0;
+  text-align: left;
+}
+
+#definitions-sidebar #definitions-list th.term {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+  width: auto !important;            /* override any inline width */
+}
+
+#definitions-sidebar #definitions-list td.definition {
+  color: var(--text-body);
+}
+
+/* Neutralise the global mobile "td:before { content: attr(data-title) }" labels here */
+#definitions-sidebar #definitions-list td.definition::before,
+#definitions-sidebar #definitions-list th.term::before {
+  content: none !important;
+}
+
+/* Undo global mobile table tweaks inside the sidebar list */
+@media (max-width: 768px) {
+  #definitions-sidebar #definitions-list td.definition {
+    padding-left: 0;
+    text-align: left;
+    border-bottom: none;
+  }
+
+  #definitions-sidebar #definitions-list th.term {
+    text-align: left;
+  }
+}
