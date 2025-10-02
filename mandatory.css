@@ -1,22 +1,13 @@
 
-/* --- MANDATORY PARAGRAPH (robust, inside-left) --- */
-
+/* --- MANDATORY PARAGRAPH — one box, in-flow --- */
 :where(p).mandatory {
-  position: relative;
-
-  /* Sizing & spacing */
-  --icon-size: 26px; /* circle diameter */
-  --gap: 6px;        /* space between icon and word */
-  --badge-inset-x: 10px; /* distance between paragraph's left edge and badge center */
-
-  /* Make room so text doesn't overlap the badge */
-  padding-left: calc(var(--badge-inset-x) + var(--icon-size) + 12px);
-
-  /* Base visuals + safe fallbacks (so hover always works) */
-  background: var(--mandy-bg, transparent);
-  border: 1px solid var(--mandy-border, transparent);
+  /* Small inner margin so the badge sits nicely inside the paragraph */
+  padding: 8px 12px;
+  border: 1px solid var(--mandy-border, rgba(37,99,235,.35));
   border-radius: 8px;
+  background: var(--mandy-bg, transparent);
 
+  /* Smooth hover if you’re using it */
   transition:
     background-color .2s ease,
     border-color .2s ease,
@@ -24,47 +15,25 @@
     transform .2s ease;
 }
 
-/* ⚠ in a blue circle (top) — centered above the word */
+/* Single pseudo-element that contains BOTH the icon and the word */
 :where(p).mandatory::before {
-  content: "⚠";
-  font-weight: 900;
-  font-size: 0.95rem; /* adjust icon glyph size independently */
-  color: #fff;
+  /* Icon on line 1, word on line 2 (the \A inserts a line break) */
+  content: "⚠\A Mandatory";
+  white-space: pre;            /* honour the \A line break */
 
-  width: var(--icon-size);
-  height: var(--icon-size);
-  line-height: var(--icon-size);
+  display: inline-block;       /* contributes to layout (no absolute) */
   text-align: center;
-  border-radius: 50%;
+  vertical-align: top;         /* aligns nicely with the first text line */
 
-  /* Gradient with safe fallbacks */
-  background: linear-gradient(
-    90deg,
-    var(--accent-start, #3b82f6) 0%,
-    var(--accent-end,   #2563eb) 100%
-  );
-
-  /* Ring uses page/bg color; fallback ensures it's visible */
-  box-shadow: 0 0 0 2px var(--mandy-bg, #fff);
-
-  position: absolute;
-  left: calc(var(--badge-inset-x) + (var(--icon-size) / 2)); /* shared center X */
-  top: 50%;
-  transform: translate(-50%, calc(-100% - var(--gap)));
-  z-index: 1; /* ensure above paragraph bg/border */
-}
-
-/* "Mandatory" under the icon (same center X) */
-:where(p).mandatory::after {
-  content: "Mandatory";
+  /* Typography */
+  font-size: 0.8em;            /* ≈80% of current text size */
   font-weight: 700;
-  font-size: 80%; /* ~80% of current */
+  line-height: 1.1;
   color: #fff;
-  padding: 2px 6px;
-  line-height: 1.2;
-  border-radius: 6px;
-  white-space: nowrap;
 
+  /* One single blue box around both lines */
+  padding: 6px 8px;
+  border-radius: 10px;
   background: linear-gradient(
     90deg,
     var(--accent-start, #3b82f6) 0%,
@@ -72,23 +41,19 @@
   );
   box-shadow: 0 0 0 2px var(--mandy-bg, #fff);
 
-  position: absolute;
-  left: calc(var(--badge-inset-x) + (var(--icon-size) / 2)); /* shared center X */
-  top: calc(50% + var(--gap));
-  transform: translateX(-50%);
-  z-index: 1;
+  /* Space between the badge and the paragraph text */
+  margin-right: .6rem;
 }
 
-/* Hover/focus visuals with safe fallbacks */
+/* Optional hover/focus styling for the paragraph box */
 :where(p).mandatory:hover,
 :where(p).mandatory:focus-within {
-  background: var(--mandy-bg-hover, rgba(37, 99, 235, 0.06));
-  border-color: var(--mandy-border-hover, rgba(37, 99, 235, 0.5));
-  box-shadow: 0 0 0 3px var(--mandy-ring, rgba(37, 99, 235, 0.25));
+  background: var(--mandy-bg-hover, rgba(37,99,235,0.06));
+  border-color: var(--mandy-border-hover, rgba(37,99,235,0.5));
+  box-shadow: 0 0 0 3px var(--mandy-ring, rgba(37,99,235,0.25));
   transform: translateY(-1px);
 }
 
-/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   :where(p).mandatory {
     transition: none;
