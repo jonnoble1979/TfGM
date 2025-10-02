@@ -1,10 +1,10 @@
 
 /* ----- Tabs (ID-agnostic) ----- */
 .tabs {
-  --tabs-accent: var(--accent-start);
-  --tabs-bg: #ffffff;
-  --tabs-text: var(--text-primary);
-  --tabs-muted: var(--text-secondary);
+  --tabs-accent: var(--brand-blue);
+  --tabs-bg: var(--nav-bg);
+  --tabs-text: #ffffff;
+  --tabs-muted: #cbd5e1;
   --tabs-border: var(--border-light);
 
   background: var(--tabs-bg);
@@ -16,14 +16,14 @@
 
 /* Controls (tab buttons) */
 .tabs > .tabs__controls {
-  display: flex;                 /* FIX: was 'display: sticky' (invalid) */
+  display: flex;
   flex-wrap: wrap;
   gap: 8px;
   padding: 10px;
-  background: linear-gradient(0deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02));
+  background: var(--tabs-bg);
   border-bottom: 1px solid var(--tabs-border);
-  position: sticky;              /* stays visible at top of component */
-  top: calc(var(--nav-space, 64px) + 8px); /* plays nice with shrinking header */ /* FIX: closed comment */
+  position: sticky;
+  top: calc(var(--nav-space, 64px) + 8px);
   z-index: 1;
   backdrop-filter: saturate(180%) blur(6px);
 }
@@ -49,19 +49,22 @@
   border-radius: 8px;
   font-weight: 600;
   color: var(--tabs-muted);
+  background-color: var(--tabs-bg);
   cursor: pointer;
   transition: background-color .2s ease, color .2s ease, border-color .2s ease;
   white-space: nowrap;
   user-select: none;
 }
 .tabs .tabs__label:hover {
-  color: var(--tabs-text);
+  color: #fff;
+  background-color: var(--tabs-accent);
   border-color: var(--tabs-border);
-  background: #f8fafc;
 }
 
 /* Panels */
-.tabs > .tabs__panels { padding: 16px; }
+.tabs > .tabs__panels {
+  padding: 16px;
+}
 .tabs > .tabs__panels > .tabs__panel {
   display: none;
   animation: fadein .25s ease;
@@ -84,7 +87,7 @@
 .tabs > input[type="radio"]:nth-of-type(9):checked ~ .tabs__controls .tabs__label:nth-of-type(9),
 .tabs > input[type="radio"]:nth-of-type(10):checked ~ .tabs__controls .tabs__label:nth-of-type(10) {
   color: #fff;
-  background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
+  background-color: var(--tabs-accent);
   border-color: transparent;
   box-shadow: 0 1px 0 rgba(0,0,0,0.02), inset 0 0 0 1px rgba(255,255,255,0.08);
 }
