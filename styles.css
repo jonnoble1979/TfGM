@@ -207,15 +207,16 @@ p { line-height: 1.6; color: var(--text-body); }
 }
 
 /* --- TWO-COLUMN LAYOUT: main content + right sidebar --- */
+
 #main-layout {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+  width: min(100%, 1600px);
+  margin-inline: auto;
+  padding-inline: clamp(12px, 2vw, 32px);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 24px;
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 380px); /* flexible sidebar */
+  gap: clamp(16px, 2vw, 32px);
   align-items: start;
-}
+
 
 #content {
   margin: 0;
