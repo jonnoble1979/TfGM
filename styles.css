@@ -595,13 +595,13 @@ th {
       overflow: clip;
     }
     .tabs__controls {
-      display: flex;
+      display: sticky;
       gap: 8px;
       padding: 10px;
       background: linear-gradient(0deg, rgba(0,0,0,0.02), rgba(0,0,0,0.02));
       border-bottom: 1px solid var(--tabs-border);
       position: sticky; /* stays visible at top of panel if panel scrolls */
-      top: 0;
+      top: calc(var(--nav-space, 64px) + 8px); /* plays nice with your shrinking header *
       z-index: 1;
       backdrop-filter: saturate(180%) blur(6px);
     }
@@ -651,20 +651,38 @@ th {
       to   { opacity: 1; translate: 0 0; }
     }
 
-    /* When a given radio is checked, show its panel and emphasize the label */
-    #tab-rsa-1:checked ~ .tabs__controls label[for="tab-rsa-1"],
-    #tab-rsa-2:checked ~ .tabs__controls label[for="tab-rsa-2"],
-    #tab-rsa-3:checked ~ .tabs__controls label[for="tab-rsa-3"] {
-      color: #fff;
-      background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
-      border-color: transparent;
-      box-shadow: 0 1px 0 rgba(0,0,0,0.02), inset 0 0 0 1px rgba(255,255,255,0.08);
-    }
-    #tab-rsa-1:checked ~ .tabs__panels #panel-rsa-1,
-    #tab-rsa-2:checked ~ .tabs__panels #panel-rsa-2,
-    #tab-rsa-3:checked ~ .tabs__panels #panel-rsa-3 {
-      display: block;
-    }
+
+/* Active label styling for the Nth tab (supports up to 10 tabs; extend if needed) */
+.tabs input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
+.tabs input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
+.tabs input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
+.tabs input[type="radio"]:nth-of-type(4):checked ~ .tabs__controls .tabs__label:nth-of-type(4),
+.tabs input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5),
+.tabs input[type="radio"]:nth-of-type(6):checked ~ .tabs__controls .tabs__label:nth-of-type(6),
+.tabs input[type="radio"]:nth-of-type(7):checked ~ .tabs__controls .tabs__label:nth-of-type(7),
+.tabs input[type="radio"]:nth-of-type(8):checked ~ .tabs__controls .tabs__label:nth-of-type(8),
+.tabs input[type="radio"]:nth-of-type(9):checked ~ .tabs__controls .tabs__label:nth-of-type(9),
+.tabs input[type="radio"]:nth-of-type(10):checked ~ .tabs__controls .tabs__label:nth-of-type(10) {
+  color: #fff;
+  background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
+  border-color: transparent;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02), inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+/* Show the matching panel for the Nth tab */
+.tabs input[type="radio"]:nth-of-type(1):checked ~ .tabs__panels .tabs__panel:nth-of-type(1),
+.tabs input[type="radio"]:nth-of-type(2):checked ~ .tabs__panels .tabs__panel:nth-of-type(2),
+.tabs input[type="radio"]:nth-of-type(3):checked ~ .tabs__panels .tabs__panel:nth-of-type(3),
+.tabs input[type="radio"]:nth-of-type(4):checked ~ .tabs__panels .tabs__panel:nth-of-type(4),
+.tabs input[type="radio"]:nth-of-type(5):checked ~ .tabs__panels .tabs__panel:nth-of-type(5),
+.tabs input[type="radio"]:nth-of-type(6):checked ~ .tabs__panels .tabs__panel:nth-of-type(6),
+.tabs input[type="radio"]:nth-of-type(7):checked ~ .tabs__panels .tabs__panel:nth-of-type(7),
+.tabs input[type="radio"]:nth-of-type(8):checked ~ .tabs__panels .tabs__panel:nth-of-type(8),
+.tabs input[type="radio"]:nth-of-type(9):checked ~ .tabs__panels .tabs__panel:nth-of-type(9),
+.tabs input[type="radio"]:nth-of-type(10):checked ~ .tabs__panels .tabs__panel:nth-of-type(10) {
+  display: block;
+}
+
 
     /* Content tweaks to match your theme */
     .tabs__panel h3 {
