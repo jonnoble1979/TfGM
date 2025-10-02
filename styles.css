@@ -245,15 +245,17 @@ p { line-height: 1.6; color: var(--text-body); }
   min-width: 0;
 }
 
+
 #definitions-sidebar {
-  background: #fff;
+  position: sticky;            /* Sticks within its parent container */
+  top: 80px;                   /* Adjust to match your fixed top nav height */
+  max-height: calc(100vh - 100px); /* Full viewport height minus nav and padding */
+  overflow-y: auto;            /* Independent scrolling */
+  background: #fff;            /* Ensure background covers content behind */
   border-left: 1px solid var(--border-light);
   padding-left: 16px;
-  position: sticky;
-  top: 12px;
-  max-height: calc(100vh - 24px);
-  overflow: auto;
 }
+
 
 .definition-search-group { position: relative; margin: 0 0 12px; }
 .definition-search-group input {
