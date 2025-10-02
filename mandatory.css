@@ -116,10 +116,18 @@
 }
 
 
-.mandatory a[href^="mailto:"] {
-    display: inline;           /* override block display */
-    white-space: nowrap;       /* keep email on one line */
-    color: var(--link-color);
-    text-decoration: underline;
+
+/* Ensure all real content lives in column 2 as a single item */
+.mandatory__content {
+  grid-column: 2;
 }
+
+/* Keep email inline & unbroken */
+.mandatory a[href^="mailto:"] {
+  display: inline;
+  white-space: nowrap;
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
 
