@@ -5,11 +5,15 @@
  * @param {string} pageId - the section id to use in the DOM
  * @param {string} [filePath] - optional path to the HTML partial to fetch
  */
+
 function showPage(pageId, filePath) {
   const content = document.getElementById('content');
   if (!content) return;
 
-  // Hide all sections
+  // Remove any previous transient error messages
+  content.querySelectorAll('.load-error').forEach(n => n.remove());
+
+  // Hide all already-loaded sections
   document.querySelectorAll('#content > section').forEach(sec => (sec.style.display = 'none'));
 
   // If section already loaded, just show it
@@ -20,8 +24,15 @@ function showPage(pageId, filePath) {
     return;
   }
 
-  // Need a file path to fetch if section isn't in DOM yet
-  const resolvedPath = filePath || `pages/${pageId}.html`; // sensible default
+  // Build path
+  const resolvedPath = filePath || (pageId ? `pages/${pageId}.html` : null);
+  if (!resolvedPath) {
+    console.warn('showPage called without a pageId/filePath');
+    return;
+  }
+
+  console.info('[showPage] request', { pageId, resolvedPath });
+
   fetch(resolvedPath, { cache: 'no-store' })
     .then(response => {
       if (!response.ok) throw new Error(`Section not found (${response.status})`);
@@ -38,13 +49,19 @@ function showPage(pageId, filePath) {
       document.querySelectorAll('#content > section').forEach(s => (s.style.display = 'none'));
       sec.style.display = 'block';
 
+      // Remove any previous error notes now that we have a good page
+      content.querySelectorAll('.load-error').forEach(n => n.remove());
+
       window.scrollTo(0, 0);
     })
     .catch(err => {
       console.error('showPage error:', err);
-      content.innerHTML = `<p class="note">Sorry, that section could not be loaded.</p>`;
+      const note = document.createElement('p');
+      note.className = 'note load-error';
+      note.textContent = 'Sorry, that section could not be loaded.';
+      content.prepend(note);
     });
-}
+
 
 // Legacy function preserved (no change)
 function showPageOld(pageId) {
