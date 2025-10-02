@@ -1,0 +1,118 @@
+
+/* --- NAVIGATION BAR --- */
+
+/* --- NAVIGATION BAR (Modern Sticky) --- */
+#top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--nav-bg);
+    color: white;
+    padding: 14px 20px; /* default height */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transition: padding 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Shrink state (we'll toggle this with JS) */
+#top-nav.shrink {
+    padding: 6px 20px; /* smaller height */
+    background-color: var(--brand-blue); /* stays same or slightly darker if you want */
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+
+/* Ensure body content doesn't hide behind nav */
+body {
+    padding-top: 64px; /* matches default nav height */
+}
+
+
+#top-nav a, .dropbtn {
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    font-weight: 500;
+    white-space: nowrap;
+}
+#top-nav button, .dropbtn {
+    color: white;
+    background: transparent;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+}
+#top-nav button:hover, .dropbtn:hover,
+#top-nav a:hover, .dropbtn:hover {
+    background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
+    color: white;
+}
+
+/* Dropdown specific styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--dropdown-bg);
+    min-width: 220px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.12);
+    z-index: 10;
+    border-radius: 8px;
+    overflow: hidden;
+    right: 0;
+    top: 100%;
+    border: 1px solid var(--border-dropdown);
+}
+
+.dropdown-content a {
+    color: var(--text-secondary) !important;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid #eee;
+    background-color: var(--dropdown-bg);
+    transition: background 0.2s, color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--dropdown-hover-bg) !important;
+    color: var(--brand-blue) !important;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.arrow-down {
+    margin-left: 5px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
