@@ -1,36 +1,46 @@
 
 /* --- MANDATORY PARAGRAPH --- */
-:where(p).mandatory {
-    position: relative;
-    background: var(--mandy-bg);
-    border: 1px solid var(--mandy-border);
-    color: var(--text-primary);
-    padding: 14px 16px 14px 48px;
-    border-radius: 8px;
-    box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
-    transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease, transform .15s ease;
-}
-:where(p).mandatory::before {
-    content: "⚠ Mandatory";
-  font-weight: 700;
-  font-size: 0.8rem;
-  color: #fff;
 
-  /* Make it a pill badge */
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;             /* space between icon and text */
-  padding: 0 0.6rem;
-  height: 24px;
-  line-height: 24px;
-  border-radius: 999px;   /* pill */
+/* Top icon (blue circle with warning triangle) */
+:where(p).mandatory::before {
+  content: "⚠";
+  font-weight: 900;
+  font-size: 0.95rem;         /* icon size */
+  color: #fff;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  line-height: var(--icon-size);
+  text-align: center;
+  border-radius: 50%;
   background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
   box-shadow: 0 0 0 2px var(--mandy-bg);
 
-  /* Inline instead of absolutely positioned */
-  position: static;
-
+  position: absolute;
+  left: var(--badge-left);
+  /* Center the combined icon+label vertically against the paragraph line */
+  top: calc(50% - (var(--icon-size) + var(--gap))/2);
 }
+
+/* Word under the icon */
+:where(p).mandatory::after {
+  content: "Mandatory";
+  font-weight: 700;
+  font-size: 80%;             /* ~80% of current */
+  color: #fff;
+  padding: 2px 6px;
+  line-height: 1.2;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
+  box-shadow: 0 0 0 2px var(--mandy-bg);
+  white-space: nowrap;
+
+  position: absolute;
+  /* Center label under the icon */
+  left: calc(var(--badge-left) + (var(--icon-size) / 2));
+  top: calc(50% + var(--icon-size)/2 + var(--gap));
+  transform: translateX(-50%);
+}
+
 
 :where(p).mandatory:hover,
 :where(p).mandatory:focus-within {
