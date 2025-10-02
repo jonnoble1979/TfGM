@@ -1,78 +1,77 @@
-:root { --mandy-icon-scale: 2; } /* 1.0 = same size as text *
 
+root {
+  /* Tune these to taste */
+  --mandy-accent: #2563eb;
+  --mandy-icon-scale: 1.8;  /* 1.4–2.2 look good */
+  --mandy-border: rgba(37, 99, 235, .30);
+  --mandy-bg: rgba(37, 99, 235, .04);
+  --mandy-border-hover: rgba(37, 99, 235, .45);
+  --mandy-bg-hover: rgba(37, 99, 235, .06);
+}
 
-/* --- MANDATORY PARAGRAPH — one box, inline with text using CSS Grid --- */
+/* --- MANDATORY PARAGRAPH — inline with text using CSS Grid --- */
 :where(p).mandatory {
-  /* Make the paragraph a 2‑column grid: [badge] [text] */
   display: grid;
-  grid-template-columns: max-content 1fr; /* badge width, then flexible text */
+  grid-template-columns: max-content 1fr; /* [badge] [text] */
   align-items: start;
   column-gap: .6rem;
 
-  /* Paragraph frame & padding */
+  /* Paragraph frame & padding (kept subtle so it doesn’t read like a button) */
   padding: 8px 12px;
-  border: 1px solid var(--mandy-border, rgba(37,99,235,.35));
+  border: 1px solid var(--mandy-border);
   border-radius: 8px;
-  background: var(--mandy-bg, transparent);
+  background: var(--mandy-bg);
 
   transition:
     background-color .2s ease,
-    border-color .2s ease,
-    box-shadow .2s ease,
-    transform .2s ease;
+    border-color .2s ease;
 }
 
-
-/* Single pseudo-element that contains BOTH the icon and the word (stacked) */
-:where(p).mandatory::before {
-  content: "⚠\A Mandatory"; /* icon on first line, word on second */
-  white-space: pre;          /* honour the \A line break */
-  display: block;            /* grid item in column 1 */
+/* Badge: two stacked lines without a filled pill */
+:where(p).mandatory::before,
+:where(p).mandatory::after {
+  grid-column: 1;
+  justify-self: center;
   text-align: center;
-
-  /* Typography & sizing */
-  font-size: 0.8em;          /* ≈ 80% of paragraph’s font size */
+  color: var(--mandy-accent);
   font-weight: 700;
-  line-height: 1.1;
-  color: #fff;
-
-  /* One single blue box around both lines */
-  padding: 6px 8px;
-  border-radius: 10px;
-  background: linear-gradient(
-    90deg,
-    var(--accent-start, #3b82f6) 0%,
-    var(--accent-end,   #2563eb) 100%
-  );
-  box-shadow: 0 0 0 2px var(--mandy-bg, #fff);
-
-  /* Keep it aligned to the top of the text block */
-  align-self: start;
+  line-height: 1.05;
 }
 
-
-:where(p).mandatory::before::first-line {
+/* Big icon on top */
+:where(p).mandatory::before {
+  content: "⚠";
   font-size: calc(1em * var(--mandy-icon-scale));
-  line-height: 1;
+  margin-bottom: .2rem; /* gap to the label */
 }
 
+/* Label below, same size as your original (≈80%) */
+:where(p).mandatory::after {
+  content: "Mandatory";
+  font-size: .8em;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  opacity: .9;
+}
 
-/* Optional hover/focus styling for the paragraph box */
+/* Keep your text in column 2 (works whether it’s just text or has inlines) */
+:where(p).mandatory,
+:where(p).mandatory > * {
+  grid-column: 2;
+}
+
+/* Hover/focus: subtle—not buttony */
 :where(p).mandatory:hover,
 :where(p).mandatory:focus-within {
-  background: var(--mandy-bg-hover, rgba(37,99,235,0.06));
-  border-color: var(--mandy-border-hover, rgba(37,99,235,0.5));
-  box-shadow: 0 0 0 3px var(--mandy-ring, rgba(37,99,235,0.25));
-  transform: translateY(-1px);
+  background: var(--mandy-bg-hover);
+  border-color: var(--mandy-border-hover);
+  /* No glow, no lift → avoids the button feel */
+  box-shadow: none;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :where(p).mandatory {
     transition: none;
-    transform: none;
-  }
-  :where(p).mandatory:hover,
-  :where(p).mandatory:focus-within {
-    box-shadow: none;
   }
 }
