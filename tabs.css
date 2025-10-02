@@ -19,7 +19,6 @@
 
 .tabs > input[type="radio"] {
   scroll-margin-top: 100px; /* or whatever height suits your layout */
-   pointer-events: none; /* prevents interaction from causing scroll */
 }
 
 
