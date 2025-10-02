@@ -1,77 +1,87 @@
 
-root {
+:root {
   /* Tune these to taste */
   --mandy-accent: #2563eb;
-  --mandy-icon-scale: 1.8;  /* 1.4–2.2 look good */
-  --mandy-border: rgba(37, 99, 235, .30);
-  --mandy-bg: rgba(37, 99, 235, .04);
-  --mandy-border-hover: rgba(37, 99, 235, .45);
-  --mandy-bg-hover: rgba(37, 99, 235, .06);
+  --mandy-border: color-mix(in oklab, var(--mandy-accent) 35%, transparent);
+  --mandy-bg:     color-mix(in oklab, var(--mandy-accent) 6%,  transparent);
+
+  /* Icon size relative to paragraph font size */
+  --mandy-icon-size: 2.2em; /* try 1.8–2.6 */
 }
 
-/* --- MANDATORY PARAGRAPH — inline with text using CSS Grid --- */
+/* Fallback for browsers without color-mix */
+@supports not (color-mix(in oklab, white 10%, black)) {
+  :root {
+    --mandy-border: rgba(37,99,235,.30);
+    --mandy-bg:     rgba(37,99,235,.04);
+  }
+}
+
+/* --- Mandatory paragraph --- */
 :where(p).mandatory {
   display: grid;
   grid-template-columns: max-content 1fr; /* [badge] [text] */
   align-items: start;
   column-gap: .6rem;
 
-  /* Paragraph frame & padding (kept subtle so it doesn’t read like a button) */
   padding: 8px 12px;
   border: 1px solid var(--mandy-border);
   border-radius: 8px;
   background: var(--mandy-bg);
 
-  transition:
-    background-color .2s ease,
-    border-color .2s ease;
+  transition: background-color .2s ease, border-color .2s ease;
 }
 
-/* Badge: two stacked lines without a filled pill */
-:where(p).mandatory::before,
-:where(p).mandatory::after {
+/* Place any element children into column 2 */
+:where(p).mandatory > * { grid-column: 2; }
+
+/* Single pseudo: draws a large icon as background + label as text (together) */
+:where(p).mandatory::before {
   grid-column: 1;
+  align-self: start;
   justify-self: center;
+
+  /* Label text (you said no uppercase) */
+  content: "Mandatory";
+  display: inline-block;
   text-align: center;
   color: var(--mandy-accent);
   font-weight: 700;
-  line-height: 1.05;
-}
-
-/* Big icon on top */
-:where(p).mandatory::before {
-  content: "⚠";
-  font-size: calc(1em * var(--mandy-icon-scale));
-  margin-bottom: .2rem; /* gap to the label */
-}
-
-/* Label below, same size as your original (≈80%) */
-:where(p).mandatory::after {
-  content: "Mandatory";
   font-size: .8em;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  opacity: .9;
+  line-height: 1.1;
+  letter-spacing: .01em;
+
+  /* Space for the icon above the label */
+  padding-top: calc(var(--mandy-icon-size) + .25rem);
+  padding-bottom: .1rem;
+  padding-inline: .5rem;
+
+  /* Subtle tag: not a button */
+  border: 1px solid var(--mandy-border);
+  border-radius: 10px;
+  background-color: var(--mandy-bg);
+
+  /* The icon (scales with --mandy-icon-size) */
+  background-image:
+    url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>\
+  <path d='M12 2 L22 20 H2 Z' fill='currentColor'/>\
+  <rect x='11' y='8' width='2' height='6' fill='white'/>\
+  <rect x='11' y='16' width='2' height='2' fill='white'/>\
+</svg>");
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: var(--mandy-icon-size) auto;
 }
 
-/* Keep your text in column 2 (works whether it’s just text or has inlines) */
-:where(p).mandatory,
-:where(p).mandatory > * {
-  grid-column: 2;
-}
-
-/* Hover/focus: subtle—not buttony */
+/* Hover/focus: keep it subtle so it doesn't read like a button */
 :where(p).mandatory:hover,
 :where(p).mandatory:focus-within {
-  background: var(--mandy-bg-hover);
-  border-color: var(--mandy-border-hover);
-  /* No glow, no lift → avoids the button feel */
+  background: color-mix(in oklab, var(--mandy-accent) 8%, transparent);
+  border-color: color-mix(in oklab, var(--mandy-accent) 45%, transparent);
   box-shadow: none;
   transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :where(p).mandatory {
-    transition: none;
-  }
-}
+  :where(p).mandatory { transition: none; }
