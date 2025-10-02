@@ -1,60 +1,54 @@
 
 :root {
-  /* Make it follow your paragraph/text color by default */
-  --mandy-accent: currentColor;
-  --mandy-icon-size: 2.8em; /* tweak: 2.2–3.2em */
+  /* One color for both icon + label */
+  --mandy-accent: #2563eb;
+  /* Make the symbol bigger/smaller (2.2em–3em usually looks good) */
+  --mandy-icon-size: 2.8em;
 }
 
-/* Your paragraph container stays the same */
+/* Your container stays grid with two columns as you already have */
 :where(p).mandatory {
   display: grid;
   grid-template-columns: max-content 1fr; /* [badge] [text] */
   column-gap: .6rem;
   align-items: start;
 
-  /* keep your existing padding/border/background... */
+  /* keep your existing padding/border/background/transition… */
 }
 
-/* Ensure content goes in column 2 */
-:where(p).mandatory > * { grid-column: 2; }
-
-/* Stack icon + label as a single unit in the same grid cell */
-:where(p).mandatory::before,
-:where(p).mandatory::after {
-  grid-column: 1;
-  grid-row: 1;            /* overlay in the same cell so they stay together */
-  justify-self: center;
-  align-self: start;
-}
-
-/* Label */
+/* This single pseudo contains BOTH the icon and the word, together */
 :where(p).mandatory::before {
-  content: "Mandatory";   /* no uppercase, as you prefer */
+  grid-column: 1;
+  align-self: start;
+  justify-self: center;
+
+  /* Label text (no uppercase as requested) */
+  content: "Mandatory";
   display: inline-block;
+  text-align: center;
   color: var(--mandy-accent);
   font-weight: 700;
-  font-size: .8em;
+  font-size: .8em;     /* label size */
   line-height: 1.1;
   letter-spacing: .01em;
-  text-align: center;
 
-  /* Reserve space above for the icon */
+  /* Reserve space above the label for the icon */
   padding-top: calc(var(--mandy-icon-size) + .2rem);
-}
+  padding-inline: .25rem;
 
-/* Icon (colored by currentColor) */
-:where(p).mandatory::after {
-  content: "";
-  width: var(--mandy-icon-size);
-  height: var(--mandy-icon-size);
+  /* No line/fill around the unit itself */
+  border: none;
+  background: none;
 
-  /* Tie icon colour to the label colour */
-  color: var(--mandy-accent);
-  background-color: currentColor;
+  /* === Icon: colored by the same color as the label via CSS mask === */
+  /* The ‘background-color’ paints the icon; the mask cuts it to shape */
+  background-color: currentColor; /* exact same color as the text */
 
-  /* SVG as mask: white = visible, black = cutouts (the “!”) */
-  -webkit-mask: center / contain no-repeat
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 2 L22 20 H2 Z'/%3E%3Crect x='11' y='8' width='2' height='6' fill='%23000'/%3E%3Crect x='11' y='16' width='2' height='2' fill='%23000'/%3E%3C/svg%3E");
-  mask: center / contain no-repeat
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 2 L22 20 H2 Z'/%3E%3Crect x='11' y='8' width='2' height='6' fill='%23000'/%3E%3Crect x='11' y='16' width='2' height='2' fill='%23000'/%3E%3C/svg%3E");
+  /* Safari/Chromium */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 2 L22 20 H2 Z'/%3E%3Crect fill='%23000' x='11' y='7.5' width='2' height='7'/%3E%3Crect fill='%23000' x='11' y='16.5' width='2' height='2'/%3E%3C/svg%3E")
+                 top center / var(--mandy-icon-size) auto no-repeat;
+
+  /* Firefox */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 2 L22 20 H2 Z'/%3E%3Crect fill='%23000' x='11' y='7.5' width='2' height='7'/%3E%3Crect fill='%23000' x='11' y='16.5' width='2' height='2'/%3E%3C/svg%3E")
+        top center / var(--mandy-icon-size) auto no-repeat;
 }
