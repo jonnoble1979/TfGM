@@ -1,87 +1,52 @@
 
 :root {
-  /* Tune these to taste */
-  --mandy-accent: #2563eb;
-  --mandy-border: color-mix(in oklab, var(--mandy-accent) 35%, transparent);
-  --mandy-bg:     color-mix(in oklab, var(--mandy-accent) 6%,  transparent);
-
-  /* Icon size relative to paragraph font size */
-  --mandy-icon-size: 2.2em; /* try 1.8–2.6 */
+  --mandy-accent: #2563eb;   /* same color for icon and text */
+  --mandy-icon-size: 2.6em;  /* increase/decrease to taste (e.g., 2.2em–3em) */
 }
 
-/* Fallback for browsers without color-mix */
-@supports not (color-mix(in oklab, white 10%, black)) {
-  :root {
-    --mandy-border: rgba(37,99,235,.30);
-    --mandy-bg:     rgba(37,99,235,.04);
-  }
-}
-
-/* --- Mandatory paragraph --- */
+/* Keep your existing paragraph box styles… */
 :where(p).mandatory {
   display: grid;
   grid-template-columns: max-content 1fr; /* [badge] [text] */
   align-items: start;
   column-gap: .6rem;
 
-  padding: 8px 12px;
-  border: 1px solid var(--mandy-border);
-  border-radius: 8px;
-  background: var(--mandy-bg);
-
-  transition: background-color .2s ease, border-color .2s ease;
+  /* your existing padding/border/background/transitions here */
 }
 
-/* Place any element children into column 2 */
+/* Ensure your content sits in column 2 */
 :where(p).mandatory > * { grid-column: 2; }
 
-/* Single pseudo: draws a large icon as background + label as text (together) */
+/* Single pseudo: icon (background) + label (text) — together, no line */
 :where(p).mandatory::before {
   grid-column: 1;
   align-self: start;
   justify-self: center;
 
-  /* Label text (you said no uppercase) */
+  /* Label text — no uppercase as requested */
   content: "Mandatory";
   display: inline-block;
-  text-align: center;
   color: var(--mandy-accent);
   font-weight: 700;
   font-size: .8em;
   line-height: 1.1;
   letter-spacing: .01em;
+  text-align: center;
 
-  /* Space for the icon above the label */
-  padding-top: calc(var(--mandy-icon-size) + .25rem);
-  padding-bottom: .1rem;
-  padding-inline: .5rem;
+  /* Reserve space above the label for the icon */
+  padding-top: calc(var(--mandy-icon-size) + .2rem);
+  padding-inline: .25rem;
+  padding-bottom: .05rem;
 
-  /* Subtle tag: not a button */
-  border: 1px solid var(--mandy-border);
-  border-radius: 10px;
-  background-color: var(--mandy-bg);
+  /* No border, no background on the badge itself */
+  border: none;
+  background-color: transparent;
 
-  /* The icon (scales with --mandy-icon-size) */
-  background-image:
-    url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>\
-  <path d='M12 2 L22 20 H2 Z' fill='currentColor'/>\
-  <rect x='11' y='8' width='2' height='6' fill='white'/>\
-  <rect x='11' y='16' width='2' height='2' fill='white'/>\
-</svg>");
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-size: var(--mandy-icon-size) auto;
+  /* Icon = SVG background, inherits the same color as the text */
+  background:
+    top center / var(--mandy-icon-size) auto no-repeat
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M12 2 L22 20 H2 Z M11 8 h2 v6 h-2 Z M11 16 h2 v2 h-2 Z'/%3E%3C/svg%3E");
 }
 
-/* Hover/focus: keep it subtle so it doesn't read like a button */
-:where(p).mandatory:hover,
-:where(p).mandatory:focus-within {
-  background: color-mix(in oklab, var(--mandy-accent) 8%, transparent);
-  border-color: color-mix(in oklab, var(--mandy-accent) 45%, transparent);
-  box-shadow: none;
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :where(p).mandatory { transition: none; }
+/* (Optional) Let the badge color follow the paragraph color token */
+:where(p).mandatory::before { color: var(--mandy-accent); }
