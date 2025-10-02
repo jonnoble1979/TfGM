@@ -1,53 +1,93 @@
 
-/* Put these near your .mandatory block so they’re easy to adjust */
-:where(p).mandatory {
-  /* SIZE + GAP knobs */
-  --mandy-icon-size: 2.2em;   /* ↓ try 2.0em if you want it smaller */
-  --mandy-gap: .22rem;        /* space between triangle and label */
+/* =========================
+   Mandatory paragraph badge
+   ========================= */
 
-  /* COLOR knobs */
-  --mandy-accent: var(--accent-end, #2563eb);   /* label + triangle color */
-  --mandy-bg-current: var(--mandy-bg, transparent); /* used for the “!” */
+/* Global defaults you can tweak (override per instance if needed) */
+:root {
+  /* Accent color for the triangle + label */
+  --mandy-accent: #2563eb;
+
+  /* Triangle size (independent of label text size) */
+  --mandy-icon-size: 2.2em;   /* try 2.0–2.8em */
+
+  /* Gap between triangle and the label */
+  --mandy-gap: .22rem;
+
+  /* Subtle paragraph frame tokens (fallbacks) */
+  --mandy-border: rgba(37, 99, 235, .30);
+  --mandy-bg: rgba(37, 99, 235, .04);
+  --mandy-border-hover: rgba(37, 99, 235, .45);
+  --mandy-bg-hover: rgba(37, 99, 235, .06);
 }
 
-/* Ensure the ‘!’ knockout follows your hover background too */
+/* --- MANDATORY PARAGRAPH — inline with text using CSS Grid --- */
+:where(p).mandatory {
+  /* Layout: [badge] [text] */
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: start;
+  column-gap: .6rem;
+
+  /* Subtle container frame (not buttony) */
+  padding: 8px 12px;
+  border: 1px solid var(--mandy-border);
+  border-radius: 8px;
+  background: var(--mandy-bg);
+
+  /* Smooth but minimal animation */
+  transition: background-color .2s ease, border-color .2s ease;
+
+  /* Internal token: current bg value (so the “!” matches bg even on hover) */
+  --mandy-bg-current: var(--mandy-bg);
+}
+
+/* Hover/focus — keep it subtle; ensure the “!” updates too */
 :where(p).mandatory:hover,
 :where(p).mandatory:focus-within {
-  --mandy-bg-current: var(--mandy-bg-hover, var(--mandy-bg, transparent));
+  background: var(--mandy-bg-hover);
+  border-color: var(--mandy-border-hover);
+  --mandy-bg-current: var(--mandy-bg-hover);
 }
 
-/* Keep your actual paragraph content in column 2 (unchanged) */
-:where(p).mandatory > * { grid-column: 2; }
+/* Ensure element children land in column 2 (text, links, etc.) */
+:where(p).mandatory > * {
+  grid-column: 2;
+}
 
-/* Both pseudos live in the SAME grid cell so they stay together on the left */
+/* Badge parts share the same grid cell so they stay together on the left */
 :where(p).mandatory::before,
 :where(p).mandatory::after {
   grid-column: 1;
   grid-row: 1;
   justify-self: center;
   align-self: start;
-  pointer-events: none; /* never block hover on the paragraph */
+  pointer-events: none; /* never block paragraph hover */
 }
 
-/* ICON = triangle in accent color, “!” knocked out to match background */
+/* ICON = triangle in accent color with a knocked-out “!” matching bg */
 :where(p).mandatory::before {
   content: "";
   width: var(--mandy-icon-size);
   height: var(--mandy-icon-size);
 
-  /* Triangle fill is the same as the label color */
+  /* Triangle fill (same color as label) */
   background-color: var(--mandy-accent);
 
-  /* Draw the “!” as two layers in the paragraph’s background color */
+  /* “!” carved using two background layers in the paragraph bg color */
   background-image:
-    /* bar of the exclamation mark */
+    /* vertical bar */
     linear-gradient(var(--mandy-bg-current), var(--mandy-bg-current)),
-    /* dot of the exclamation mark */
+    /* dot */
     radial-gradient(circle, var(--mandy-bg-current) 60%, transparent 61%);
   background-repeat: no-repeat;
+
+  /* Sizes of bar + dot (tweak for weight) */
   background-size:
     12% 46%,   /* bar: width × height */
     12% 12%;   /* dot: diameter × diameter */
+
+  /* Positions of bar + dot (tweak for vertical placement) */
   background-position:
     50% 42%,   /* bar: centered, ~42% from top */
     50% 82%;   /* dot: centered, near bottom */
@@ -56,18 +96,25 @@
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }
 
-/* LABEL = “Mandatory”, shifted down by the icon height + gap */
+/* LABEL = “Mandatory”, same accent color, placed under the triangle */
 :where(p).mandatory::after {
-  content: "Mandatory";  /* no uppercase */
+  content: "Mandatory";        /* no uppercase */
   display: block;
   text-align: center;
   color: var(--mandy-accent);
   font-weight: 700;
-  font-size: .8em;
+  font-size: .8em;             /* keep label modest */
   line-height: 1.1;
   letter-spacing: .01em;
 
-  /* Translate instead of margins so it ALWAYS sits below the triangle */
+  /* Position below icon precisely (prevents overlap at any size) */
   transform: translateY(calc(var(--mandy-icon-size) + var(--mandy-gap)));
-  z-index: 1; /* make sure it renders over the icon if they overlap */
+  z-index: 1; /* ensure it paints above the icon if they touch */
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  :where(p).mandatory {
+    transition: none;
+  }
 }
