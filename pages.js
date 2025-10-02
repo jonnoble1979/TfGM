@@ -1,37 +1,38 @@
-/**
- * Loads/shows a page section.
- * If the section already exists in #content, it is shown and others are hidden.
- * Otherwise, it fetches the HTML and injects it.
- * @param {string} pageId - the section id to use in the DOM
- * @param {string} [filePath] - optional path to the HTML partial to fetch
- */
 
 function showPage(pageId, filePath) {
   const content = document.getElementById('content');
   if (!content) return;
 
-  // Remove any previous transient error messages
-  content.querySelectorAll('.load-error').forEach(n => n.remove());
+  // Remove previous transient messages from earlier attempts
+  content.querySelectorAll('.load-error, .load-info').forEach(n => n.remove());
 
-  // Hide all already-loaded sections
-  document.querySelectorAll('#content > section').forEach(sec => (sec.style.display = 'none'));
+  // Helper: all already-loaded sections
+  const getSections = () => Array.from(content.querySelectorAll('#content > section'));
 
-  // If section already loaded, just show it
-  let section = document.getElementById(pageId);
-  if (section) {
-    section.style.display = 'block';
+  // If already loaded, just switch visibility
+  const already = document.getElementById(pageId);
+  if (already) {
+    getSections().forEach(sec => (sec.style.display = 'none'));
+    already.style.display = 'block';
     window.scrollTo(0, 0);
     return;
   }
 
-  // Build path
+  // Build the path to fetch
   const resolvedPath = filePath || (pageId ? `pages/${pageId}.html` : null);
   if (!resolvedPath) {
     console.warn('showPage called without a pageId/filePath');
     return;
   }
 
-  console.info('[showPage] request', { pageId, resolvedPath });
+  // Remember what was visible (so we can restore it if fetch fails)
+  const previouslyVisible = getSections().find(sec => sec.style.display !== 'none');
+
+  // Optional: small loading note (you can remove this if you don’t want it)
+  const loading = document.createElement('p');
+  loading.className = 'note load-info';
+  loading.textContent = 'Loading…';
+  content.prepend(loading);
 
   fetch(resolvedPath, { cache: 'no-store' })
     .then(response => {
@@ -39,28 +40,40 @@ function showPage(pageId, filePath) {
       return response.text();
     })
     .then(html => {
+      // Inject new section
       const sec = document.createElement('section');
       sec.id = pageId;
       sec.className = 'page active-page';
       sec.innerHTML = html;
       content.appendChild(sec);
 
-      // Hide others (safety), show this one
-      document.querySelectorAll('#content > section').forEach(s => (s.style.display = 'none'));
+      // Now hide others and show the new one
+      getSections().forEach(s => (s.style.display = 'none'));
       sec.style.display = 'block';
 
-      // Remove any previous error notes now that we have a good page
+      // Clear transient messages
+      loading.remove();
       content.querySelectorAll('.load-error').forEach(n => n.remove());
 
       window.scrollTo(0, 0);
     })
     .catch(err => {
       console.error('showPage error:', err);
+      loading.remove();
+
+      // Keep whatever was visible before
+      if (previouslyVisible) {
+        previouslyVisible.style.display = 'block';
+      }
+
+      // Show a removable error note
       const note = document.createElement('p');
       note.className = 'note load-error';
       note.textContent = 'Sorry, that section could not be loaded.';
       content.prepend(note);
     });
+}
+
 
 
 // Legacy function preserved (no change)
