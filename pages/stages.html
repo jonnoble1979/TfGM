@@ -16,43 +16,48 @@
   <input type="radio" name="stages-tabs" id="stages-tabs-4">
   <input type="radio" name="stages-tabs" id="stages-tabs-5">
 
- <div class="tabs__controls" role="tablist" aria-label="RSA stages tabs">
-  <label class="tabs__label" for="stages-tabs-1" role="tab" id="tab-stg-1-label" aria-controls="panel-stg-1">
-    <span class="tabs__text">Interim</span>
-    <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-      <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
-      <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
-    </svg>
-  </label>
+  <div class="tabs__controls" role="tablist" aria-label="RSA stages tabs">
+    <!-- 1: Interim -->
+    <label class="tabs__label" for="stages-tabs-1" role="tab" id="tab-stg-1-label" aria-controls="panel-stg-1">
+      <span class="tabs__text">Interim</span>
+      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
+        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
+      </svg>
+    </label>
 
-  <label class="tabs__label" for="stages-tabs-2" role="tab" id="tab-stg-2-label" aria-controls="panel-stg-2">
-    <span class="tabs__text">Stage 1</span>
-    <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-      <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
-      <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
-    </svg>
-  </label>
+    <!-- 2: Stage 1 -->
+    <label class="tabs__label" for="stages-tabs-2" role="tab" id="tab-stg-2-label" aria-controls="panel-stg-2">
+      <span class="tabs__text">Stage 1</span>
+      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
+        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
+      </svg>
+    </label>
 
-  <label class="tabs__label" for="stages-tabs-3" role="tab" id="tab-stg-3-label" aria-controls="panel-stg-3">
-    <span class="tabs__text">Stage 2<br>&amp; Combined Stage 1–2</span>
-    <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-      <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
-      <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
-    </svg>
-  </label>
+    <!-- 3: Stage 2 & Combined 1–2 -->
+    <label class="tabs__label" for="stages-tabs-3" role="tab" id="tab-stg-3-label" aria-controls="panel-stg-3">
+      <span class="tabs__text">Stage 2<br>&amp; Combined Stage 1–2</span>
+      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
+        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
+      </svg>
+    </label>
 
-  <label class="tabs__label" for="stages-tabs-4" role="tab" id="tab-stg-4-label" aria-controls="panel-stg-4">
-    <span class="tabs__text">Stage 3</span>
-    <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-      <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
-      <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
-    </svg>
-  </label>
+    <!-- 4: Stage 3 -->
+    <label class="tabs__label" for="stages-tabs-4" role="tab" id="tab-stg-4-label" aria-controls="panel-stg-4">
+      <span class="tabs__text">Stage 3</span>
+      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
+        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
+      </svg>
+    </label>
 
-  <label class="tabs__label tabs__label--last" for="stages-tabs-5" role="tab" id="tab-stg-5-label" aria-controls="panel-stg-5">
-    <span class="tabs__text">Stage 4</span>
-  </label>
-</div>
+    <!-- 5: Stage 4 (last, no wedge) -->
+    <label class="tabs__label tabs__label--last" for="stages-tabs-5" role="tab" id="tab-stg-5-label" aria-controls="panel-stg-5">
+      <span class="tabs__text">Stage 4</span>
+    </label>
+  </div>
 
   <!-- Panels (order must match radios/labels 1–5) -->
   <div class="tabs__panels">
@@ -205,4 +210,3 @@
     </section>
   </div>
 </div>
-
