@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfected Seamless Arrow Tab Navigation</title>
+    <title>Final Seamless Arrow Tab Navigation</title>
     <style>
         /* CSS Variables for easy color/size changes */
         :root {
             --segment-color: #1a759f;
             --hover-color: #166084;
             --active-color: #004d73;
-            --arrow-width: 15px; /* Controls the size of the point */
+            --arrow-width: 15px; /* Controls the size of the point/V-cut */
             --segment-height: 40px;
         }
 
@@ -40,8 +40,8 @@
             color: white;
             padding: 0 20px;
             
-            /* Overlap the next segment by almost the arrow width */
-            margin-right: calc(-1 * var(--arrow-width) + 2px); 
+            /* Overlap is critical. We use 2px to ensure no white line shows. */
+            margin-right: -2px; 
             height: var(--segment-height);
             font-weight: bold;
             font-size: 16px;
@@ -75,44 +75,46 @@
                 calc(100% - var(--arrow-width)) 100%, 
                 0 100%
             );
+            /* Reset padding since there is no V-cut on the left */
+            padding-left: 20px;
         }
 
         /* ---------------------------------------------------- */
-        /* 2. Middle Segments (Arrow Start, Arrow End) */
+        /* 2. Middle Segments (V-cut Start, Arrow End) */
         /* ---------------------------------------------------- */
         .arrow-nav li:not(:first-child):not(:last-child) {
-            /* V-shape on left, arrow point on right */
+            /* Inward V-cut on left, arrow point on right */
             clip-path: polygon(
-                var(--arrow-width) 0, 
+                0 0, 
                 calc(100% - var(--arrow-width)) 0, 
                 100% 50%, 
                 calc(100% - var(--arrow-width)) 100%, 
-                var(--arrow-width) 100%, 
-                0 50%
+                0 100%, 
+                var(--arrow-width) 50% /* The key: defines the V-cut */
             );
             /* Add padding on the left to move text past the V-cut */
             padding-left: 30px;
         }
 
         /* ---------------------------------------------------- */
-        /* 3. Last Segment (Arrow Start, Flat End) */
+        /* 3. Last Segment (V-cut Start, Flat End) */
         /* ---------------------------------------------------- */
         .arrow-nav li:last-child {
             /* Remove negative margin */
             margin-right: 0; 
             border-top-right-radius: 4px;
             border-bottom-right-radius: 4px;
-            /* V-shape on left, flat right side */
+            /* Inward V-cut on left, flat right side */
             clip-path: polygon(
-                var(--arrow-width) 0, 
+                0 0, 
                 100% 0, 
                 100% 100%, 
-                var(--arrow-width) 100%, 
-                0 50%
+                0 100%, 
+                var(--arrow-width) 50% /* The key: defines the V-cut */
             );
             /* Add padding on the left to move text past the V-cut */
             padding-left: 30px; 
-            /* Add padding on the right to match width of other segments */
+            /* Match right padding of other segments */
             padding-right: 20px; 
         }
     </style>
