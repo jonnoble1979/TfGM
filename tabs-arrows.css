@@ -1,5 +1,5 @@
 
-/* ----- Tabs (Arrow Style) ----- */
+/* ----- Tabs (Arrow Style with Pseudo-Elements) ----- */
 .tab-arrows {
   --arrow-accent: var(--accent-start);
   --arrow-bg: var(--nav-bg);
@@ -10,10 +10,10 @@
   background: var(--arrow-bg);
   border: 2px solid var(--arrow-border);
   border-radius: 10px;
-  overflow: clip;
+  overflow: hidden;
 }
 
-/* Controls (arrow tab buttons) */
+/* Controls container */
 .tab-arrows > .tabs__controls {
   display: flex;
   flex-wrap: nowrap;
@@ -23,35 +23,61 @@
   border-bottom: 1px solid var(--arrow-border);
 }
 
-/* Arrow-shaped labels */
+/* Arrow-shaped labels using pseudo-elements */
 .tab-arrows .tabs__label {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   padding: 12px 24px;
   background: #fff;
   color: var(--arrow-muted);
   font-weight: 600;
+  min-width: 140px; /* ensures enough width for text */
+  min-height: 60px; /* ensures enough height for two lines */
+  flex: 1 1 auto;
   cursor: pointer;
-  clip-path: polygon(
-    0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%, 15% 50%
-  );
-  margin-right: -20px; /* overlap arrows */
-  z-index: 1;
   transition: background-color .2s ease, color .2s ease;
 }
+
+/* Create the arrow tip */
+.tab-arrows .tabs__label::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -20px;
+  width: 0;
+  height: 0;
+  border-top: 30px solid transparent;
+  border-bottom: 30px solid transparent;
+  border-left: 20px solid #fff; /* same as background */
+  z-index: 1;
+}
+
+/* Overlap arrows */
+.tab-arrows .tabs__label:not(:last-child) {
+  margin-right: -20px;
+}
+
+/* Hover effect */
 .tab-arrows .tabs__label:hover {
   background-color: #f8fafc;
   color: var(--arrow-text);
 }
+.tab-arrows .tabs__label:hover::after {
+  border-left-color: #f8fafc;
+}
 
 /* Active tab */
-.tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
-.tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
-.tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
-.tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__controls .tabs__label:nth-of-type(4),
-.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5) {
+.tab-arrows > input[type="radio"]:checked + .tabs__label {
   background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
   color: #fff;
   z-index: 2;
+}
+.tab-arrows > input[type="radio"]:checked + .tabs__label::after {
+  border-left-color: var(--accent-end);
 }
 
 /* Panels */
