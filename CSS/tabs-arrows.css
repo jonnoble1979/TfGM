@@ -1,12 +1,16 @@
 /* ==================================================================== */
-/* ARROW TAB COMPONENT STYLES - Relies on Global :root Variables Only */
+/* ARROW TAB COMPONENT STYLES - ULTIMATE CONFLICT-PROOF VERSION */
 /* ==================================================================== */
 
-/* Parent Container for Arrow Tabs */
+/* Parent Container for Arrow Tabs - DEFENSIVE STYLING */
 .tab-arrows {
-    --arrow-width: 15px; /* Controls the size of the point/V-cut */
+    --arrow-width: 15px; 
     
-    /* Removed all conflicting variable definitions (e.g., --tabs-accent, --tabs-bg) */
+    /* DEFENSIVE RESET: Set a local variable that might be conflicting to a neutral value */
+    /* This ensures that if the tab styles are being incorrectly applied globally, 
+       they will not assign a bad color to --nav-bg or --brand-blue */
+    --nav-bg: transparent; 
+    --brand-blue: transparent;
     
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: fit-content; 
