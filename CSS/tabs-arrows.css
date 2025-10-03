@@ -1,18 +1,18 @@
-
 /* ==================================================================== */
-/* ARROW TAB COMPONENT STYLES - ULTIMATE CONFLICT-PROOF VERSION */
+/* ARROW TAB COMPONENT STYLES - ISOLATED VERSION */
 /* ==================================================================== */
 
-/* Parent Container for Arrow Tabs - DEFENSIVE STYLING */
+/* Parent Container for Arrow Tabs - ISOLATING VARIABLES */
 .tab-arrows {
     --arrow-width: 15px; 
-    
-    /* DEFENSIVE RESET: Set a local variable that might be conflicting to a neutral value */
-    /* This ensures that if the tab styles are being incorrectly applied globally, 
-       they will not assign a bad color to --nav-bg or --brand-blue */
-    --nav-bg: transparent; 
-    --brand-blue: transparent;
-    
+
+    /* LOCAL REDEFINITION: Use local variables for tab-specific colors 
+       to prevent them from leaking or overwriting global values. */
+    --tabs-active-start: var(--accent-start);
+    --tabs-active-end: var(--accent-end);
+    --tabs-muted-text: var(--text-secondary);
+    --tabs-content-bg: var(--body-bg);
+
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: fit-content; 
     overflow: hidden;
@@ -54,9 +54,9 @@
     justify-content: center;
     height: 40px; 
     
-    /* DEFAULT STATE: Off-white background, muted text (using your theme variables) */
+    /* DEFAULT STATE: Off-white background, muted text (using local variable) */
     background-color: #ffffff; 
-    color: var(--text-secondary);
+    color: var(--tabs-muted-text);
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
@@ -71,7 +71,7 @@
 /* Hover Effect: Maintain default color, increase z-index for visual pop */
 .tab-arrows .tabs__label:hover {
     background-color: #ffffff;
-    color: var(--text-secondary);
+    color: var(--tabs-muted-text);
     z-index: 2; 
 }
 
@@ -150,8 +150,8 @@
 .tab-arrows > input[type="radio"]:nth-of-type(10):checked ~ .tabs__controls .tabs__label:nth-of-type(10) {
     /* White text on gradient */
     color: #fff;
-    /* Uses your theme's accent gradient */
-    background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
+    /* Uses local tab variables, which reference the global accent variables */
+    background: linear-gradient(90deg, var(--tabs-active-start) 0%, var(--tabs-active-end) 100%);
     box-shadow: none; 
     border-color: transparent;
     z-index: 3; 
@@ -161,7 +161,7 @@
 
 .tab-arrows > .tabs__panels {
     padding: 16px;
-    background-color: var(--body-bg);
+    background-color: var(--tabs-content-bg);
 }
 .tab-arrows > .tabs__panels > .tabs__panel {
     display: none;
