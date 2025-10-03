@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chevron Tabs — Pure SVG Baseline</title>
+<title>Chevron Tabs — Pure SVG Forward-Only</title>
 <style>
   :root{
-    /* You can tweak these two */
-    --tip-px: 24;     /* chevron point width in pixels */
-    --radius: 10px;   /* rounding for container corners */
-    --stroke: 1;      /* stroke width in pixels */
+    /* Tweak these if you like */
+    --tip-px: 24;   /* chevron point width in pixels */
+    --radius: 10px;
+    --stroke: 1;    /* border width in pixels */
 
-    /* Palette (local to this test page) */
+    /* Local palette for this test page */
     --accent-start: #2e7df6;
     --accent-end:   #7aa8ff;
     --nav-bg:       #ffffff;
@@ -21,17 +21,18 @@
     --body-bg:      #f7f9fc;
   }
 
-  html, body { margin:0; padding:0; background:var(--body-bg); color:var(--text-primary); font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+  html, body { margin:0; padding:0; background:var(--body-bg); color:var(--text-primary);
+    font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
   .wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
 
   .tabs-box{
     background: var(--nav-bg);
     border: calc(var(--stroke) * 2px) solid var(--brand-blue);
     border-radius: var(--radius);
-    overflow: hidden; /* keep outer rounding */
+    overflow: hidden;
   }
 
-  /* Panel area */
+  /* Panels */
   .panels{
     background: var(--body-bg);
     padding: 16px;
@@ -40,23 +41,25 @@
   .panel{ display:none; }
   .panel.active{ display:block; }
 
-  /* A11y focus ring for SVG segments (we fake focus on group) */
-  .seg:focus-visible .seg-outline{
-    outline: 2px solid #000;
-    outline-offset: -2px;
-  }
+  /* SVG focus handling: remove UA outline that shows as black bars */
+  svg :focus { outline: none; }
+  svg [tabindex]:focus { outline: none; }
 
-  /* Small helper for label text inside SVG */
-  .seg-text{ pointer-events: none; font-weight: 600; fill: var(--text-secondary); }
-  .seg-text.active{ fill:#fff; }
+  /* Optional: custom focus style (uncomment if you want visible keyboard focus)
+  svg g.seg:focus-visible path{
+    filter: drop-shadow(0 0 0.5px rgba(0,0,0,.35));
+  } */
+
+  .seg-text { pointer-events:none; font-weight:600; fill: var(--text-secondary); }
+  .seg-text.active { fill:#fff; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h2>Road Safety Audit Stages (Pure SVG Test)</h2>
+  <h2>Road Safety Audit Stages (Pure SVG – Forward Only)</h2>
 
   <div id="chevronTabs" class="tabs-box" aria-label="RSA stages tabs">
-    <!-- SVG strip is injected here by JS -->
+    <!-- SVG injected here -->
     <div class="panels" id="panels">
       <section class="panel active"><h3>Interim Road Safety Audit</h3><p>Interim content…</p></section>
       <section class="panel"><h3>Stage 1 Road Safety Audit</h3><p>Stage 1 content…</p></section>
@@ -69,7 +72,6 @@
 
 <script>
 (function(){
-  // ----- Config -----
   const labels = [
     'Interim',
     'Stage 1',
@@ -77,22 +79,22 @@
     'Stage 3',
     'Stage 4'
   ];
+
   const tipPx      = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tip-px')) || 24;
   const strokePx   = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--stroke')) || 1;
 
-  // ----- Build SVG strip -----
   const host = document.getElementById('chevronTabs');
   const panelsEl = document.getElementById('panels');
 
   const svgNS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(svgNS, 'svg');
   svg.setAttribute('width', '100%');
-  svg.setAttribute('height', '64');                 // strip height (you can tweak)
-  svg.setAttribute('viewBox', '0 0 100 64');        // temporary; we’ll reset dynamically
+  svg.setAttribute('height', '64');
+  svg.setAttribute('viewBox', '0 0 100 64');
   svg.setAttribute('preserveAspectRatio', 'none');
-  svg.style.display = 'block'; // remove inline gap
+  svg.style.display = 'block';
 
-  // Gradients
+  // Gradient defs
   const defs = document.createElementNS(svgNS, 'defs');
   const grad = document.createElementNS(svgNS, 'linearGradient');
   grad.setAttribute('id', 'activeGrad');
@@ -106,121 +108,105 @@
 
   host.insertBefore(svg, panelsEl);
 
-  // State
   let active = 0;
 
   function draw(){
-    // Clear old segments
+    // Clear old segments (keep defs)
     while(svg.lastChild && svg.lastChild !== defs){ svg.removeChild(svg.lastChild); }
 
     const rect = svg.getBoundingClientRect();
-    const W = Math.max(320, Math.floor(rect.width));  // avoid tiny widths
-    const H = 64;                                     // fixed strip height
+    let W = Math.max(320, Math.floor(rect.width));
+    // Snap to even width to keep .5 alignment crisp at various DPR
+    if (W % 2) W -= 1;
+    const H = 64;
     const N = labels.length;
-    const stroke = strokePx;                          // 1px
+    const stroke = strokePx;
     const half = stroke/2;
 
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-    const segW = Math.floor(W / N); // equal widths
-    const tip = Math.round(tipPx);  // ensure integer px
+    const segW = Math.floor(W / N);
+    const tip = Math.round(tipPx);
     const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--brand-blue') || '#2e7df6';
 
     for(let i=0;i<N;i++){
-      // Segment bounds
       const x0 = i * segW;
-      // Last segment stretches to end to absorb remainder
       const x1 = (i === N-1) ? W : (i+1) * segW;
 
-      // Build chevron path with constant tip width in px
-      // Coordinates on .5 to align 1px strokes crisply
-      const leftFlat  = i === 0;
-      const rightFlat = i === N-1;
+      const isFirst = (i === 0);
+      const isLast  = (i === N-1);
 
-      const path = [];
+      // ---- Forward-only chevron geometry (no left notch) ----
+      // Points (clockwise):
+      // TL: first => (x0, 0); middle/last => (x0 + tip, 0)
+      // TR: last  => (x1, 0); others => (x1 - tip, 0)
+      // TIP: not last => (x1, H/2)
+      // BR: last  => (x1, H); others => (x1 - tip, H)
+      // BL: all => (x0, H)
+      const TLx = (isFirst ? x0 + half : x0 + tip + half), TLy = half;
+      const TRx = (isLast  ? x1 - half : x1 - tip - half), TRy = half;
+      const BRx = (isLast  ? x1 - half : x1 - tip - half), BRy = H - half;
+      const BLx = x0 + half, BLy = H - half;
+      const TIPx = x1 - half, TIPy = H/2;
 
-      // Start top-left
-      if(leftFlat){
-        path.push(`M ${x0+half},${half}`);
+      const d = [];
+      d.push(`M ${TLx},${TLy}`);         // TL
+      d.push(`L ${TRx},${TRy}`);         // TR
+      if(!isLast){
+        d.push(`L ${TIPx},${TIPy}`);     // right tip
+        d.push(`L ${BRx},${BRy}`);       // BR (pre-tip)
       }else{
-        // left notch tip at x0 + tip
-        path.push(`M ${x0+tip+half},${half}`);
+        d.push(`L ${BRx},${BRy}`);       // BR (flat)
       }
+      d.push(`L ${BLx},${BLy}`);         // BL
+      d.push('Z');
 
-      // Top-right (minus tip if not last)
-      if(rightFlat){
-        path.push(`L ${x1-half},${half}`);
-        path.push(`L ${x1-half},${H-half}`);
-      }else{
-        path.push(`L ${x1-tip-half},${half}`); // top before tip
-        path.push(`L ${x1-half},${H/2}`);      // right point
-        path.push(`L ${x1-tip-half},${H-half}`); // bottom before tip
-      }
-
-      // Bottom-left
-      if(leftFlat){
-        path.push(`L ${x0+half},${H-half}`);
-      }else{
-        path.push(`L ${x0+tip+half},${H-half}`);
-        path.push(`L ${x0+half},${H/2}`);    // left notch point
-      }
-
-      path.push('Z');
-
-      // Group for interactivity
+      // Group for interactions
       const g = document.createElementNS(svgNS, 'g');
       g.classList.add('seg');
-      g.setAttribute('tabindex','0');   // focusable
+      g.setAttribute('tabindex','0');      // focusable
       g.setAttribute('role','tab');
       g.setAttribute('aria-selected', i===active ? 'true' : 'false');
       g.dataset.index = i;
+      g.style.outline = 'none';            // nuke UA outline (Chrome/Edge/Safari)
 
-      // Fill
-      const shape = document.createElementNS(svgNS, 'path');
-      shape.setAttribute('d', path.join(' '));
-      shape.setAttribute('vector-effect', 'non-scaling-stroke');
-      shape.setAttribute('shape-rendering', 'geometricPrecision');
-      shape.setAttribute('stroke', borderColor.trim());
-      shape.setAttribute('stroke-width', String(stroke));
-      shape.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
+      // Shape
+      const path = document.createElementNS(svgNS, 'path');
+      path.setAttribute('d', d.join(' '));
+      path.setAttribute('vector-effect', 'non-scaling-stroke');
+      path.setAttribute('shape-rendering', 'geometricPrecision');
+      path.setAttribute('stroke', borderColor.trim());
+      path.setAttribute('stroke-width', String(stroke));
+      path.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
 
-      // Hover effect (using <title> is not enough visually); we’ll adjust fill on events
-      g.appendChild(shape);
-
-      // Text (centered)
+      // Label text (centered)
+      const label = labels[i];
       const text = document.createElementNS(svgNS, 'text');
       text.setAttribute('x', String(x0 + (x1-x0)/2));
-      text.setAttribute('y', String(H/2 + 5)); // approx vertical centering
+      text.setAttribute('y', String(H/2 + 5));
       text.setAttribute('text-anchor','middle');
       text.setAttribute('dominant-baseline','middle');
       text.setAttribute('font-size','14');
       text.setAttribute('font-weight','600');
       text.classList.add('seg-text');
-      text.textContent = labels[i].includes('\n') ? labels[i].split('\n')[0] : labels[i];
 
-      // If label contains linebreak, draw a second line
-      if(labels[i].includes('\n')){
+      if(label.includes('\n')){
+        const [ln1, ln2] = label.split('\n');
         const t1 = document.createElementNS(svgNS, 'tspan');
         t1.setAttribute('x', text.getAttribute('x'));
-        t1.setAttribute('dy', '-0.4em');
-        t1.textContent = labels[i].split('\n')[0];
+        t1.setAttribute('dy', '-0.4em'); t1.textContent = ln1;
         const t2 = document.createElementNS(svgNS, 'tspan');
         t2.setAttribute('x', text.getAttribute('x'));
-        t2.setAttribute('dy', '1.2em');
-        t2.textContent = labels[i].split('\n')[1];
-        text.textContent = '';
+        t2.setAttribute('dy', '1.2em'); t2.textContent = ln2;
         text.append(t1, t2);
+      }else{
+        text.textContent = label;
       }
-
       if(i===active){ text.classList.add('active'); }
 
-      // Hover/active styling via events
-      g.addEventListener('mouseenter', () => {
-        if(i!==active) shape.setAttribute('fill', '#e6f0ff');
-      });
-      g.addEventListener('mouseleave', () => {
-        shape.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
-      });
+      // Events
+      g.addEventListener('mouseenter', () => { if(i!==active) path.setAttribute('fill', '#e6f0ff'); });
+      g.addEventListener('mouseleave', () => { path.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff'); });
       g.addEventListener('click', () => activate(i));
       g.addEventListener('keydown', (e) => {
         if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(i); }
@@ -229,52 +215,41 @@
           const dir = e.key === 'ArrowRight' ? 1 : -1;
           const next = (active + dir + labels.length) % labels.length;
           activate(next);
-          // Move focus
           const nextG = svg.querySelector(`g.seg[data-index="${next}"]`);
           if(nextG) nextG.focus();
         }
       });
 
-      // Append
-      g.appendChild(text);
-
-      // Optional invisible rect to increase hit target
+      // Bigger hit target
       const hit = document.createElementNS(svgNS, 'rect');
       hit.setAttribute('x', x0);
       hit.setAttribute('y', 0);
       hit.setAttribute('width', x1-x0);
       hit.setAttribute('height', H);
       hit.setAttribute('fill', 'transparent');
-      g.appendChild(hit);
 
+      g.append(path, text, hit);
       svg.appendChild(g);
     }
   }
 
   function activate(idx){
     active = idx;
-    // Update fills/text colours
     svg.querySelectorAll('g.seg').forEach((g, i) => {
       const path = g.querySelector('path');
       const txt  = g.querySelector('text');
-      if(i === active){
-        g.setAttribute('aria-selected','true');
-        path.setAttribute('fill', 'url(#activeGrad)');
-        txt.classList.add('active');
-      }else{
-        g.setAttribute('aria-selected','false');
-        path.setAttribute('fill', '#ffffff');
-        txt.classList.remove('active');
-      }
+      g.setAttribute('aria-selected', i===active ? 'true' : 'false');
+      path.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
+      txt.classList.toggle('active', i===active);
     });
-    // Panels
     const panels = panelsEl.querySelectorAll('.panel');
     panels.forEach((p, i)=> p.classList.toggle('active', i===active));
   }
 
-  // Initial draw & on resize
+  // Initial draw and resize handling
   draw();
   activate(0);
+
   let rafId = 0;
   window.addEventListener('resize', () => {
     cancelAnimationFrame(rafId);
@@ -283,3 +258,4 @@
 })();
 </script>
 </body>
+</html>
