@@ -40,10 +40,12 @@
   /* box-shadow: 0 0 0 3px var(--mandy-ring); */
 }
 
-/* Keep actual text content in column 2 */
-:where(p).mandatory > * {
-  grid-column: 2;
+/* ❌ OLD: :where(p).mandatory > * { grid-column: 2; } */
+/* ✅ NEW: Apply grid-column: 2 to ALL direct children of the mandatory box */
+:where(p).mandatory > :not(.mandatory::before):not(.mandatory::after) {
+    grid-column: 2;
 }
+
 
 /* Badge parts share the same grid cell so they stay together on the left */
 :where(p).mandatory::before,
@@ -64,8 +66,8 @@
 
   /* smaller/cleaner “!” using two layers */
   background-image:
-    linear-gradient(#fff, #fff),             /* bar */
-    radial-gradient(circle, #fff 60%, transparent); /* dot */
+    linear-gradient(var(--color-white), var(--color-white)),             /* bar */
+    radial-gradient(circle, var(--color-white) 60%, transparent); /* dot */
   background-repeat: no-repeat;
 
   /* Tweak these to adjust “!” thickness/size */
@@ -107,7 +109,8 @@
 
 
 
-/* Ensure all real content lives in column 2 as a single item */
+/* Ensure all real content lives in column 2 as a single item 
+   (If you use a wrapper div like <div class="mandatory__content">) */
 .mandatory__content {
   grid-column: 2;
 }
