@@ -1,20 +1,19 @@
 /* ==================================================================== */
-/* ARROW TAB COMPONENT STYLES - Uses Central Theme Variables */
+/* ARROW TAB COMPONENT STYLES - Relies on Global :root Variables Only */
 /* ==================================================================== */
-
-/* --- Base Tabs Styling --- */
 
 /* Parent Container for Arrow Tabs */
 .tab-arrows {
     --arrow-width: 15px; /* Controls the size of the point/V-cut */
     
-    /* Ensure the container is not overriding nav styles */
+    /* Removed all conflicting variable definitions (e.g., --tabs-accent, --tabs-bg) */
+    
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: fit-content; 
     overflow: hidden;
 }
 
-/* Hide radios (from your existing code) */
+/* Hide radios (Standard accessible hiding technique) */
 .tab-arrows > input[type="radio"] {
     position: absolute !important;
     inline-size: 1px;
@@ -28,7 +27,7 @@
     margin: -1px;
 }
 
-/* Controls container */
+/* Controls container (Flexbox for arrow alignment) */
 .tab-arrows > .tabs__controls {
     display: flex;
     flex-wrap: nowrap; 
@@ -50,9 +49,9 @@
     justify-content: center;
     height: 40px; 
     
-    /* DEFAULT STATE: Uses your theme variables for off-white background and muted text */
-    background-color: #ffffff; /* Explicitly white background */
-    color: var(--text-secondary); /* Text color for default state */
+    /* DEFAULT STATE: Off-white background, muted text (using your theme variables) */
+    background-color: #ffffff; 
+    color: var(--text-secondary);
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
@@ -64,11 +63,11 @@
     margin-right: -2px; 
 }
 
-/* Hover Effect: Maintain default color, increase z-index (per your last successful request) */
+/* Hover Effect: Maintain default color, increase z-index for visual pop */
 .tab-arrows .tabs__label:hover {
     background-color: #ffffff;
     color: var(--text-secondary);
-    z-index: 2; /* Brings element forward for a visual pop */
+    z-index: 2; 
 }
 
 /* Padding for text within the segment */
@@ -82,7 +81,7 @@
     display: none;
 }
 
-/* --- CLIP-PATH SHAPE DEFINITIONS (Unchanged - the correct shapes) --- */
+/* --- CLIP-PATH SHAPE DEFINITIONS (Unchanged) --- */
 
 /* 1. First Segment (Flat Start, Arrow End) */
 .tab-arrows .tabs__label:first-of-type {
@@ -133,7 +132,7 @@
 
 /* --- Wiring for Active State (up to 10 buttons) --- */
 
-/* ACTIVE STATE: Apply gradient background and primary text color */
+/* ACTIVE STATE: Apply gradient background and white text */
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
@@ -153,7 +152,7 @@
     z-index: 3; 
 }
 
-/* --- Panels Styling (from your existing code) --- */
+/* --- Panels Styling --- */
 
 .tab-arrows > .tabs__panels {
     padding: 16px;
