@@ -3,38 +3,43 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chevron Tabs — Pure CSS Border Triangles</title>
+<title>Chevron Tabs — CSS (left cap + no seams)</title>
 <style>
   :root{
-    --h: 56px;        /* nav height */
-    --tip: 22px;      /* arrow tip width */
+    --h: 56px;        /* nav height (use an even px) */
+    --tip: 22px;      /* right/left tip width */
+    --left-cap: 10px; /* flat lead-in on the very left of the first tab */
+    --fudge: 1px;     /* anti-gap oversize to hide hairlines */
+
     --brand: #2e7df6; /* active fill */
     --hover: #eaf2ff; /* hover fill for inactive */
     --muted: #5a6b82; /* inactive text */
     --body:  #f7f9fc; /* page bg */
   }
 
-  html, body { margin:0; padding:0; background:var(--body); font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
+  html, body { margin:0; padding:0; background:var(--body);
+    font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
   .wrap { max-width:1100px; margin:24px auto; padding:0 16px; }
 
-  /* ---- Chevron strip sits OUTSIDE rounded container (so left tip isn't clipped) ---- */
+  /* -------- NAV (separate so nothing clips the left tip) -------- */
   .chevron-nav {
     display:flex;
     align-items:stretch;
     height:var(--h);
-    overflow:visible;      /* important: let arrow tips overflow */
-    gap:0;                 /* we overlap instead of gapping */
+    overflow:visible; /* allow tips to extend */
+    gap:0;
+    background:transparent;
   }
 
   .tab {
-    --fill: #fff;          /* default background (inactive) */
-    --text: var(--muted);  /* default text */
+    --fill: #fff;
+    --text: var(--muted);
     position:relative;
     display:flex;
     align-items:center;
     justify-content:center;
     padding:0 18px;
-    min-width:120px;       /* grows with flex */
+    min-width:120px;
     height:100%;
     flex:1 1 0;
     background:var(--fill);
@@ -42,45 +47,58 @@
     font-weight:600;
     border:0;
     cursor:pointer;
-    margin-left: calc(var(--tip) * -1);  /* overlap the previous tab’s tip */
+    margin-left: calc(var(--tip) * -1);  /* overlap to hide seams */
     outline:none;
     line-height:1.2;
     text-align:center;
   }
-  .tab:first-child { margin-left:0; }     /* nothing to overlap on the far left */
+  .tab:first-child { margin-left:0; }
 
-  /* Active + hover colors flow to the triangles via --fill */
   .tab.is-active { --fill: var(--brand); --text:#fff; }
   .tab:not(.is-active):hover { --fill: var(--hover); }
 
-  /* Right-pointing tip for all but the last */
+  /* Ensure pseudo-elements sit above the cap rectangle */
+  .tab::before, .tab::after { position:absolute; z-index:2; content:""; }
+
+  /* Right chevron tip for all but the last (oversized by --fudge to kill hairlines) */
   .tab::after{
-    content:"";
-    position:absolute; top:0; right: calc(var(--tip) * -1);
+    top: calc(-1 * var(--fudge));
+    right: calc(var(--tip) * -1);
     width:0; height:0;
-    border-top: calc(var(--h)/2) solid transparent;
-    border-bottom: calc(var(--h)/2) solid transparent;
-    border-left: var(--tip) solid var(--fill); /* triangle color = tab fill */
+    border-top: calc(var(--h)/2 + var(--fudge)) solid transparent;
+    border-bottom: calc(var(--h)/2 + var(--fudge)) solid transparent;
+    border-left: var(--tip) solid var(--fill);
   }
-  .tab:last-child::after{ display:none; }
+  .tab:last-child::after { display:none; }
 
-  /* TRUE left arrow head on the FIRST tab */
+  /* ---------- FIRST TAB: flat left start + true left arrow ---------- */
+
+  /* Flat lead-in block at the very left (gives a horizontal start) */
+  .tab:first-child .cap{
+    position:absolute; z-index:1;
+    left: calc(var(--tip) * -1 - var(--left-cap));
+    top: calc(-1 * var(--fudge));
+    width: var(--left-cap);
+    height: calc(var(--h) + 2 * var(--fudge));
+    background: var(--fill);
+    pointer-events:none;
+    content:"";
+  }
+
+  /* Left-pointing triangle (comes immediately after the flat section) */
   .tab:first-child::before{
-    content:"";
-    position:absolute; top:0; left: calc(var(--tip) * -1);
+    left: calc(var(--tip) * -1);
+    top: calc(-1 * var(--fudge));
     width:0; height:0;
-    border-top: calc(var(--h)/2) solid transparent;
-    border-bottom: calc(var(--h)/2) solid transparent;
-    border-right: var(--tip) solid var(--fill); /* triangle points LEFT */
+    border-top: calc(var(--h)/2 + var(--fudge)) solid transparent;
+    border-bottom: calc(var(--h)/2 + var(--fudge)) solid transparent;
+    border-right: var(--tip) solid var(--fill);
   }
 
-  /* Accessibility focus ring */
-  .tab:focus-visible{
-    outline:3px solid #94b8ff;
-    outline-offset:2px;
-  }
+  /* Accessibility focus */
+  .tab:focus-visible{ outline:3px solid #94b8ff; outline-offset:2px; }
 
-  /* ---- Panels are in their own rounded box (no clipping of the left arrow) ---- */
+  /* -------- PANELS (rounded box is separate; no clipping issues) -------- */
   .tabs-box{
     margin-top:8px;
     background:#fff;
@@ -92,33 +110,34 @@
   .panel{ display:none; }
   .panel.active{ display:block; }
 
-  /* Mobile tweaks */
+  /* Mobile */
   @media (max-width:560px){
-    :root { --h: 64px; --tip: 18px; }
+    :root { --h: 64px; --tip: 18px; --left-cap: 8px; }
     .tab { min-width:100px; padding:0 12px; font-size:14px; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h2>Road Safety Audit Stages — Pure CSS chevrons (first is a left arrow)</h2>
+  <h2>Road Safety Audit Stages — CSS chevrons (flat start + no seams)</h2>
 
-  <!-- Chevron nav (separate, so left arrow head never gets clipped) -->
+  <!-- Chevron nav -->
   <div id="chevronNav" class="chevron-nav" role="tablist" aria-label="RSA stages tabs">
     <button class="tab is-active" role="tab" id="t0" aria-selected="true" aria-controls="p0">
-      Interim
+      <span class="label">Interim</span>
+      <span class="cap" aria-hidden="true"></span> <!-- flat start -->
     </button>
     <button class="tab" role="tab" id="t1" aria-selected="false" aria-controls="p1">
-      Stage 1
+      <span class="label">Stage 1</span>
     </button>
     <button class="tab" role="tab" id="t2" aria-selected="false" aria-controls="p2">
-      Stage 2<br>&amp; Combined Stage 1–2
+      <span class="label">Stage 2<br>&amp; Combined Stage 1–2</span>
     </button>
     <button class="tab" role="tab" id="t3" aria-selected="false" aria-controls="p3">
-      Stage 3
+      <span class="label">Stage 3</span>
     </button>
     <button class="tab" role="tab" id="t4" aria-selected="false" aria-controls="p4">
-      Stage 4
+      <span class="label">Stage 4</span>
     </button>
   </div>
 
@@ -148,7 +167,7 @@
   const tabs   = Array.from(document.querySelectorAll('.tab'));
   const panels = Array.from(document.querySelectorAll('.panel'));
 
-  // Ensure left tabs paint on top (so their tips cover seams)
+  // Ensure left tabs paint on top (hides seams reliably)
   tabs.forEach((t, i) => t.style.zIndex = String(1000 - i));
 
   function activate(idx){
