@@ -1,22 +1,36 @@
 /* ==================================================================== */
-/* ARROW TAB COMPONENT STYLES - Inherits colors from external variables */
+/* Custom Variables for Arrow Tabs */
+/* Add these to your main :root block if you want to customize colors */
+/* :root {
+    --arrow-color: #1a759f;
+    --arrow-hover-color: #166084;
+    --arrow-active-color: #004d73;
+    --arrow-width: 15px;
+    --arrow-text-color: #ffffff;
+} */
+/* If you don't define them, the component will use the fallback values below. */
 /* ==================================================================== */
 
-/* --- Base Tabs Styling --- */
+/* --- Base Tabs Styling (Preserve your existing CSS structure) --- */
 
 /* Parent Container for Arrow Tabs */
 .tab-arrows {
-    --arrow-width: 15px; /* Controls the size of the point/V-cut */
-    
-    /* Inherits: --tabs-accent, --tabs-bg, --tabs-text, --tabs-muted, --tabs-border */
-    
-    /* We keep the box shadow here, but remove the border for the seamless arrow look */
+    /* Use the same styling as your .tabs container, if applicable */
+    --tabs-accent: var(--accent-start, #1a759f);
+    --tabs-bg: var(--nav-bg, #f0f0f0);
+    --tabs-text: var(--text-primary, #333);
+    --tabs-muted: var(--text-secondary, #666);
+    --tabs-border: var(--brand-blue, #1a759f);
+
+    background: var(--tabs-bg);
+    /* Removed standard border/shadow for clean flow, but you can add it back to the .tab-arrows div */
+    /* border-radius: 10px; */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: fit-content; 
-    overflow: hidden;
+    width: fit-content; /* Ensure container only wraps the tabs */
+    overflow: hidden; /* Helps contain any stray shadows/borders */
 }
 
-/* Hide radios (from your existing code) */
+/* Hide radios, keep accessible (from your existing code) */
 .tab-arrows > input[type="radio"] {
     position: absolute !important;
     inline-size: 1px;
@@ -30,12 +44,12 @@
     margin: -1px;
 }
 
-/* Controls container */
+/* Controls container (must use flex to arrange arrows horizontally) */
 .tab-arrows > .tabs__controls {
     display: flex;
-    flex-wrap: nowrap; 
+    flex-wrap: nowrap; /* Prevent wrapping onto a new line */
     padding: 0;
-    background: transparent;
+    background: transparent; /* Background on this container should be transparent */
     border-bottom: none;
     position: static;
     top: auto;
@@ -46,40 +60,47 @@
 /* --- Arrow Label (Button) Styling --- */
 
 .tab-arrows .tabs__label {
+    /* Set color variables using fallbacks */
+    --arrow-color: var(--tabs-accent, #1a759f);
+    --arrow-hover-color: #166084;
+    --arrow-active-color: #004d73;
+    --arrow-text-color: var(--tabs-text, #ffffff);
+    --arrow-width: 15px;
+
     position: relative;
     display: flex;
-    align-items: center; 
+    align-items: center;
     justify-content: center;
-    height: 40px; 
+    height: 40px; /* Define segment height */
     
-    /* DEFAULT STATE: Off-white background, muted text (as per your request) */
-    background-color: #ffffff; 
-    color: var(--tabs-muted);
+    /* Default styling */
+    background-color: var(--arrow-color);
+    color: var(--arrow-text-color);
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
     user-select: none;
-    transition: background-color .2s ease, color .2s ease, z-index 0s;
-    z-index: 1; 
+    transition: background-color .2s ease, z-index 0s;
+    z-index: 1; /* Base z-index */
 
     /* Overlap is critical to hide the join line. */
     margin-right: -2px; 
 }
 
-/* Hover Effect: Maintains default color, increases z-index (as per your request) */
+/* Hover Effect (applies to all segments) */
 .tab-arrows .tabs__label:hover {
-    background-color: #ffffff;
-    color: var(--tabs-muted);
-    z-index: 2; /* Brings element forward for a visual pop */
+    background-color: var(--arrow-hover-color);
+    color: var(--arrow-text-color);
+    z-index: 2; /* Bring hovered item to front */
 }
 
 /* Padding for text within the segment */
 .tab-arrows .tabs__label .tabs__text {
     padding: 0 10px; 
-    line-height: 1.2; 
+    line-height: 1.2; /* For multi-line text */
 }
 
-/* Hide the SVG wedge (if present in HTML) */
+/* Hide the SVG wedge from your original HTML, we'll use clip-path */
 .tab-arrows .tabs__label .tabs__wedge {
     display: none;
 }
@@ -90,8 +111,10 @@
 .tab-arrows .tabs__label:first-of-type {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
-    padding-left: 20px; 
+    padding-left: 20px; /* Base padding */
     padding-right: 20px;
+
+    /* Flat left side, arrow point on right */
     clip-path: polygon(
         0 0, 
         calc(100% - var(--arrow-width)) 0, 
@@ -103,39 +126,46 @@
 
 /* 2. Middle Segments (V-cut Start, Arrow End) */
 .tab-arrows .tabs__label:not(:first-of-type):not(:last-of-type) {
+    /* Inward V-cut on left, arrow point on right */
     clip-path: polygon(
         0 0, 
         calc(100% - var(--arrow-width)) 0, 
         100% 50%, 
         calc(100% - var(--arrow-width)) 100%, 
         0 100%, 
-        var(--arrow-width) 50%
+        var(--arrow-width) 50% /* Defines the V-cut */
     );
+    /* Add padding to clear the V-cut area */
     padding-left: 30px; 
     padding-right: 20px;
 }
 
 /* 3. Last Segment (V-cut Start, Flat End) */
+/* Note: You are using the custom class tabs__label--last, but nth-of-type is more reliable */
 .tab-arrows .tabs__label:last-of-type,
 .tab-arrows .tabs__label--last {
-    margin-right: 0; 
+    margin-right: 0; /* Remove overlap */
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
+    
+    /* Inward V-cut on left, flat right side */
     clip-path: polygon(
         0 0, 
         100% 0, 
         100% 100%, 
         0 100%, 
-        var(--arrow-width) 50%
+        var(--arrow-width) 50% /* Defines the V-cut */
     );
+    /* Add padding to clear the V-cut area */
     padding-left: 30px; 
-    padding-right: 20px;
-    z-index: 1; 
+    padding-right: 20px; /* Match right padding of other segments */
+    z-index: 1; /* Keep last item at base z-index unless active/hovered */
 }
 
 /* --- Wiring for Active State (up to 10 buttons) --- */
 
-/* ACTIVE STATE: Apply gradient background and white text (using your variables) */
+/* The checked radio button is found, then the general sibling selector (~) finds the controls, 
+   and we apply the active color to the corresponding label by position. */
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
@@ -146,11 +176,11 @@
 .tab-arrows > input[type="radio"]:nth-of-type(8):checked ~ .tabs__controls .tabs__label:nth-of-type(8),
 .tab-arrows > input[type="radio"]:nth-of-type(9):checked ~ .tabs__controls .tabs__label:nth-of-type(9),
 .tab-arrows > input[type="radio"]:nth-of-type(10):checked ~ .tabs__controls .tabs__label:nth-of-type(10) {
-    color: #fff;
-    background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
-    box-shadow: none; 
+    background-color: var(--arrow-active-color);
+    color: var(--arrow-text-color);
+    z-index: 3; /* Highest z-index for the active tab */
+    box-shadow: none; /* Remove any shadows that interfere with the shape */
     border-color: transparent;
-    z-index: 3; 
 }
 
 /* --- Panels Styling (from your existing code) --- */
