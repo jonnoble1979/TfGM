@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arrowed Tab Navigation</title>
+    <title>Revised Seamless Arrow Tab Navigation</title>
     <style>
-        /* General Reset and Container Styling */
+        /* CSS Variables for easy color/size changes */
+        :root {
+            --segment-color: #1a759f;
+            --hover-color: #166084;
+            --active-color: #004d73;
+            --arrow-width: 15px; /* Controls the size of the point */
+            --border-radius: 4px; /* For the start/end points */
+            --segment-height: 40px;
+        }
+
+        /* General Styling */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -14,82 +24,96 @@
 
         /* Navigation List Styling */
         .arrow-nav {
-            list-style: none; /* Remove bullet points */
+            list-style: none;
             padding: 0;
             margin: 0;
             display: flex; /* Align items horizontally */
-            width: fit-content; /* Container width adjusts to content */
+            width: fit-content;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 4px; /* Optional: slight rounding for the overall container */
         }
 
         /* Individual Tab Styling */
         .arrow-nav li {
-            position: relative; /* Needed for positioning the ::after arrow */
-            display: inline-block;
-            background-color: #1a759f; /* The main segment color (like the image) */
+            position: relative;
+            display: flex;
+            align-items: center; /* Vertically center the text */
+            background-color: var(--segment-color);
             color: white;
-            padding: 10px 30px 10px 20px; /* Padding for text inside */
-            margin-right: -15px; /* Overlap to hide the border and make the join seamless */
-            text-align: center;
+            padding: 0 20px 0 20px;
+            /* Overlap is key to hiding the transition line */
+            margin-right: calc(-1 * var(--arrow-width) + 1px); 
+            height: var(--segment-height);
             font-weight: bold;
             font-size: 16px;
-            text-decoration: none; /* Remove underline */
             cursor: pointer;
             transition: background-color 0.3s;
-            line-height: 1.5; /* Vertical centering aid */
+            text-align: center;
+            z-index: 1; /* Ensures text is on top */
+
+            /* =================================================== */
+            /* The Key Change: Using clip-path for the arrow shape */
+            /* This defines a pentagon shape for every item */
+            /* (0,0) -> (100%-15px, 0) -> (100%, 50%) -> (100%-15px, 100%) -> (0, 100%) */
+            clip-path: polygon(
+                0 0, 
+                calc(100% - var(--arrow-width)) 0, 
+                100% 50%, 
+                calc(100% - var(--arrow-width)) 100%, 
+                0 100%
+            );
+            /* =================================================== */
         }
 
         /* Hover Effect */
         .arrow-nav li:hover {
-            background-color: #166084; /* Slightly darker on hover */
+            background-color: var(--hover-color);
+            z-index: 2; /* Bring the hovered item slightly forward */
         }
-
-        /* The Arrowhead Styling (for all list items except the last one) */
-        .arrow-nav li:not(:last-child)::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: -15px; /* Position the arrow point at the overlap */
-            width: 0;
-            height: 0;
-            /* Create the triangle shape using borders */
-            border-top: 20.5px solid transparent; /* Half of the list item height */
-            border-bottom: 20.5px solid transparent; /* Half of the list item height */
-            border-left: 15px solid #1a759f; /* The color of the main segment */
-            z-index: 1; /* Ensure it's above the next segment's background */
-            transition: border-left-color 0.3s;
-        }
-
-        /* Adjusting the Arrowhead on Hover */
-        .arrow-nav li:hover::after {
-            border-left-color: #166084; /* Change arrow color on hover too */
-        }
-
-        /* Making the first item a flat start (optional) */
-        .arrow-nav li:first-child {
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-            padding-left: 20px; /* Standardize left padding */
-        }
-
-        /* Making the last item a pointed end (optional) */
-        .arrow-nav li:last-child {
-            /* Remove the negative margin so it doesn't overlap an arrow */
-            margin-right: 0;
-            /* Add the final arrowhead shape */
-            padding-right: 40px; /* Increase right padding for space before point */
-            clip-path: polygon(0 0, 95% 0, 100% 50%, 95% 100%, 0 100%);
-            /* Using clip-path is a modern, clean way to create the final arrow point */
-            /* Fallback (less precise): border-top-right-radius: 4px; border-bottom-right-radius: 4px; */
-        }
-
-        /* Active Tab Styling (Example) */
+        
+        /* Active Tab Styling */
         .arrow-nav li.active {
-            background-color: #004d73; /* Darker blue for active state */
+            background-color: var(--active-color); 
+            z-index: 3; /* Highest priority for active state */
         }
-        .arrow-nav li.active::after {
-            border-left-color: #004d73;
+
+        /* Fix the First Segment (Flat Left Edge) */
+        .arrow-nav li:first-child {
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+            /* Adjust clip-path for the first item to have a flat left side */
+            clip-path: polygon(
+                0 0, 
+                calc(100% - var(--arrow-width)) 0, 
+                100% 50%, 
+                calc(100% - var(--arrow-width)) 100%, 
+                0 100%
+            );
+        }
+
+        /* Fix the Last Segment (Flat Right Edge) */
+        .arrow-nav li:last-child {
+            /* Remove the negative margin so it sits flat */
+            margin-right: 0; 
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            /* Adjust clip-path for the last item to have a flat right side */
+            clip-path: polygon(
+                0 0, 
+                100% 0, 
+                100% 100%, 
+                0 100%, 
+                var(--arrow-width) 50%
+            );
+            /* Adjust padding to account for the inward point on the left */
+            padding-left: 30px; 
+        }
+
+        /* Adjust the point on the left of the last segment on hover/active */
+        .arrow-nav li:last-child:hover {
+            background-color: var(--hover-color);
+        }
+        .arrow-nav li:last-child.active {
+            background-color: var(--active-color);
         }
     </style>
 </head>
@@ -105,11 +129,8 @@
 <script>
     // Simple JavaScript to handle an 'active' state for demonstration
     function activateTab(element) {
-        // Remove 'active' class from all tabs
         const tabs = document.querySelectorAll('.tab-step');
         tabs.forEach(tab => tab.classList.remove('active'));
-
-        // Add 'active' class to the clicked tab
         element.classList.add('active');
     }
 </script>
