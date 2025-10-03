@@ -35,12 +35,11 @@
   border-color: var(--mandy-border-hover);
 }
 
-/* ⬅️ REVERTED TO ORIGINAL: Targets ALL direct children.
-   This works correctly when the HTML uses wrappers like <p> and <ul>. */
+/* ⬅️ RESTORED AND SIMPLIFIED: Targets ALL direct children for column 2. 
+   THIS REQUIRES EVERY BIT OF CONTENT TO BE WRAPPED IN A TAG (<p>, <ul>, etc.). */
 :where(p).mandatory > * {
     grid-column: 2;
 }
-
 
 /* Badge parts share the same grid cell so they stay together on the left */
 :where(p).mandatory::before,
@@ -95,25 +94,30 @@
   z-index: 1; /* ensure label always paints above the icon if close */
 }
 
-/* ⬅️ THE ISOLATED LIST FIX: Only target the lists, not the general content */
+/* ⬅️ THE ISOLATED LIST FIX: Only target the lists, overriding global margin/padding. */
 :where(p).mandatory ul,
 :where(p).mandatory ol {
     /* Critical resets to override large global margins/padding from styles.css */
-    margin-left: 0;
+    margin: 0.5em 0 1em 0; /* Removed left margin */
     padding-left: 0;
-
-    /* Maintain vertical spacing, reset for the <p> wrapper element */
-    margin-top: 0.5em;
-    margin-bottom: 1em;
 
     /* Puts the bullet inside the content area. */
     list-style-position: inside; 
 }
-/* Re-introduce padding for the bullet if needed, or rely on margin */
+
+/* Final list padding to create indent */
 :where(p).mandatory ul,
 :where(p).mandatory ol {
-    /* This adds a small indent for the list text, but keeps the whole element inside the box */
+    /* Use padding on the UL/OL element to create the indent */
     padding-left: 1.5em; 
+}
+
+/* Ensure list items follow standard styles */
+:where(p).mandatory ul li,
+:where(p).mandatory ol li {
+    /* Remove any vertical margin added by the old global list styling that could cause spacing issues */
+    margin-bottom: 0.6em;
+    padding-left: 0; /* Ensure li doesn't add more padding */
 }
 
 
