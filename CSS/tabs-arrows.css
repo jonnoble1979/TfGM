@@ -30,6 +30,7 @@
   display: flex;
   background: var(--arrow-bg);
   border-bottom: var(--border-w) solid var(--arrow-border);
+  overflow: visible; /* allow wedges to overlap next tab */
 }
 
 /* ----- Labels: box + overlap + SVG wedge ----- */
@@ -38,6 +39,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+
+  /* Make tabs share width evenly */
+  flex: 1 1 0;
+  min-width: 0;
 
   /* Leave space on the right for the wedge to sit without covering text */
   padding-block: 12px;
