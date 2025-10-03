@@ -1,7 +1,6 @@
-
-/* ----- Tabs (Arrow Style with Pseudo-Elements) ----- */
 .tab-arrows {
-  --arrow-accent: var(--accent-start);
+  --arrow-accent-start: var(--accent-start);
+  --arrow-accent-end: var(--accent-end);
   --arrow-bg: var(--nav-bg);
   --arrow-text: var(--text-primary);
   --arrow-muted: var(--text-secondary);
@@ -16,14 +15,12 @@
 /* Controls container */
 .tab-arrows > .tabs__controls {
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
   padding: 0;
   background: var(--arrow-bg);
   border-bottom: 1px solid var(--arrow-border);
 }
 
-/* Arrow-shaped labels using pseudo-elements */
+/* Arrow-shaped labels */
 .tab-arrows .tabs__label {
   position: relative;
   display: flex;
@@ -35,14 +32,13 @@
   background: #fff;
   color: var(--arrow-muted);
   font-weight: 600;
-  min-width: 140px; /* ensures enough width for text */
-  min-height: 60px; /* ensures enough height for two lines */
-  flex: 1 1 auto;
+  flex: 1 1 0;
+  min-height: 60px;
   cursor: pointer;
   transition: background-color .2s ease, color .2s ease;
 }
 
-/* Create the arrow tip */
+/* Arrow tip */
 .tab-arrows .tabs__label::after {
   content: "";
   position: absolute;
@@ -52,7 +48,7 @@
   height: 0;
   border-top: 30px solid transparent;
   border-bottom: 30px solid transparent;
-  border-left: 20px solid #fff; /* same as background */
+  border-left: 20px solid #fff; /* matches background */
   z-index: 1;
 }
 
@@ -70,14 +66,22 @@
   border-left-color: #f8fafc;
 }
 
-/* Active tab */
-.tab-arrows > input[type="radio"]:checked + .tabs__label {
-  background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+/* Active tab (gradient + arrow tip) */
+.tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
+.tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
+.tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
+.tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__controls .tabs__label:nth-of-type(4),
+.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5) {
+  background: linear-gradient(90deg, var(--arrow-accent-start), var(--arrow-accent-end));
   color: #fff;
   z-index: 2;
 }
-.tab-arrows > input[type="radio"]:checked + .tabs__label::after {
-  border-left-color: var(--accent-end);
+.tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1)::after,
+.tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2)::after,
+.tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3)::after,
+.tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__controls .tabs__label:nth-of-type(4)::after,
+.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5)::after {
+  border-left-color: var(--arrow-accent-end);
 }
 
 /* Panels */
