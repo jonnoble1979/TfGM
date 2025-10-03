@@ -1,5 +1,8 @@
 /* ----- Theme tokens (example) ----- */
 :root{
+  --accent-start: #2e7df6;
+  --accent-end:   #7aa8ff;
+
   /* Chevron geometry */
   --tip: 24px;        /* width of the triangular wedge in CSS pixels */
   --radius: 10px;
@@ -62,7 +65,7 @@
 .tab-arrows .tabs__label:first-child{
   border-start-start-radius: var(--radius);
   border-end-start-radius: var(--radius);
-  /* Flat left side is CSS border—this fixes your "left-hand side is wrong" */
+  /* Flat left side is CSS border—this fixes the left-hand side */
 }
 .tab-arrows .tabs__label--last{
   /* Last tab has flat right edge; restore the right border and remove overlap */
@@ -115,7 +118,8 @@
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
-.tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__controls .tabs__label:nth-of-type(4){
+.tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__controls .tabs__label:nth-of-type(4),
+.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5){
   --tab-fill: linear-gradient(90deg, var(--arrow-accent-start), var(--arrow-accent-end));
   color: #fff;
   z-index: 3;
@@ -134,7 +138,8 @@
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__panels .tabs__panel:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__panels .tabs__panel:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__panels .tabs__panel:nth-of-type(3),
-.tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__panels .tabs__panel:nth-of-type(4){
+.tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__panels .tabs__panel:nth-of-type(4),
+.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__panels .tabs__panel:nth-of-type(5){
   display: block;
 }
 
@@ -188,4 +193,5 @@
   .tab-arrows .wedge-fill{ fill: currentColor; }
   .tab-arrows .wedge-stroke{ stroke: ButtonText; }
 }
+
 @keyframes fadein{ from{opacity:0; transform: translateY(2px);} to{opacity:1; transform: translateY(0);} }
