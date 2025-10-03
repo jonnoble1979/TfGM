@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chevron Tabs — Pure SVG Forward-Only</title>
+<title>Chevron Tabs — Forward Only, Overlapping Tips (v4)</title>
 <style>
   :root{
-    /* Tweak these if you like */
-    --tip-px: 24;   /* chevron point width in pixels */
-    --radius: 10px;
-    --stroke: 1;    /* border width in pixels */
+    /* Tweak these */
+    --tip-px: 24;   /* width of the right-pointing tip in pixels */
+    --radius: 10px; /* outer container rounding */
+    --stroke: 1;    /* border thickness in pixels */
 
-    /* Local palette for this test page */
+    /* Local palette just for this test */
     --accent-start: #2e7df6;
     --accent-end:   #7aa8ff;
     --nav-bg:       #ffffff;
@@ -21,8 +21,10 @@
     --body-bg:      #f7f9fc;
   }
 
-  html, body { margin:0; padding:0; background:var(--body-bg); color:var(--text-primary);
-    font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+  html, body {
+    margin:0; padding:0; background:var(--body-bg); color:var(--text-primary);
+    font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  }
   .wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
 
   .tabs-box{
@@ -32,7 +34,6 @@
     overflow: hidden;
   }
 
-  /* Panels */
   .panels{
     background: var(--body-bg);
     padding: 16px;
@@ -41,25 +42,20 @@
   .panel{ display:none; }
   .panel.active{ display:block; }
 
-  /* SVG focus handling: remove UA outline that shows as black bars */
+  /* Remove UA focus bars on SVG elements */
   svg :focus { outline: none; }
   svg [tabindex]:focus { outline: none; }
 
-  /* Optional: custom focus style (uncomment if you want visible keyboard focus)
-  svg g.seg:focus-visible path{
-    filter: drop-shadow(0 0 0.5px rgba(0,0,0,.35));
-  } */
-
-  .seg-text { pointer-events:none; font-weight:600; fill: var(--text-secondary); }
-  .seg-text.active { fill:#fff; }
+  .seg-text { pointer-events: none; font-weight: 600; fill: var(--text-secondary); }
+  .seg-text.active { fill: #fff; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h2>Road Safety Audit Stages (Pure SVG – Forward Only)</h2>
+  <h2>Road Safety Audit Stages (Forward Chevrons)</h2>
 
   <div id="chevronTabs" class="tabs-box" aria-label="RSA stages tabs">
-    <!-- SVG injected here -->
+    <!-- SVG strip injected here -->
     <div class="panels" id="panels">
       <section class="panel active"><h3>Interim Road Safety Audit</h3><p>Interim content…</p></section>
       <section class="panel"><h3>Stage 1 Road Safety Audit</h3><p>Stage 1 content…</p></section>
@@ -72,6 +68,7 @@
 
 <script>
 (function(){
+  // Tab labels (line break with \n)
   const labels = [
     'Interim',
     'Stage 1',
@@ -80,8 +77,8 @@
     'Stage 4'
   ];
 
-  const tipPx      = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tip-px')) || 24;
-  const strokePx   = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--stroke')) || 1;
+  const tipPx    = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tip-px')) || 24;
+  const strokePx = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--stroke')) || 1;
 
   const host = document.getElementById('chevronTabs');
   const panelsEl = document.getElementById('panels');
@@ -89,12 +86,12 @@
   const svgNS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(svgNS, 'svg');
   svg.setAttribute('width', '100%');
-  svg.setAttribute('height', '64');
-  svg.setAttribute('viewBox', '0 0 100 64');
+  svg.setAttribute('height', '64');                     // strip height
+  svg.setAttribute('viewBox', '0 0 100 64');            // will be reset
   svg.setAttribute('preserveAspectRatio', 'none');
   svg.style.display = 'block';
 
-  // Gradient defs
+  // Gradient for active tab
   const defs = document.createElementNS(svgNS, 'defs');
   const grad = document.createElementNS(svgNS, 'linearGradient');
   grad.setAttribute('id', 'activeGrad');
@@ -111,78 +108,87 @@
   let active = 0;
 
   function draw(){
-    // Clear old segments (keep defs)
+    // Remove old segments, keep defs
     while(svg.lastChild && svg.lastChild !== defs){ svg.removeChild(svg.lastChild); }
 
     const rect = svg.getBoundingClientRect();
-    let W = Math.max(320, Math.floor(rect.width));
-    // Snap to even width to keep .5 alignment crisp at various DPR
-    if (W % 2) W -= 1;
+    let W = Math.max(360, Math.floor(rect.width));   // sensible min
+    if (W % 2) W -= 1;                               // even width -> cleaner half-pixel snaps
     const H = 64;
     const N = labels.length;
     const stroke = strokePx;
-    const half = stroke/2;
+    const half = stroke / 2;
+    const tip = Math.round(tipPx);
 
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-    const segW = Math.floor(W / N);
-    const tip = Math.round(tipPx);
-    const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--brand-blue') || '#2e7df6';
+    // Base rectangle width so that total width remains W when tips overlap next tab
+    const baseW = Math.max(40, Math.floor((W - tip * (N - 1)) / N));
 
+    // Precompute rectangle start/end for each segment
+    // Each segment i: rectangle spans [x0, x1], where x0 = i*(baseW) + i*tip, x1 = x0 + baseW
+    const rects = [];
     for(let i=0;i<N;i++){
-      const x0 = i * segW;
-      const x1 = (i === N-1) ? W : (i+1) * segW;
+      const x0 = i * (baseW + tip);
+      const x1 = x0 + baseW;
+      rects.push([x0, x1]);
+    }
 
-      const isFirst = (i === 0);
-      const isLast  = (i === N-1);
+    const borderColor = (getComputedStyle(document.documentElement).getPropertyValue('--brand-blue') || '#2e7df6').trim();
 
-      // ---- Forward-only chevron geometry (no left notch) ----
-      // Points (clockwise):
-      // TL: first => (x0, 0); middle/last => (x0 + tip, 0)
-      // TR: last  => (x1, 0); others => (x1 - tip, 0)
-      // TIP: not last => (x1, H/2)
-      // BR: last  => (x1, H); others => (x1 - tip, H)
-      // BL: all => (x0, H)
-      const TLx = (isFirst ? x0 + half : x0 + tip + half), TLy = half;
-      const TRx = (isLast  ? x1 - half : x1 - tip - half), TRy = half;
-      const BRx = (isLast  ? x1 - half : x1 - tip - half), BRy = H - half;
+    // Draw RIGHT -> LEFT so left tabs sit ON TOP of the ones to their right (forward-only overlap)
+    for(let i=N-1; i>=0; i--){
+      const [x0, x1] = rects[i];
+      const isLast = (i === N-1);
+
+      // Build path:
+      // - Vertical left edge (true arrow body)
+      // - Flat right edge of the rectangle at x1
+      // - Forward tip extending into the next tab by 'tip' (except last)
+      // Points aligned to half-pixels for crisp 1px stroke
+      const TLx = x0 + half, TLy = half;
+      const TRx = x1 - half, TRy = half;
+      const BRx = x1 - half, BRy = H - half;
       const BLx = x0 + half, BLy = H - half;
-      const TIPx = x1 - half, TIPy = H/2;
 
       const d = [];
-      d.push(`M ${TLx},${TLy}`);         // TL
-      d.push(`L ${TRx},${TRy}`);         // TR
+      d.push(`M ${TLx},${TLy}`);            // TL
+      d.push(`L ${TRx},${TRy}`);            // TR
+
       if(!isLast){
-        d.push(`L ${TIPx},${TIPy}`);     // right tip
-        d.push(`L ${BRx},${BRy}`);       // BR (pre-tip)
+        // Right-pointing tip (extends over the next rectangle)
+        const TIPx = x1 + tip - half, TIPy = H/2;
+        d.push(`L ${TIPx},${TIPy}`);        // TIP
+        d.push(`L ${BRx},${BRy}`);          // BR (back to rect right edge)
       }else{
-        d.push(`L ${BRx},${BRy}`);       // BR (flat)
+        d.push(`L ${BRx},${BRy}`);          // BR (flat last)
       }
-      d.push(`L ${BLx},${BLy}`);         // BL
+
+      d.push(`L ${BLx},${BLy}`);            // BL
       d.push('Z');
 
-      // Group for interactions
+      // Group for interaction
       const g = document.createElementNS(svgNS, 'g');
       g.classList.add('seg');
-      g.setAttribute('tabindex','0');      // focusable
+      g.setAttribute('tabindex','0');
       g.setAttribute('role','tab');
       g.setAttribute('aria-selected', i===active ? 'true' : 'false');
       g.dataset.index = i;
-      g.style.outline = 'none';            // nuke UA outline (Chrome/Edge/Safari)
+      g.style.outline = 'none';
 
       // Shape
-      const path = document.createElementNS(svgNS, 'path');
-      path.setAttribute('d', d.join(' '));
-      path.setAttribute('vector-effect', 'non-scaling-stroke');
-      path.setAttribute('shape-rendering', 'geometricPrecision');
-      path.setAttribute('stroke', borderColor.trim());
-      path.setAttribute('stroke-width', String(stroke));
-      path.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
+      const shape = document.createElementNS(svgNS, 'path');
+      shape.setAttribute('d', d.join(' '));
+      shape.setAttribute('vector-effect', 'non-scaling-stroke');
+      shape.setAttribute('shape-rendering', 'geometricPrecision');
+      shape.setAttribute('stroke', borderColor);
+      shape.setAttribute('stroke-width', String(stroke));
+      shape.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
 
-      // Label text (centered)
-      const label = labels[i];
+      // Text (centered on the rectangle, not including tip — matches SmartArt feel)
       const text = document.createElementNS(svgNS, 'text');
-      text.setAttribute('x', String(x0 + (x1-x0)/2));
+      const cx = x0 + (x1 - x0)/2;
+      text.setAttribute('x', String(cx));
       text.setAttribute('y', String(H/2 + 5));
       text.setAttribute('text-anchor','middle');
       text.setAttribute('dominant-baseline','middle');
@@ -190,14 +196,17 @@
       text.setAttribute('font-weight','600');
       text.classList.add('seg-text');
 
+      const label = labels[i];
       if(label.includes('\n')){
         const [ln1, ln2] = label.split('\n');
         const t1 = document.createElementNS(svgNS, 'tspan');
-        t1.setAttribute('x', text.getAttribute('x'));
-        t1.setAttribute('dy', '-0.4em'); t1.textContent = ln1;
+        t1.setAttribute('x', String(cx));
+        t1.setAttribute('dy', '-0.4em');
+        t1.textContent = ln1;
         const t2 = document.createElementNS(svgNS, 'tspan');
-        t2.setAttribute('x', text.getAttribute('x'));
-        t2.setAttribute('dy', '1.2em'); t2.textContent = ln2;
+        t2.setAttribute('x', String(cx));
+        t2.setAttribute('dy', '1.2em');
+        t2.textContent = ln2;
         text.append(t1, t2);
       }else{
         text.textContent = label;
@@ -205,8 +214,8 @@
       if(i===active){ text.classList.add('active'); }
 
       // Events
-      g.addEventListener('mouseenter', () => { if(i!==active) path.setAttribute('fill', '#e6f0ff'); });
-      g.addEventListener('mouseleave', () => { path.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff'); });
+      g.addEventListener('mouseenter', () => { if(i!==active) shape.setAttribute('fill', '#e6f0ff'); });
+      g.addEventListener('mouseleave', () => { shape.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff'); });
       g.addEventListener('click', () => activate(i));
       g.addEventListener('keydown', (e) => {
         if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(i); }
@@ -220,15 +229,15 @@
         }
       });
 
-      // Bigger hit target
+      // Bigger hit target (rect over the base rectangle area)
       const hit = document.createElementNS(svgNS, 'rect');
       hit.setAttribute('x', x0);
       hit.setAttribute('y', 0);
-      hit.setAttribute('width', x1-x0);
+      hit.setAttribute('width', x1 - x0 + (isLast ? 0 : tip)); // include tip area for hit test
       hit.setAttribute('height', H);
       hit.setAttribute('fill', 'transparent');
 
-      g.append(path, text, hit);
+      g.append(shape, text, hit);
       svg.appendChild(g);
     }
   }
@@ -246,7 +255,7 @@
     panels.forEach((p, i)=> p.classList.toggle('active', i===active));
   }
 
-  // Initial draw and resize handling
+  // Initial draw + resize
   draw();
   activate(0);
 
