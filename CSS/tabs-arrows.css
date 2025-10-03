@@ -1,4 +1,4 @@
-/* ----- Tabs (Arrow Style with clip-path) ----- */
+/* ----- Tabs (Arrow Style with clip-path both ends) ----- */
 .tab-arrows {
   --arrow-accent-start: var(--accent-start);
   --arrow-accent-end: var(--accent-end);
@@ -21,7 +21,7 @@
   border-bottom: 1px solid var(--arrow-border);
 }
 
-/* Arrow-shaped labels */
+/* Base label style */
 .tab-arrows .tabs__label {
   position: relative;
   display: flex;
@@ -36,8 +36,22 @@
   flex: 1 1 0;
   min-height: 60px;
   cursor: pointer;
-  transition: background-color .2s ease, color .2s ease;
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+/* Middle tabs: right arrow only */
+.tab-arrows .tabs__label {
   clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+}
+
+/* First tab: both arrows */
+.tab-arrows .tabs__label:first-child {
+  clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 20px 100%, 0 50%);
+}
+
+/* Last tab: left arrow only */
+.tab-arrows .tabs__label:last-child {
+  clip-path: polygon(20px 0, 100% 0, 100% 100%, 20px 100%, 0 50%);
 }
 
 /* Overlap effect */
@@ -45,10 +59,11 @@
   margin-right: -20px;
 }
 
-/* Hover effect */
+/* Hover effect: stronger highlight */
 .tab-arrows .tabs__label:hover {
-  background-color: #f8fafc;
+  background: #e6f0ff; /* light blue highlight */
   color: var(--arrow-text);
+  box-shadow: inset 0 0 0 2px var(--arrow-border);
 }
 
 /* Active tab (gradient) */
@@ -60,6 +75,7 @@
   background: linear-gradient(90deg, var(--arrow-accent-start), var(--arrow-accent-end));
   color: #fff;
   z-index: 2;
+  box-shadow: none;
 }
 
 /* Panels */
