@@ -1,0 +1,212 @@
+<h2>Road Safety Audit Stages</h2>
+
+<p class="mandatory">
+  Subject to the decision to proceed with the RSA process (see clauses 2.1.6 and 2.1.7) Improvement Schemes shall be subjected to RSA at Stages 1, 2 and 3.
+</p>
+<p class="mandatory">
+  All improvement schemes shall be subject to a Stage 4 RSA, or a Stage 4 RSA file note if no Personal Injury Collisions have occurred in the vicinity of the scheme during the assessment period.
+</p>
+
+<!-- 2) Tabs for stages -->
+<div class="tab-arrows">
+  <!-- Radios (no JS needed) -->
+  <input type="radio" name="stages-tabs" id="stages-tabs-1" checked>
+  <input type="radio" name="stages-tabs" id="stages-tabs-2">
+  <input type="radio" name="stages-tabs" id="stages-tabs-3">
+  <input type="radio" name="stages-tabs" id="stages-tabs-4">
+  <input type="radio" name="stages-tabs" id="stages-tabs-5">
+
+  <div class="tabs__controls" role="tablist" aria-label="RSA stages tabs">
+    <!-- 1: Interim -->
+    <label class="tabs__label" for="stages-tabs-1" role="tab" id="tab-stg-1-label" aria-controls="panel-stg-1">
+      <span class="tabs__text">Interim</span>
+      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
+        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
+      </svg>
+    </label>
+
+    <!-- 2: Stage 1 -->
+    <label class="tabs__label" for="stages-tabs-2" role="tab" id="tab-stg-2-label" aria-controls="panel-stg-2">
+      <span class="tabs__text">Stage 1</span>
+      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
+        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
+      </svg>
+    </label>
+
+    <!-- 3: Stage 2 & Combined 1–2 -->
+    <label class="tabs__label" for="stages-tabs-3" role="tab" id="tab-stg-3-label" aria-controls="panel-stg-3">
+      <span class="tabs__text">Stage 2<br>&amp; Combined Stage 1–2</span>
+      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
+        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
+      </svg>
+    </label>
+
+    <!-- 4: Stage 3 -->
+    <label class="tabs__label" for="stages-tabs-4" role="tab" id="tab-stg-4-label" aria-controls="panel-stg-4">
+      <span class="tabs__text">Stage 3</span>
+      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
+        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
+        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
+      </svg>
+    </label>
+
+    <!-- 5: Stage 4 (last, no wedge) -->
+    <label class="tabs__label tabs__label--last" for="stages-tabs-5" role="tab" id="tab-stg-5-label" aria-controls="panel-stg-5">
+      <span class="tabs__text">Stage 4</span>
+    </label>
+  </div>
+
+  <!-- Panels (order must match radios/labels 1–5) -->
+  <div class="tabs__panels">
+    <!-- 1: Interim -->
+    <section id="panel-stg-1" class="tabs__panel" role="tabpanel" aria-labelledby="tab-stg-1-label">
+      <h3>Interim Road Safety Audit</h3>
+      <p>
+        For large, complex schemes, particularly with accelerated programmes, the Overseeing Organisation may consider at any time during the preliminary and detailed design stages that it is appropriate to undertake an Interim RSA.
+      </p>
+      <p class="mandatory">
+        Aside from being undertaken at an interim stage, Interim RSAs shall be carried out following the same procedure as for the formal RSA stages.
+      </p>
+      <p class="mandatory">
+        Interim RSA does not replace a particular stage of RSA, and Stage 1, 2 and 3 RSAs shall be undertaken at the appropriate scheme stage.
+      </p>
+    </section>
+
+    <!-- 2: Stage 1 -->
+    <section id="panel-stg-2" class="tabs__panel" role="tabpanel" aria-labelledby="tab-stg-2-label">
+      <h3>Stage 1 Road Safety Audit</h3>
+      <p>
+        Should be undertaken on the completion of Preliminary Design or at the Feasibility Stage of the design. The scheme design should be sufficiently progressed such that all significant features are shown.
+      </p>
+      <p>As a guide the following information should be provided, but not limited to:</p>
+      <ul>
+        <li>General arrangement details</li>
+        <li>Location plan</li>
+        <li>Collision data</li>
+        <li>Traffic flow data</li>
+      </ul>
+      <p>
+        This could be the last opportunity to consider land implications (layout, alignment and junction type) and considers horizontal and vertical alignments, tie‑ins to the existing network, nature and type of junction layouts and conceptual road markings and signs.
+      </p>
+      <p class="mandatory">All RSA Team Members shall examine the scheme site together.</p>
+      <p>
+        For site visit representation by the Police, Maintaining Agent and Specialist Advisors at Stage 1, see sections 5.3, 5.4 and 5.5.
+      </p>
+      <p>
+        Depending on scheme type, major changes to the layout and alignment could be limited after this stage.
+      </p>
+      <p>
+        In some situations, a full Stage 1 RSA may be necessary prior to a scheme reaching planning or Transport and Works Act Order approval. The Overseeing Organisation is therefore encouraged to embed the Stage 1 RSA, and this procedure, into their individual planning processes to ensure that fundamental questions affecting safety are considered at an early stage. It will remain the Scheme Manager’s overall responsibility to initiate the RSA process at the correct time.
+      </p>
+    </section>
+
+    <!-- 3: Stage 2 & Combined 1–2 -->
+    <section id="panel-stg-3" class="tabs__panel" role="tabpanel" aria-labelledby="tab-stg-3-label">
+      <h3>Stage 2 Road Safety Audit &amp; Combined Stage 1–2 Road Safety Audit</h3>
+      <p class="mandatory">
+        If, for any reason, a Stage 1 RSA has not been carried out (for example, where a scheme is of such a scale that no preliminary design has been necessary and the scheme has progressed directly to detailed design with the agreement of the Scheme Manager), RSA Stages 1 and 2 shall be combined at Stage 2 and shall be referred to as a Combined Stage 1 &amp; 2 RSA. <br>
+        The appropriateness of a Combined Audit needs determining at the initial stages of the development process. Where the Overseeing Organisation consider it a requirement, the RSA process should be started again from Stage 1 RSA. <br>
+        The information provided as part of the RSA Brief for a Combined Stage 1 &amp; 2 RSA shall be of sufficient detail to undertake a detailed design RSA. <br>
+        Stage 1 and Stage 2 RSAs shall not be combined as purely a cost and/or programme saving measure.
+      </p>
+      <p>
+        Should be undertaken on completion of Detailed Design. Ideally a full set of contract drawings should be provided, however the design should be developed such that it could be constructed without further development.
+      </p>
+      <p>
+        The RSA should consider junction layouts, sign positions, marking, lighting, roadside furniture, barriers, drainage and non‑motorised/vulnerable road users.
+      </p>
+      <p>The details to be provided are to be agreed prior to undertaking the RSA with the Overseeing Organisation; as a guide, the following may be provided:</p>
+      <ul>
+        <li>General arrangement details</li>
+        <li>Site clearance details</li>
+        <li>Traffic signs and road markings</li>
+        <li>Drainage alterations</li>
+        <li>Street lighting alterations</li>
+        <li>Traffic signal details and traffic signal staging alterations</li>
+        <li>Carriageway and footway level alterations</li>
+        <li>Swept path analysis</li>
+        <li>Surfacing and material details/specifications</li>
+      </ul>
+      <p class="mandatory">All RSA Team Members shall examine the scheme site together.</p>
+      <p>
+        For site visit representation by the Police, Maintaining Agent and Specialist Advisors at Stage 2, see sections 5.3, 5.4 and 5.5.
+      </p>
+      <p>
+        Issues which remain outstanding from Stage 2 should also be reviewed at Stage 3 along with any RSA Response Reports received.
+      </p>
+    </section>
+
+    <!-- 4: Stage 3 -->
+    <section id="panel-stg-4" class="tabs__panel" role="tabpanel" aria-labelledby="tab-stg-4-label">
+      <h3>Stage 3 Road Safety Audit</h3>
+      <p>
+        Should be undertaken on completion of construction / substantial completion and ideally prior to opening to live traffic.
+      </p>
+      <p>
+        A scheme is regarded to be completed from the date construction ceases on site, the location is open to the general public and all temporary traffic management has been removed.
+      </p>
+      <p class="mandatory">
+        Stage 3 RSAs shall be carried out within 1 month of opening unless otherwise agreed in writing with the Overseeing Organisation.
+      </p>
+      <p>
+        The RSA team should examine the constructed scheme from all road users’ viewpoints whether they be walking, driving, cycling or travelling on public transport.
+      </p>
+      <p>
+        The RSA Team should also consider the potential impact on road safety of different traffic conditions which may be specific to the Improvement Scheme location (e.g., peak periods, the beginning or end of the school day, or during frequent events). The need to consider the site during specific traffic conditions should be identified in the RSA Brief.
+      </p>
+      <p>
+        Road Safety Auditors should also consider the potential impacts on road safety of various weather conditions that may not be present at the time of inspection.
+      </p>
+      <p class="mandatory">All RSA Team Members shall examine the scheme site together during daylight.</p>
+      <p class="mandatory">
+        The scheme shall also be visited by all RSA Team Members together during the hours of darkness to gain a road users’ perspective in terms of appreciation of the layout and visibility of signs and road markings.
+      </p>
+      <p>
+        For site visit representation by the Police, Maintaining Agent and Specialist Advisors at Stage 3, see sections 5.3, 5.4 and 5.5.
+      </p>
+      <p>
+        Issues which remain outstanding from Stage 2 should also be reviewed at Stage 3 along with any RSA Response Reports received.
+      </p>
+    </section>
+
+    <!-- 5: Stage 4 -->
+    <section id="panel-stg-5" class="tabs__panel" role="tabpanel" aria-labelledby="tab-stg-5-label">
+      <h3>Stage 4 Road Safety Audit</h3>
+      <p class="mandatory">
+        The Overseeing Organisation shall arrange for Stage 4 RSA to be undertaken for all improvement schemes. Stage 4 RSA shall be carried out using 12 months of validated pre‑ and post‑highway scheme‑opening road traffic collision data.
+      </p>
+      <p>
+        A scheme is regarded to be operational from the date construction ceases on site, the location is open to the general public and all temporary traffic management has been removed.
+      </p>
+      <p>
+        The collision records shall be analysed in detail to identify locations at which personal injury collisions have occurred; and personal injury collisions that appear to arise from similar causes or show common factors.
+      </p>
+      <p>
+        The collision data should be analysed to identify the influence of problems and recommendations identified at previous RSA stages, and within any RSA Response Reports.
+      </p>
+      <p>
+        Where no personal injury collisions have been recorded in the vicinity of the Highway Improvement Scheme over the 12‑month period, a formal Stage 4 RSA collision monitoring report is not required. See 3.5.7.
+      </p>
+      <p>
+        The scope and extents of the Stage 4 RSA are to be agreed as part of the Audit Brief. The area in the vicinity of a scheme will typically include the scheme extents and those areas immediately beyond the scheme tie‑ins. However, for some schemes where the works may influence driver behaviour over a wider geographical area (i.e., queuing on the approach to the scheme extents) personal injury collisions that may have occurred in the wider area should also be considered.
+      </p>
+      <p class="mandatory">
+        If, for the above reason, the Scheme Manager decides not to proceed with the Stage 4 RSA collision monitoring report, this decision shall be formally recorded and kept on the highway scheme file (or equivalent).
+      </p>
+      <p>At RSA Stage 4 all RSA Team members should visit together the site of Highway Improvement Schemes:</p>
+      <ul>
+        <li>Where higher than expected numbers of personal injury collisions have occurred since the scheme became operational (when compared to control data)</li>
+        <li>Where the personal injury collision rate or severity has increased since the scheme became operational</li>
+        <li>Where characteristics within the personal injury collision data post‑opening show unexpected common trends (e.g., a high frequency of personal injury collisions during the hours of darkness or on a wet road surface)</li>
+        <li>Where road safety matters relating to vulnerable road users have increased</li>
+        <li>Where a site visit is needed, the RSA team should decide if the road traffic collision data analysis justifies an inspection during a particular time period and record their decision making within the RSA report</li>
+      </ul>
+      <p>
+        In the absence of any before or after personal injury collision records (e.g., due to under‑reporting) the Scheme Manager may still choose to commission a modified Stage 4 RSA based upon specific issues or concerns that have been brought to their attention.
+      </p>
+    </section>
+  </div>
+</div>
