@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revised Seamless Arrow Tab Navigation</title>
+    <title>Perfected Seamless Arrow Tab Navigation</title>
     <style>
         /* CSS Variables for easy color/size changes */
         :root {
@@ -11,7 +11,6 @@
             --hover-color: #166084;
             --active-color: #004d73;
             --arrow-width: 15px; /* Controls the size of the point */
-            --border-radius: 4px; /* For the start/end points */
             --segment-height: 40px;
         }
 
@@ -32,55 +31,43 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Individual Tab Styling */
+        /* Base Tab Styling */
         .arrow-nav li {
             position: relative;
             display: flex;
             align-items: center; /* Vertically center the text */
             background-color: var(--segment-color);
             color: white;
-            padding: 0 20px 0 20px;
-            /* Overlap is key to hiding the transition line */
-            margin-right: calc(-1 * var(--arrow-width) + 1px); 
+            padding: 0 20px;
+            
+            /* Overlap the next segment by almost the arrow width */
+            margin-right: calc(-1 * var(--arrow-width) + 2px); 
             height: var(--segment-height);
             font-weight: bold;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, z-index 0s;
             text-align: center;
             z-index: 1; /* Ensures text is on top */
-
-            /* =================================================== */
-            /* The Key Change: Using clip-path for the arrow shape */
-            /* This defines a pentagon shape for every item */
-            /* (0,0) -> (100%-15px, 0) -> (100%, 50%) -> (100%-15px, 100%) -> (0, 100%) */
-            clip-path: polygon(
-                0 0, 
-                calc(100% - var(--arrow-width)) 0, 
-                100% 50%, 
-                calc(100% - var(--arrow-width)) 100%, 
-                0 100%
-            );
-            /* =================================================== */
         }
-
-        /* Hover Effect */
+        
+        /* Hover and Active State */
         .arrow-nav li:hover {
             background-color: var(--hover-color);
             z-index: 2; /* Bring the hovered item slightly forward */
         }
-        
-        /* Active Tab Styling */
         .arrow-nav li.active {
             background-color: var(--active-color); 
             z-index: 3; /* Highest priority for active state */
         }
 
-        /* Fix the First Segment (Flat Left Edge) */
+        /* ---------------------------------------------------- */
+        /* 1. First Segment (Flat Start, Arrow End) */
+        /* ---------------------------------------------------- */
         .arrow-nav li:first-child {
-            border-top-left-radius: var(--border-radius);
-            border-bottom-left-radius: var(--border-radius);
-            /* Adjust clip-path for the first item to have a flat left side */
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            /* Flat left side, arrow point on right */
             clip-path: polygon(
                 0 0, 
                 calc(100% - var(--arrow-width)) 0, 
@@ -90,38 +77,51 @@
             );
         }
 
-        /* Fix the Last Segment (Flat Right Edge) */
-        .arrow-nav li:last-child {
-            /* Remove the negative margin so it sits flat */
-            margin-right: 0; 
-            border-top-right-radius: var(--border-radius);
-            border-bottom-right-radius: var(--border-radius);
-            /* Adjust clip-path for the last item to have a flat right side */
+        /* ---------------------------------------------------- */
+        /* 2. Middle Segments (Arrow Start, Arrow End) */
+        /* ---------------------------------------------------- */
+        .arrow-nav li:not(:first-child):not(:last-child) {
+            /* V-shape on left, arrow point on right */
             clip-path: polygon(
-                0 0, 
-                100% 0, 
-                100% 100%, 
-                0 100%, 
-                var(--arrow-width) 50%
+                var(--arrow-width) 0, 
+                calc(100% - var(--arrow-width)) 0, 
+                100% 50%, 
+                calc(100% - var(--arrow-width)) 100%, 
+                var(--arrow-width) 100%, 
+                0 50%
             );
-            /* Adjust padding to account for the inward point on the left */
-            padding-left: 30px; 
+            /* Add padding on the left to move text past the V-cut */
+            padding-left: 30px;
         }
 
-        /* Adjust the point on the left of the last segment on hover/active */
-        .arrow-nav li:last-child:hover {
-            background-color: var(--hover-color);
-        }
-        .arrow-nav li:last-child.active {
-            background-color: var(--active-color);
+        /* ---------------------------------------------------- */
+        /* 3. Last Segment (Arrow Start, Flat End) */
+        /* ---------------------------------------------------- */
+        .arrow-nav li:last-child {
+            /* Remove negative margin */
+            margin-right: 0; 
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            /* V-shape on left, flat right side */
+            clip-path: polygon(
+                var(--arrow-width) 0, 
+                100% 0, 
+                100% 100%, 
+                var(--arrow-width) 100%, 
+                0 50%
+            );
+            /* Add padding on the left to move text past the V-cut */
+            padding-left: 30px; 
+            /* Add padding on the right to match width of other segments */
+            padding-right: 20px; 
         }
     </style>
 </head>
 <body>
 
 <ul class="arrow-nav">
-    <li class="tab-step active" onclick="activateTab(this)">Step 1: Planning</li>
-    <li class="tab-step" onclick="activateTab(this)">Step 2: Execution</li>
+    <li class="tab-step" onclick="activateTab(this)">Step 1: Planning</li>
+    <li class="tab-step active" onclick="activateTab(this)">Step 2: Execution</li>
     <li class="tab-step" onclick="activateTab(this)">Step 3: Review</li>
     <li class="tab-step" onclick="activateTab(this)">Final Result</li>
 </ul>
