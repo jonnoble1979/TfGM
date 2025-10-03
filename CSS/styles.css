@@ -1,4 +1,3 @@
-
 /* --- THEME VARIABLES --- */
 :root {
     --font-family: 'Inter', sans-serif;
@@ -7,6 +6,11 @@
     --brand-blue: #004488;
     --accent-start: #38bdf8;
     --accent-end: #1e90ff;
+    --accent-hover-start: #60a5fa; /* Added: Used for the main button hover state */
+
+    /* Basic Utility Colors (Added for consistency) */
+    --color-white: #fff;
+    --color-light-bg: #ffffff; /* Explicit background for cards/panels */
 
     /* Backgrounds */
     --body-bg: #f4f4f9;
@@ -25,7 +29,7 @@
     --border-light: #e2e8f0;
     --border-dropdown: #cbd5e1;
     --table-header-bg: #cbd5e1;
-
+    
     /* Buttons */
     --button-bg: #007bff;
     --button-hover-bg: var(--accent-start);
@@ -87,7 +91,7 @@ p { line-height: 1.6; color: var(--text-body); }
 .main-button {
     padding: 15px 30px;
     background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
-    color: white;
+    color: var(--color-white); /* Used new variable */
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -98,8 +102,9 @@ p { line-height: 1.6; color: var(--text-body); }
 }
 
 .main-button:hover {
-    background: linear-gradient(90deg, #60a5fa 0%, var(--accent-start) 100%);
-    color: #fff;
+    /* Uses new variable for the gradient start color */
+    background: linear-gradient(90deg, var(--accent-hover-start) 0%, var(--accent-start) 100%);
+    color: var(--color-white); /* Used new variable */
     transform: translateY(1px);
 }
 
@@ -112,19 +117,20 @@ p { line-height: 1.6; color: var(--text-body); }
 /* --- TWO-COLUMN LAYOUT: main content + right sidebar --- */
 
 #main-layout {
-  width: min(100%, 1600px);
-  margin-inline: auto;
-  padding-inline: clamp(12px, 2vw, 32px);
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(280px, 380px); /* flexible sidebar */
-  gap: clamp(16px, 2vw, 32px);
-  align-items: start;
+    width: min(100%, 1600px);
+    margin-inline: auto;
+    padding-inline: clamp(12px, 2vw, 32px);
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 380px); /* flexible sidebar */
+    gap: clamp(16px, 2vw, 32px);
+    align-items: start;
+}
 
 
 #content {
-  margin: 0;
-  max-width: none;
-  min-width: 0;
+    margin: 0;
+    max-width: none;
+    min-width: 0;
 }
 
 
@@ -159,7 +165,7 @@ th {
     border-radius: 8px;
     cursor: pointer;
     background-color: var(--button-bg);
-    color: white;
+    color: var(--color-white); /* Used new variable */
     transition: background-color 0.2s ease;
 }
 .filter-group button:hover, .download-button:hover {
@@ -176,7 +182,7 @@ th {
 .checklist-list li {
     padding: 12px 15px;
     border-bottom: 1px solid var(--border-light);
-    background-color: #fff;
+    background-color: var(--color-light-bg); /* Used new variable */
     margin-bottom: 5px;
     border-radius: 6px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -249,7 +255,7 @@ th {
         transform: rotate(45deg);
     }
     .dropbtn:hover .arrow-down {
-        border-color: white;
+        border-color: var(--color-white); /* Used new variable */
     }
 
     #content {
@@ -302,8 +308,8 @@ th {
 /* --- BULLET LIST STYLING --- */
 ul {
     margin: 1em 0 1.5em 1.5em; /* extra breathing room */
-    padding-left: 1.2em;       /* indent bullets nicely */
-    list-style-type: disc;     /* clean bullet style */
+    padding-left: 1.2em;      /* indent bullets nicely */
+    list-style-type: disc;    /* clean bullet style */
 }
 
 ul li {
@@ -318,7 +324,3 @@ ul li::marker {
     color: var(--brand-blue);  /* or try #60a5fa for accent */
     font-size: 1.1em;          /* slightly larger bullet */
 }
-
-
-
-
