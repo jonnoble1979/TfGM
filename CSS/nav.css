@@ -7,7 +7,10 @@
     top: 0;
     left: 0;
     width: 100%;
-    background-color: var(--nav-bg);
+    /* OLD: background-color: var(--nav-bg);
+       NEW: Use the reliable --brand-blue instead of the leaky --nav-bg
+    */
+    background-color: var(--brand-blue);
     color: white;
     padding: 14px 20px; /* default height */
     display: flex;
@@ -19,12 +22,13 @@
     transition: padding 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Shrink state (we'll toggle this with JS) */
+/* Shrink state (remains unchanged as it already works) */
 #top-nav.shrink {
     padding: 6px 20px; /* smaller height */
-    background-color: var(--brand-blue); /* stays same or slightly darker if you want */
+    background-color: var(--brand-blue); 
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
+
 
 /* Ensure body content doesn't hide behind nav */
 body {
