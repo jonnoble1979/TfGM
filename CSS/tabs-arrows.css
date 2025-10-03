@@ -1,26 +1,22 @@
 /* ==================================================================== */
-/* Custom Variables for Arrow Tabs */
-/* These map to the variables in your main tab component */
+/* ARROW TAB COMPONENT STYLES - Inherits colors from external variables */
 /* ==================================================================== */
 
-/* --- Base Tabs Styling (Preserve your existing CSS structure) --- */
+/* --- Base Tabs Styling --- */
 
 /* Parent Container for Arrow Tabs */
 .tab-arrows {
-    /* Use the same styling as your .tabs container, if applicable */
-    --tabs-accent: var(--accent-start, #1a759f);
-    --tabs-bg: var(--nav-bg, #f0f0f0);
-    --tabs-text: var(--text-primary, #ffffff); /* Text color for active state */
-    --tabs-muted: var(--text-secondary, #666); /* Text color for default state */
-    --tabs-border: var(--brand-blue, #1a759f);
-
+    --arrow-width: 15px; /* Controls the size of the point/V-cut */
+    
+    /* Inherits: --tabs-accent, --tabs-bg, --tabs-text, --tabs-muted, --tabs-border */
+    
     /* We keep the box shadow here, but remove the border for the seamless arrow look */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: fit-content; 
     overflow: hidden;
 }
 
-/* Hide radios, keep accessible (from your existing code) */
+/* Hide radios (from your existing code) */
 .tab-arrows > input[type="radio"] {
     position: absolute !important;
     inline-size: 1px;
@@ -50,15 +46,13 @@
 /* --- Arrow Label (Button) Styling --- */
 
 .tab-arrows .tabs__label {
-    --arrow-width: 15px; /* Controls the size of the point/V-cut */
-    
     position: relative;
     display: flex;
     align-items: center; 
     justify-content: center;
     height: 40px; 
     
-    /* DEFAULT STATE: Off-white background, muted text */
+    /* DEFAULT STATE: Off-white background, muted text (as per your request) */
     background-color: #ffffff; 
     color: var(--tabs-muted);
     font-weight: 600;
@@ -72,12 +66,11 @@
     margin-right: -2px; 
 }
 
-/* Hover Effect: No color change, slight visual pop using z-index */
+/* Hover Effect: Maintains default color, increases z-index (as per your request) */
 .tab-arrows .tabs__label:hover {
-    /* Maintain default color and text color */
     background-color: #ffffff;
     color: var(--tabs-muted);
-    z-index: 2; /* Brings the element forward, simulating the 'size change' focus */
+    z-index: 2; /* Brings element forward for a visual pop */
 }
 
 /* Padding for text within the segment */
@@ -86,12 +79,12 @@
     line-height: 1.2; 
 }
 
-/* Hide the SVG wedge from your original HTML */
+/* Hide the SVG wedge (if present in HTML) */
 .tab-arrows .tabs__label .tabs__wedge {
     display: none;
 }
 
-/* --- CLIP-PATH SHAPE DEFINITIONS (Unchanged from winning design) --- */
+/* --- CLIP-PATH SHAPE DEFINITIONS --- */
 
 /* 1. First Segment (Flat Start, Arrow End) */
 .tab-arrows .tabs__label:first-of-type {
@@ -99,8 +92,6 @@
     border-bottom-left-radius: 4px;
     padding-left: 20px; 
     padding-right: 20px;
-
-    /* Flat left side, arrow point on right */
     clip-path: polygon(
         0 0, 
         calc(100% - var(--arrow-width)) 0, 
@@ -112,7 +103,6 @@
 
 /* 2. Middle Segments (V-cut Start, Arrow End) */
 .tab-arrows .tabs__label:not(:first-of-type):not(:last-of-type) {
-    /* Inward V-cut on left, arrow point on right */
     clip-path: polygon(
         0 0, 
         calc(100% - var(--arrow-width)) 0, 
@@ -131,8 +121,6 @@
     margin-right: 0; 
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    
-    /* Inward V-cut on left, flat right side */
     clip-path: polygon(
         0 0, 
         100% 0, 
@@ -147,7 +135,7 @@
 
 /* --- Wiring for Active State (up to 10 buttons) --- */
 
-/* ACTIVE STATE: Apply gradient background and white text */
+/* ACTIVE STATE: Apply gradient background and white text (using your variables) */
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
@@ -158,7 +146,6 @@
 .tab-arrows > input[type="radio"]:nth-of-type(8):checked ~ .tabs__controls .tabs__label:nth-of-type(8),
 .tab-arrows > input[type="radio"]:nth-of-type(9):checked ~ .tabs__controls .tabs__label:nth-of-type(9),
 .tab-arrows > input[type="radio"]:nth-of-type(10):checked ~ .tabs__controls .tabs__label:nth-of-type(10) {
-    /* Use the gradient defined in your original CSS */
     color: #fff;
     background: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
     box-shadow: none; 
