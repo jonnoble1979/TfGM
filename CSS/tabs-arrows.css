@@ -1,18 +1,33 @@
+/* Example fallbacks – use your own custom properties if you already define them */
+:root {
+  --accent-start: #2e7df6;
+  --accent-end:   #7aa8ff;
+  --nav-bg:       #ffffff;
+  --text-primary: #0b1f33;
+  --text-secondary:#5a6b82;
+  --brand-blue:   #2e7df6;
+  --body-bg:      #f7f9fc;
+}
+
+/* Container */
 .tab-arrows {
   --arrow-accent-start: var(--accent-start);
-  --arrow-accent-end: var(--accent-end);
-  --arrow-bg: var(--nav-bg);
-  --arrow-text: var(--text-primary);
-  --arrow-muted: var(--text-secondary);
-  --arrow-border: var(--brand-blue);
+  --arrow-accent-end:   var(--accent-end);
+  --arrow-bg:           var(--nav-bg);
+  --arrow-text:         var(--text-primary);
+  --arrow-muted:        var(--text-secondary);
+  --arrow-border:       var(--brand-blue);
+  --arrow-gap:          20px; /* depth of the chevron tip */
 
   background: var(--arrow-bg);
   border: 2px solid var(--arrow-border);
   border-radius: 10px;
   overflow: hidden;
+  isolation: isolate; /* ensures z-index stacking inside */
+  color: var(--arrow-text);
 }
 
-/* Controls container */
+/* Controls container (NOTE: use '>' not '&gt;') */
 .tab-arrows > .tabs__controls {
   display: flex;
   padding: 0;
@@ -20,47 +35,91 @@
   border-bottom: 1px solid var(--arrow-border);
 }
 
-/* Base label style */
+/* Base label style (middle chevrons: left notch + right tip) */
 .tab-arrows .tabs__label {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 12px 24px;
+
+  /* padding left a touch bigger so text clears the left notch */
+  padding: 12px 28px 12px 36px;
+
   background: #fff;
   color: var(--arrow-muted);
   font-weight: 600;
   flex: 1 1 0;
   min-height: 60px;
   cursor: pointer;
-  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
-  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease, z-index .2s ease;
+
+  /* chevron shape (middle tabs) */
+  clip-path: polygon(
+    var(--arrow-gap) 0,
+    calc(100% - var(--arrow-gap)) 0,
+    100% 50%,
+    calc(100% - var(--arrow-gap)) 100%,
+    var(--arrow-gap) 100%,
+    0 50%
+  );
+
+  /* pull the next tab under this tab by the arrow depth */
+  margin-right: calc(var(--arrow-gap) * -1);
+
+  z-index: 1;
+  user-select: none;
 }
 
-/* First tab: flat left edge */
+/* First tab: flat left edge, right tip */
 .tab-arrows .tabs__label:first-child {
-  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+  padding-left: 24px;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--arrow-gap)) 0,
+    100% 50%,
+    calc(100% - var(--arrow-gap)) 100%,
+    0 100%
+  );
 }
 
-/* Last tab: flat right edge */
+/* Last tab: left notch, flat right edge; no overlap */
 .tab-arrows .tabs__label:last-child {
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 20px 50%);
+  margin-right: 0;
+  clip-path: polygon(
+    var(--arrow-gap) 0,
+    100% 0,
+    100% 100%,
+    var(--arrow-gap) 100%,
+    0 50%
+  );
 }
 
-/* Overlap effect */
-.tab-arrows .tabs__label:not(:last-child) {
-  margin-right: -20px;
+/* Optional: a subtle divider on the right edge of each chevron */
+.tab-arrows .tabs__label::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; right: calc(var(--arrow-gap) * -0.5);
+  width: var(--arrow-gap);
+  /* Using a vertical gradient to emulate a thin divider on the slant */
+  background:
+    linear-gradient(90deg, transparent 49%, rgba(0,0,0,.08) 50%, transparent 51%);
+  pointer-events: none;
+  opacity: .4;
+}
+.tab-arrows .tabs__label:last-child::after {
+  display: none;
 }
 
-/* Hover effect: stronger highlight */
+/* Hover effect */
 .tab-arrows .tabs__label:hover {
   background: #e6f0ff;
   color: var(--arrow-text);
   box-shadow: inset 0 0 0 2px var(--arrow-border);
+  z-index: 2;
 }
 
-/* Active tab (gradient) */
+/* Active tab (gradient + top of stack) */
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
@@ -68,7 +127,7 @@
 .tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5) {
   background: linear-gradient(90deg, var(--arrow-accent-start), var(--arrow-accent-end));
   color: #fff;
-  z-index: 2;
+  z-index: 3;
   box-shadow: none;
 }
 
@@ -89,7 +148,12 @@
   display: block;
 }
 
-/* Hide radios */
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Visually hide radios but keep them accessible */
 .tab-arrows > input[type="radio"] {
   position: absolute !important;
   inline-size: 1px;
@@ -101,4 +165,12 @@
   border: 0;
   padding: 0;
   margin: -1px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tab-arrows * {
+    transition: none !important;
+    animation: none !important;
+  }
 }
