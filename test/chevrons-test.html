@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chevron Tabs — Canvas (flat start, no seams)</title>
+<title>Chevron Tabs — Canvas (flat start, correct left arrow, no duplicate labels)</title>
 <style>
   :root{
-    --h: 64;          /* strip height (px) */
+    --h: 64;          /* strip height (px, preferably even to avoid subpixel blur) */
     --tip: 24;        /* tip width (px) */
-    --tail: 14;       /* slanted tail width on left of inner tabs (px) */
-    --left-cap: 10;   /* flat start length at the very left (px) */
+    --tail: 14;       /* slanted tail width (px) on inner tabs’ left side */
+    --left-cap: 10;   /* length of the flat horizontal start (px) on the very left */
 
     --brand-start:#2e7df6; /* active gradient start */
     --brand-end:  #7aa8ff; /* active gradient end */
@@ -21,7 +21,7 @@
   }
 
   html, body { margin:0; padding:0; background:var(--body);
-    font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif; }
   .wrap { max-width:1100px; margin:24px auto; padding:0 16px; }
 
   .tabs-shell{
@@ -30,33 +30,29 @@
     background:#fff;
   }
 
-  /* --- Canvas-backed chevron strip --- */
+  /* ---- Canvas-backed chevron strip (no seams) ---- */
   .chevron-strip{
     position:relative;
     height: calc(var(--h) * 1px);
     border-bottom:1px solid var(--box-border);
   }
   .chevron-strip canvas{
-    display:block;
-    width:100%;
-    height:100%;
+    display:block; width:100%; height:100%;
   }
 
-  /* Click/keyboard targets + labels */
-  .labels{
-    position:absolute; inset:0;
-  }
+  /* Transparent overlay buttons for click/keyboard; canvas handles the visuals */
+  .labels{ position:absolute; inset:0; }
   .tab{
     position:absolute; top:0; height:100%;
     display:flex; align-items:center; justify-content:center;
-    background:transparent; border:0; margin:0; padding:0 18px;
-    color:var(--text-muted); font-weight:600; line-height:1.2; text-align:center;
+    background:transparent; border:0; margin:0; padding:0;
+    /* hide visible text to avoid duplication; use aria-label instead */
+    color:transparent; font-size:0;
     cursor:pointer; outline:none;
   }
-  .tab.is-active{ color:#fff; }
   .tab:focus-visible{ outline:3px solid #94b8ff; outline-offset:2px; }
 
-  /* content */
+  /* Panels */
   .panels{ background:var(--body); padding:16px; }
   .panel{ display:none; }
   .panel.active{ display:block; }
@@ -93,7 +89,7 @@
     'Stage 4'
   ];
 
-  // Read CSS vars
+  // CSS vars
   const cs = getComputedStyle(document.documentElement);
   const H         = +cs.getPropertyValue('--h') || 64;
   const TIP       = +cs.getPropertyValue('--tip') || 24;
@@ -102,6 +98,7 @@
   const BRAND_S   = cs.getPropertyValue('--brand-start').trim() || '#2e7df6';
   const BRAND_E   = cs.getPropertyValue('--brand-end').trim()   || '#7aa8ff';
   const HOVER     = cs.getPropertyValue('--hover').trim()       || '#eaf2ff';
+  const TEXT_MUTED= cs.getPropertyValue('--text-muted').trim()  || '#5a6b82';
 
   const strip   = document.getElementById('chevrons');
   const canvas  = document.getElementById('navCanvas');
@@ -109,71 +106,7 @@
   const panelsEl= document.getElementById('panels');
 
   let active = 0;
-  let geom   = null; // segment geometry cache
-
-  function px(v){ return Math.round(v); }
-
-  function computeGeom(W){
-    const N = labels.length;
-    // With a true left tip on the first and right tips on all but the last,
-    // there are N tips total to subtract.
-    const baseW = Math.max(60, Math.floor((W - N*TIP) / N));
-    const rects = [];
-    for(let i=0;i<N;i++){
-      const x0 = TIP + i * (baseW + TIP); // body left
-      const x1 = x0 + baseW;              // body right
-      rects.push([x0, x1]);
-    }
-    // Build geometry objects with polygon points and label centers
-    const segs = [];
-    for(let i=0;i<N;i++){
-      const [x0,x1] = rects[i];
-      const isFirst = (i===0);
-      const isLast  = (i===N-1);
-
-      let poly = [];
-      if(isFirst){
-        // First segment: flat start at top and bottom, then left apex.
-        // Outline (clockwise): top-left flat -> top-right (before tip) -> right apex (if any) -> bottom-right -> bottom-left flat -> left apex
-        const TLx = x0;                // body top-left (after the left wedge)
-        const TRx = isLast ? x1 : x1 - TIP;
-        poly = [
-          [0, 0],                      // very left, top (start flat)
-          [LEFT_CAP, 0],               // flat start length
-          [TRx, 0],
-          ...(isLast ? [] : [[x1 + TIP, H/2]]),
-          [TRx, H],
-          [LEFT_CAP, H],               // flat bottom start
-          [0, H/2]                     // TRUE left apex
-        ];
-      }else{
-        const TRx = isLast ? x1 : x1 - TIP;
-        // Forward chevron with slanted tail
-        poly = [
-          [x0, 0],
-          [TRx, 0],
-          ...(isLast ? [] : [[x1 + TIP, H/2]]),
-          [TRx, H],
-          [x0, H],
-          [x0 - TAIL, H/2]
-        ];
-      }
-
-      // Label center (use body only; exclude tips)
-      const bodyLeft  = isFirst ? x0 : x0;
-      const bodyRight = isLast ? x1 : x1 - TIP;
-      const cx = bodyLeft + (bodyRight - bodyLeft)/2;
-      const wForButtonLeft  = isFirst ? 0 : (x0 - TAIL);               // cover the slanted tail area
-      const wForButtonRight = isLast ? x1 : (x1 + TIP);                // include tip area
-      segs.push({
-        i, isFirst, isLast, x0, x1, poly,
-        labelX: cx,
-        btnLeft: Math.max(0, wForButtonLeft),
-        btnRight: Math.min(W, wForButtonRight)
-      });
-    }
-    return {baseW, rects, segs};
-  }
+  let geom   = null; // segment geometry
 
   function sizeCanvas(){
     const dpr = Math.max(1, window.devicePixelRatio || 1);
@@ -183,40 +116,95 @@
     canvas.style.width  = Wcss + 'px';
     canvas.style.height = H + 'px';
     const ctx = canvas.getContext('2d');
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // CSS pixels
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
     return {ctx, W: Wcss, dpr};
   }
+
+  function computeGeom(W){
+    const N = labels.length;
+    // With true left tip on first + right tips on all but last => N tips total.
+    const baseW = Math.max(60, Math.floor((W - N * TIP) / N));
+    const rects = [];
+    for(let i=0;i<N;i++){
+      const x0 = TIP + i * (baseW + TIP); // body left
+      const x1 = x0 + baseW;              // body right
+      rects.push([x0, x1]);
+    }
+    const segs = [];
+    for(let i=0;i<N;i++){
+      const [x0, x1] = rects[i];
+      const isFirst = (i===0);
+      const isLast  = (i===N-1);
+      const TRx     = isLast ? x1 : (x1 - TIP);
+
+      let poly = [];
+
+      if(isFirst){
+        // FIRST: start at TRUE LEFT APEX, then flat top, body, tip, flat bottom, back to apex
+        poly = [
+          [0, H/2],                 // left apex
+          [LEFT_CAP, 0],            // top flat end
+          [TRx, 0],                 // top-right of body
+          ...(isLast ? [] : [[x1 + TIP, H/2]]), // right apex if not last
+          [TRx, H],                 // bottom-right of body
+          [LEFT_CAP, H]             // bottom flat end
+          // closePath will return to [0, H/2]
+        ];
+      } else {
+        // MIDDLE/LAST: forward chevron with slanted left tail
+        poly = [
+          [x0 - TAIL, H/2],         // left tail apex
+          [x0, 0],                  // top-left body
+          [TRx, 0],                 // top-right body
+          ...(isLast ? [] : [[x1 + TIP, H/2]]), // right apex if not last
+          [TRx, H],                 // bottom-right body
+          [x0, H]                   // bottom-left body
+          // closePath will return to [x0 - TAIL, H/2]
+        ];
+      }
+
+      // Label center within BODY (exclude tips)
+      const bodyLeft  = x0;
+      const bodyRight = isLast ? x1 : (x1 - TIP);
+      const cx = bodyLeft + (bodyRight - bodyLeft)/2;
+
+      // Clickable horizontal extent (include tails/tips so it feels right)
+      const btnLeft  = Math.max(0, isFirst ? 0 : (x0 - TAIL));
+      const btnRight = Math.min(W, isLast ? x1 : (x1 + TIP));
+
+      segs.push({ i, isFirst, isLast, x0, x1, TRx, poly, labelX: cx, btnLeft, btnRight });
+    }
+    return { baseW, rects, segs };
+  }
+
+  let hoverIndex = -1;
 
   function draw(){
     const {ctx, W} = sizeCanvas();
     geom = computeGeom(W);
-    ctx.clearRect(0, 0, W, H);
 
-    // Draw from right -> left so left segments sit visually on top (even though no stroke)
+    // background cleared; draw from right -> left (left tabs visually on top)
     for(let idx = geom.segs.length - 1; idx >= 0; idx--){
       const seg = geom.segs[idx];
 
-      // Fill style
+      // Fill
       if(idx === active){
-        const grad = ctx.createLinearGradient(seg.x0, 0, (seg.isLast ? seg.x1 : seg.x1 - TIP), 0);
+        const grad = ctx.createLinearGradient(seg.x0, 0, seg.TRx, 0);
         grad.addColorStop(0, BRAND_S);
         grad.addColorStop(1, BRAND_E);
         ctx.fillStyle = grad;
-      }else{
+      } else {
         ctx.fillStyle = '#ffffff';
       }
 
-      // Path
       ctx.beginPath();
       const pts = seg.poly;
-      ctx.moveTo(px(pts[0][0]), px(pts[0][1]));
-      for(let k=1;k<pts.length;k++){
-        ctx.lineTo(px(pts[k][0]), px(pts[k][1]));
-      }
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for(let k=1;k<pts.length;k++){ ctx.lineTo(pts[k][0], pts[k][1]); }
       ctx.closePath();
       ctx.fill();
 
-      // Hover highlight for non-active (optional subtle)
+      // Hover overlay for non-active
       if(hoverIndex === idx && idx !== active){
         ctx.save();
         ctx.globalAlpha = 1.0;
@@ -226,40 +214,38 @@
       }
     }
 
-    // Draw labels (on canvas so they always center over the body)
-    ctx.font = '600 14px system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif';
+    // Labels (on canvas only; buttons are aria-only to avoid duplication)
+    ctx.font = '600 14px system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     for(const seg of geom.segs){
       const lines = String(labels[seg.i]).split('\n');
-      const color = (seg.i === active) ? '#ffffff' : getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#5a6b82';
-      ctx.fillStyle = color;
+      ctx.fillStyle = (seg.i === active) ? '#ffffff' : TEXT_MUTED;
       if(lines.length === 1){
         ctx.fillText(lines[0], seg.labelX, H/2 + 1);
-      }else{
+      } else {
         ctx.fillText(lines[0], seg.labelX, H/2 - 8);
         ctx.fillText(lines[1], seg.labelX, H/2 + 10);
       }
     }
 
-    // (Optional) outer border line can be drawn if needed, but it may reintroduce hairlines between segments.
-    // We keep the outer shell border in CSS instead.
     layoutButtons(W);
   }
 
   function layoutButtons(W){
-    // Build/position transparent buttons purely for a11y, focus, and click
+    // Build aria-labeled transparent buttons (no visible text)
     const N = labels.length;
     if(labelsEl.childElementCount !== N){
       labelsEl.innerHTML = '';
       for(let i=0;i<N;i++){
         const btn = document.createElement('button');
-        btn.className = 'tab' + (i===active ? ' is-active' : '');
+        btn.className = 'tab';
         btn.id = 't' + i;
         btn.setAttribute('role','tab');
+        btn.setAttribute('aria-label', labels[i].replace(/\n/g,' ')); // accessibility label
         btn.setAttribute('aria-selected', i===active ? 'true' : 'false');
         btn.setAttribute('tabindex', i===active ? '0' : '-1');
-        btn.textContent = labels[i].replace('\n',' ');
+
         btn.addEventListener('click', ()=> activate(i));
         btn.addEventListener('mouseenter', ()=> { hoverIndex = i; draw(); });
         btn.addEventListener('mouseleave', ()=> { hoverIndex = -1; draw(); });
@@ -272,21 +258,20 @@
             activate(next);
           }
         });
+
         labelsEl.appendChild(btn);
       }
     }
-    // Position and z-index (left tabs above to ensure expected focus ring stacking)
+    // Position + update state
     const tabs = Array.from(labelsEl.children);
     tabs.forEach((btn, i)=>{
       const seg = geom.segs[i];
-      const left = seg.btnLeft;
-      const right= seg.btnRight;
-      btn.style.left = left + 'px';
-      btn.style.width = Math.max(0, right - left) + 'px';
-      btn.style.zIndex = String(1000 - i);
-      btn.classList.toggle('is-active', i===active);
-      btn.setAttribute('aria-selected', i===active ? 'true' : 'false');
-      btn.setAttribute('tabindex', i===active ? '0' : '-1');
+      btn.style.left  = seg.btnLeft + 'px';
+      btn.style.width = Math.max(0, seg.btnRight - seg.btnLeft) + 'px';
+      btn.style.zIndex = String(1000 - i);     // leftmost above
+      const on = i===active;
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+      btn.setAttribute('tabindex', on ? '0' : '-1');
     });
   }
 
@@ -297,12 +282,12 @@
     const ps = panelsEl.querySelectorAll('.panel');
     ps.forEach((p, idx) => p.classList.toggle('active', idx===active));
     draw();
+    // move focus to active button without scrolling
+    const act = document.getElementById('t'+i);
+    if(act) act.focus({preventScroll:true});
   }
 
-  // Hover state (for canvas highlight)
-  let hoverIndex = -1;
-
-  // Initial draw + resize
+  // First draw + resize handling
   draw();
   let raf = 0;
   window.addEventListener('resize', ()=>{
