@@ -55,7 +55,7 @@
     height: 40px; 
     
     /* DEFAULT STATE: Off-white background, muted text (using local variable) */
-    background-color: #ffffff; 
+    background-color: var(--color-light-bg); /* Updated to use theme variable */
     color: var(--tabs-muted-text);
     font-weight: 600;
     cursor: pointer;
@@ -70,7 +70,7 @@
 
 /* Hover Effect: Maintain default color, increase z-index for visual pop */
 .tab-arrows .tabs__label:hover {
-    background-color: #ffffff;
+    background-color: var(--color-light-bg); /* Updated to use theme variable */
     color: var(--tabs-muted-text);
     z-index: 2; 
 }
@@ -149,7 +149,7 @@
 .tab-arrows > input[type="radio"]:nth-of-type(9):checked ~ .tabs__controls .tabs__label:nth-of-type(9),
 .tab-arrows > input[type="radio"]:nth-of-type(10):checked ~ .tabs__controls .tabs__label:nth-of-type(10) {
     /* White text on gradient */
-    color: #fff;
+    color: var(--color-white); /* Updated to use theme variable */
     /* Uses local tab variables, which reference the global accent variables */
     background: linear-gradient(90deg, var(--tabs-active-start) 0%, var(--tabs-active-end) 100%);
     box-shadow: none; 
