@@ -1,19 +1,140 @@
-/* ⬅️ SPECIFICITY OVERRIDE: Clear global list styling ONLY inside the mandatory box. */
+/* =========================
+   Mandatory paragraph badge
+   ========================= */
+
+:root {
+  /* Accent for triangle + label: Rename and point to theme blue */
+  --mandy-accent: var(--brand-blue); 
+
+  /* Triangle size + gap to label */
+  --mandy-icon-size: 2.2em;      
+  --mandy-gap: 0.5rem;           
+}
+
+/* --- Mandatory paragraph container --- */
+:where(p).mandatory {
+  /* Layout: [badge] [text] */
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: start;
+  column-gap: .6rem;
+
+  /* Subtle frame (using variables from styles.css) */
+  padding: 8px 12px;
+  border: 1px solid var(--mandy-border);
+  border-radius: 8px;
+  background: var(--mandy-bg);
+
+  /* Smooth transitions, include shadow if you enable it */
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+/* Make hover/focus clearly visible (using variables from styles.css) */
+:where(p).mandatory:is(:hover, :focus-within) {
+  background: var(--mandy-bg-hover);
+  border-color: var(--mandy-border-hover);
+}
+
+/* ⬅️ REVERTED TO ORIGINAL: Targets ALL direct children.
+   This works correctly when the HTML uses wrappers like <p> and <ul>. */
+:where(p).mandatory > * {
+    grid-column: 2;
+}
+
+
+/* Badge parts share the same grid cell so they stay together on the left */
+:where(p).mandatory::before,
+:where(p).mandatory::after {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  align-self: start;
+  pointer-events: none; /* never block paragraph hover */
+}
+
+/* ICON = triangle in accent color, smaller white “!” */
+:where(p).mandatory::before {
+  content: "";
+  width: var(--mandy-icon-size);
+  height: var(--mandy-icon-size);
+  background-color: var(--mandy-accent); /* Uses local variable */
+
+  /* smaller/cleaner “!” using two layers */
+  background-image:
+    linear-gradient(var(--color-white), var(--color-white)),             /* bar */
+    radial-gradient(circle, var(--color-white) 60%, transparent); /* dot */
+  background-repeat: no-repeat;
+
+  /* Tweak these to adjust “!” thickness/size */
+  background-size:
+    8% 40%,    /* bar: width × height (make first value smaller for thinner) */
+    8% 8%;     /* dot: diameter */
+
+  /* Centered positions with good vertical placement */
+  background-position:
+    50% 40%,  /* bar */
+    50% 78%;  /* dot */
+
+  /* Make it a triangle */
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+/* LABEL = “Mandatory” below triangle with a clear gap */
+:where(p).mandatory::after {
+  content: "Mandatory";          /* no uppercase */
+  display: block;
+  text-align: center;
+  color: var(--mandy-accent); /* Uses local variable */
+  font-weight: 700;
+  font-size: .8em;
+  line-height: 1.1;
+  letter-spacing: .01em;
+
+  /* Guaranteed spacing: triangle height + explicit gap */
+  padding-top: calc(var(--mandy-icon-size) + var(--mandy-gap));
+  z-index: 1; /* ensure label always paints above the icon if close */
+}
+
+/* ⬅️ THE ISOLATED LIST FIX: Only target the lists, not the general content */
 :where(p).mandatory ul,
 :where(p).mandatory ol {
-    /* Critical resets to remove left-side indentation pushing it out of the grid column */
+    /* Critical resets to override large global margins/padding from styles.css */
     margin-left: 0;
     padding-left: 0;
 
-    /* Re-apply desired vertical spacing */
+    /* Maintain vertical spacing, reset for the <p> wrapper element */
     margin-top: 0.5em;
     margin-bottom: 1em;
 
-    /* Puts the bullet inside the content area, preventing bleed. */
+    /* Puts the bullet inside the content area. */
     list-style-position: inside; 
 }
 /* Re-introduce padding for the bullet if needed, or rely on margin */
-:where(p).mandatory ul {
+:where(p).mandatory ul,
+:where(p).mandatory ol {
     /* This adds a small indent for the list text, but keeps the whole element inside the box */
     padding-left: 1.5em; 
+}
+
+
+/* --- Other Styles (No Changes) --- */
+
+/* Respect reduced‑motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  :where(p).mandatory {
+    transition: none;
+  }
+}
+
+/* Ensure all real content lives in column 2 as a single item */
+.mandatory__content {
+  grid-column: 2;
+}
+
+/* Keep email inline & unbroken */
+.mandatory a[href^="mailto:"] {
+  display: inline;
+  white-space: nowrap;
+  color: var(--link-color);
+  text-decoration: underline;
 }
