@@ -3,269 +3,184 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chevron Tabs — First is a TRUE left arrow</title>
+<title>Chevron Tabs — Pure CSS Border Triangles</title>
 <style>
   :root{
-    --h: 64;     /* strip height (in px) */
-    --tip: 24;   /* tip width (in px) */
-    --stroke: 1; /* border thickness */
-
-    --accent-start: #2e7df6;
-    --accent-end:   #7aa8ff;
-    --nav-bg:       #ffffff;
-    --text-primary: #0b1f33;
-    --text-secondary:#5a6b82;
-    --brand-blue:   #2e7df6;
-    --body-bg:      #f7f9fc;
+    --h: 56px;        /* nav height */
+    --tip: 22px;      /* arrow tip width */
+    --brand: #2e7df6; /* active fill */
+    --hover: #eaf2ff; /* hover fill for inactive */
+    --muted: #5a6b82; /* inactive text */
+    --body:  #f7f9fc; /* page bg */
   }
 
-  html, body {
-    margin:0; padding:0; background:var(--body-bg); color:var(--text-primary);
-    font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  }
-  .wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+  html, body { margin:0; padding:0; background:var(--body); font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
+  .wrap { max-width:1100px; margin:24px auto; padding:0 16px; }
 
-  .tabs-shell{
-    /* NOTE: no overflow:hidden here, so the left arrow tip is NEVER clipped */
-    background: var(--nav-bg);
-    border: 2px solid var(--brand-blue);
-    border-radius: 10px;
+  /* ---- Chevron strip sits OUTSIDE rounded container (so left tip isn't clipped) ---- */
+  .chevron-nav {
+    display:flex;
+    align-items:stretch;
+    height:var(--h);
+    overflow:visible;      /* important: let arrow tips overflow */
+    gap:0;                 /* we overlap instead of gapping */
   }
-  .panels{
-    background: var(--body-bg);
-    padding: 16px;
-    border-top: 1px solid var(--brand-blue);
+
+  .tab {
+    --fill: #fff;          /* default background (inactive) */
+    --text: var(--muted);  /* default text */
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0 18px;
+    min-width:120px;       /* grows with flex */
+    height:100%;
+    flex:1 1 0;
+    background:var(--fill);
+    color:var(--text);
+    font-weight:600;
+    border:0;
+    cursor:pointer;
+    margin-left: calc(var(--tip) * -1);  /* overlap the previous tab’s tip */
+    outline:none;
+    line-height:1.2;
+    text-align:center;
   }
+  .tab:first-child { margin-left:0; }     /* nothing to overlap on the far left */
+
+  /* Active + hover colors flow to the triangles via --fill */
+  .tab.is-active { --fill: var(--brand); --text:#fff; }
+  .tab:not(.is-active):hover { --fill: var(--hover); }
+
+  /* Right-pointing tip for all but the last */
+  .tab::after{
+    content:"";
+    position:absolute; top:0; right: calc(var(--tip) * -1);
+    width:0; height:0;
+    border-top: calc(var(--h)/2) solid transparent;
+    border-bottom: calc(var(--h)/2) solid transparent;
+    border-left: var(--tip) solid var(--fill); /* triangle color = tab fill */
+  }
+  .tab:last-child::after{ display:none; }
+
+  /* TRUE left arrow head on the FIRST tab */
+  .tab:first-child::before{
+    content:"";
+    position:absolute; top:0; left: calc(var(--tip) * -1);
+    width:0; height:0;
+    border-top: calc(var(--h)/2) solid transparent;
+    border-bottom: calc(var(--h)/2) solid transparent;
+    border-right: var(--tip) solid var(--fill); /* triangle points LEFT */
+  }
+
+  /* Accessibility focus ring */
+  .tab:focus-visible{
+    outline:3px solid #94b8ff;
+    outline-offset:2px;
+  }
+
+  /* ---- Panels are in their own rounded box (no clipping of the left arrow) ---- */
+  .tabs-box{
+    margin-top:8px;
+    background:#fff;
+    border:2px solid var(--brand);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .panels{ padding:16px; background:var(--body); border-top:1px solid var(--brand); }
   .panel{ display:none; }
   .panel.active{ display:block; }
 
-  .seg-text { pointer-events:none; font-weight:600; fill: var(--text-secondary); }
-  .seg-text.active { fill: #fff; }
-  svg [tabindex]:focus { outline: none; }
+  /* Mobile tweaks */
+  @media (max-width:560px){
+    :root { --h: 64px; --tip: 18px; }
+    .tab { min-width:100px; padding:0 12px; font-size:14px; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h2>Road Safety Audit Stages — First tab is a true left arrow</h2>
+  <h2>Road Safety Audit Stages — Pure CSS chevrons (first is a left arrow)</h2>
 
-  <div id="tabs" class="tabs-shell" aria-label="RSA stages tabs">
-    <!-- SVG nav strip is injected above the panels -->
+  <!-- Chevron nav (separate, so left arrow head never gets clipped) -->
+  <div id="chevronNav" class="chevron-nav" role="tablist" aria-label="RSA stages tabs">
+    <button class="tab is-active" role="tab" id="t0" aria-selected="true" aria-controls="p0">
+      Interim
+    </button>
+    <button class="tab" role="tab" id="t1" aria-selected="false" aria-controls="p1">
+      Stage 1
+    </button>
+    <button class="tab" role="tab" id="t2" aria-selected="false" aria-controls="p2">
+      Stage 2<br>&amp; Combined Stage 1–2
+    </button>
+    <button class="tab" role="tab" id="t3" aria-selected="false" aria-controls="p3">
+      Stage 3
+    </button>
+    <button class="tab" role="tab" id="t4" aria-selected="false" aria-controls="p4">
+      Stage 4
+    </button>
+  </div>
+
+  <div class="tabs-box">
     <div class="panels" id="panels">
-      <section class="panel active"><h3>Interim Road Safety Audit</h3><p>Interim content…</p></section>
-      <section class="panel"><h3>Stage 1 Road Safety Audit</h3><p>Stage 1 content…</p></section>
-      <section class="panel"><h3>Stage 2 &amp; Combined Stage 1–2</h3><p>Stage 2 + Combined content…</p></section>
-      <section class="panel"><h3>Stage 3 Road Safety Audit</h3><p>Stage 3 content…</p></section>
-      <section class="panel"><h3>Stage 4 Road Safety Audit</h3><p>Stage 4 content…</p></section>
+      <section id="p0" class="panel active" role="tabpanel" aria-labelledby="t0">
+        <h3>Interim Road Safety Audit</h3><p>Interim content…</p>
+      </section>
+      <section id="p1" class="panel" role="tabpanel" aria-labelledby="t1">
+        <h3>Stage 1 Road Safety Audit</h3><p>Stage 1 content…</p>
+      </section>
+      <section id="p2" class="panel" role="tabpanel" aria-labelledby="t2">
+        <h3>Stage 2 &amp; Combined Stage 1–2</h3><p>Stage 2 + Combined content…</p>
+      </section>
+      <section id="p3" class="panel" role="tabpanel" aria-labelledby="t3">
+        <h3>Stage 3 Road Safety Audit</h3><p>Stage 3 content…</p>
+      </section>
+      <section id="p4" class="panel" role="tabpanel" aria-labelledby="t4">
+        <h3>Stage 4 Road Safety Audit</h3><p>Stage 4 content…</p>
+      </section>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  // ------------ Config ------------
-  const labels = [
-    'Interim',
-    'Stage 1',
-    'Stage 2\n& Combined Stage 1–2',
-    'Stage 3',
-    'Stage 4'
-  ];
-  const H       = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--h')) || 64;
-  const TIP     = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tip')) || 24;
-  const STROKE  = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--stroke')) || 1;
+  const tabs   = Array.from(document.querySelectorAll('.tab'));
+  const panels = Array.from(document.querySelectorAll('.panel'));
 
-  const host    = document.getElementById('tabs');
-  const panels  = document.getElementById('panels');
-
-  // Create SVG strip above panels
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svg   = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('width', '100%');
-  svg.setAttribute('height', String(H));
-  svg.setAttribute('viewBox', `0 0 100 ${H}`); // will be updated on draw
-  svg.setAttribute('preserveAspectRatio', 'none');
-  svg.setAttribute('role','tablist');
-  svg.style.display = 'block';
-  host.insertBefore(svg, panels);
-
-  // Gradient
-  const defs  = document.createElementNS(svgNS, 'defs');
-  const grad  = document.createElementNS(svgNS, 'linearGradient');
-  grad.setAttribute('id','activeGrad');
-  grad.setAttribute('x1','0%'); grad.setAttribute('y1','0%');
-  grad.setAttribute('x2','100%'); grad.setAttribute('y2','0%');
-  const s1 = document.createElementNS(svgNS, 'stop'); s1.setAttribute('offset','0%');  s1.setAttribute('stop-color','var(--accent-start)');
-  const s2 = document.createElementNS(svgNS, 'stop'); s2.setAttribute('offset','100%'); s2.setAttribute('stop-color','var(--accent-end)');
-  grad.append(s1,s2); defs.appendChild(grad); svg.appendChild(defs);
-
-  let active = 0;
-
-  function draw(){
-    // Clear old segments except defs
-    while(svg.lastChild && svg.lastChild !== defs){ svg.removeChild(svg.lastChild); }
-
-    const rect = svg.getBoundingClientRect();
-    let W = Math.max(360, Math.floor(rect.width));
-    if (W % 2) W -= 1;  // crisp half-pixel strokes
-
-    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-
-    const N = labels.length;
-    const half = STROKE / 2;
-
-    // IMPORTANT: with a left tip on the first AND right tips on all but last,
-    // there are N tips total. Keep total width = W by subtracting N*TIP then distributing.
-    const baseW = Math.max(60, Math.floor((W - N*TIP) / N));
-
-    // For body rectangles, we anchor the first body's left edge at x = TIP,
-    // so its left apex sits exactly at x = 0.
-    const rects = [];
-    for (let i=0; i<N; i++){
-      const x0 = TIP + i * (baseW + TIP); // body left
-      const x1 = x0 + baseW;              // body right
-      rects.push([x0, x1]);
-    }
-
-    const borderColor = (getComputedStyle(document.documentElement).getPropertyValue('--brand-blue') || '#2e7df6').trim();
-
-    // Draw from right to left so left segments sit on top and hide seams
-    for(let i=N-1; i>=0; i--){
-      const [x0, x1] = rects[i];
-      const isFirst  = (i === 0);
-      const isLast   = (i === N-1);
-
-      // BODY edges (excluding tips)
-      const TLx = (isFirst ? x0 + half : x0 + half); // same TL point; apex handled separately
-      const TRx = (isLast ? x1 - half : x1 - TIP - half);
-      const BLx = x0 + half;
-      const BRx = (isLast ? x1 - half : x1 - TIP - half);
-
-      const TLy = half, TRy = half, BLy = H - half, BRy = H - half;
-
-      // Tip apexes
-      const leftApexX  = isFirst ? 0 + half : null;
-      const rightApexX = isLast ? null : x1 + TIP - half;
-      const apexY = H / 2;
-
-      // Build path
-      const d = [];
-      if (isFirst) {
-        // Start at TRUE LEFT APEX -> top-left -> top-right -> right tip (if any) -> bottom-right -> bottom-left -> back to apex
-        d.push(`M ${leftApexX},${apexY}`);
-        d.push(`L ${TLx},${TLy}`);
-        d.push(`L ${TRx},${TRy}`);
-        if(!isLast){ d.push(`L ${rightApexX},${apexY}`); d.push(`L ${BRx},${BRy}`); }
-        else { d.push(`L ${BRx},${BRy}`); }
-        d.push(`L ${BLx},${BLy}`);
-        d.push(`Z`);
-      } else {
-        // Middle/last: slanted tail (diagonal left) is implied by the polygon edges below
-        d.push(`M ${TLx},${TLy}`);
-        d.push(`L ${TRx},${TRy}`);
-        if(!isLast){ d.push(`L ${rightApexX},${apexY}`); d.push(`L ${BRx},${BRy}`); }
-        else { d.push(`L ${BRx},${BRy}`); }
-        d.push(`L ${BLx},${BLy}`);
-        d.push(`Z`);
-      }
-
-      // Group
-      const g = document.createElementNS(svgNS, 'g');
-      g.classList.add('seg');
-      g.setAttribute('tabindex','0');
-      g.setAttribute('role','tab');
-      g.setAttribute('aria-selected', i===active ? 'true' : 'false');
-      g.dataset.index = i;
-
-      const path = document.createElementNS(svgNS, 'path');
-      path.setAttribute('d', d.join(' '));
-      path.setAttribute('vector-effect','non-scaling-stroke');
-      path.setAttribute('shape-rendering','geometricPrecision');
-      path.setAttribute('stroke', borderColor);
-      path.setAttribute('stroke-width', String(STROKE));
-      path.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
-
-      // Center text in the BODY (excludes tips)
-      const bodyLeft  = isFirst ? x0 : x0; // first tab’s body starts at x0 (left tip is outside body)
-      const bodyRight = isLast ? x1 : x1 - TIP;
-      const cx = bodyLeft + (bodyRight - bodyLeft) / 2;
-
-      const text = document.createElementNS(svgNS, 'text');
-      text.setAttribute('x', String(cx));
-      text.setAttribute('y', String(H/2 + 5));
-      text.setAttribute('text-anchor','middle');
-      text.setAttribute('dominant-baseline','middle');
-      text.setAttribute('font-size','14');
-      text.setAttribute('font-weight','600');
-      text.classList.add('seg-text');
-
-      const label = labels[i];
-      if(label.includes('\n')){
-        const [ln1, ln2] = label.split('\n');
-        const t1 = document.createElementNS(svgNS, 'tspan');
-        t1.setAttribute('x', String(cx));
-        t1.setAttribute('dy', '-0.4em'); t1.textContent = ln1;
-        const t2 = document.createElementNS(svgNS, 'tspan');
-        t2.setAttribute('x', String(cx));
-        t2.setAttribute('dy', '1.2em'); t2.textContent = ln2;
-        text.append(t1, t2);
-      } else {
-        text.textContent = label;
-      }
-      if(i===active) text.classList.add('active');
-
-      // Hover / Click / Keys
-      g.addEventListener('mouseenter', () => { if(i!==active) path.setAttribute('fill','#e6f0ff'); });
-      g.addEventListener('mouseleave', () => { path.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff'); });
-      g.addEventListener('click', () => activate(i));
-      g.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(i); }
-        if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
-          e.preventDefault();
-          const dir = e.key === 'ArrowRight' ? 1 : -1;
-          const next = (active + dir + labels.length) % labels.length;
-          activate(next);
-          const nextG = svg.querySelector(`g.seg[data-index="${next}"]`);
-          if(nextG) nextG.focus();
-        }
-      });
-
-      // Big hit area including tips
-      const hit = document.createElementNS(svgNS, 'rect');
-      const hitX = isFirst ? 0 : x0;
-      const hitW = (isLast ? (x1 - hitX) : (x1 + TIP - hitX));
-      hit.setAttribute('x', String(hitX));
-      hit.setAttribute('y', '0');
-      hit.setAttribute('width', String(hitW));
-      hit.setAttribute('height', String(H));
-      hit.setAttribute('fill', 'transparent');
-
-      g.append(path, text, hit);
-      svg.appendChild(g);
-    }
-  }
+  // Ensure left tabs paint on top (so their tips cover seams)
+  tabs.forEach((t, i) => t.style.zIndex = String(1000 - i));
 
   function activate(idx){
-    active = idx;
-    svg.querySelectorAll('g.seg').forEach((g, i) => {
-      const p = g.querySelector('path');
-      const t = g.querySelector('text');
-      g.setAttribute('aria-selected', i===active ? 'true' : 'false');
-      p.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
-      t.classList.toggle('active', i===active);
+    tabs.forEach((t,i)=>{
+      const on = i===idx;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-selected', on ? 'true':'false');
+      t.setAttribute('tabindex', on ? '0':'-1');
     });
-    const ps = panels.querySelectorAll('.panel');
-    ps.forEach((p, i)=> p.classList.toggle('active', i===active));
+    panels.forEach((p,i)=>{
+      const on = i===idx;
+      p.classList.toggle('active', on);
+      p.setAttribute('aria-hidden', on ? 'false':'true');
+    });
+    tabs[idx].focus({preventScroll:true});
   }
 
-  draw();
-  activate(0);
-
-  // Redraw on resize (keep the left apex at x=0)
-  let raf=0;
-  window.addEventListener('resize', ()=>{
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(()=>{ draw(); activate(active); });
+  tabs.forEach((t,i)=>{
+    t.addEventListener('click', ()=> activate(i));
+    t.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(i); }
+      if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+        e.preventDefault();
+        const dir = e.key === 'ArrowRight' ? 1 : -1;
+        const next = (i + dir + tabs.length) % tabs.length;
+        activate(next);
+      }
+    });
   });
+
+  // Init
+  tabs.forEach((t,i)=> t.setAttribute('tabindex', i===0 ? '0':'-1'));
 })();
 </script>
 </body>
