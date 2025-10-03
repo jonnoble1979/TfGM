@@ -1,5 +1,5 @@
 /* =========================
-   Mandatory paragraph badge
+   Mandatory paragraph badge (P TAGS)
    ========================= */
 
 :root {
@@ -11,8 +11,8 @@
   --mandy-gap: 0.5rem;           
 }
 
-/* --- Mandatory paragraph container --- */
-:where(p).mandatory {
+/* --- Mandatory paragraph container (P TAGS) --- */
+:where(p).mandatory { 
   /* Layout: [badge] [text] */
   display: grid;
   grid-template-columns: max-content 1fr;
@@ -25,6 +25,9 @@
   border-radius: 8px;
   background: var(--mandy-bg);
 
+  /* Set default block margin for the p tag */
+  margin: 1em 0; 
+
   /* Smooth transitions, include shadow if you enable it */
   transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
@@ -35,58 +38,56 @@
   border-color: var(--mandy-border-hover);
 }
 
-/* ⬅️ FINAL FIX 1: FORCING ALL DIRECT CHILDREN TO COLUMN 2 */
-/* Now that the HTML uses <div> and <ul>, this should reliably target all content. */
+/* CORE: FORCING ALL DIRECT CHILDREN TO COLUMN 2 (P TAGS) */
 :where(p).mandatory > * {
-    grid-column: 2 !important; 
-    /* Also ensure the DIV/P content starts cleanly */
+    grid-column: 2; 
     margin-top: 0;
 }
 
 
-/* Badge parts share the same grid cell so they stay together on the left */
+/* Badge parts share the same grid cell so they stay together on the left (P TAGS)*/
 :where(p).mandatory::before,
 :where(p).mandatory::after {
   grid-column: 1;
   grid-row: 1;
   justify-self: center;
   align-self: start;
-  pointer-events: none; /* never block paragraph hover */
+  pointer-events: none; 
 }
 
-/* ICON = triangle in accent color, smaller white “!” */
+/* ICON = triangle in accent color, smaller white “!” (P TAGS)*/
 :where(p).mandatory::before {
   content: "";
   width: var(--mandy-icon-size);
   height: var(--mandy-icon-size);
-  background-color: var(--mandy-accent); /* Uses local variable */
+  background-color: var(--mandy-accent); 
 
   /* smaller/cleaner “!” using two layers */
   background-image:
-    linear-gradient(var(--color-white), var(--color-white)),             /* bar */
-    radial-gradient(circle, var(--color-white) 60%, transparent); /* dot */
+    linear-gradient(var(--color-white), var(--color-white)),             
+    radial-gradient(circle, var(--color-white) 60%, transparent); 
   background-repeat: no-repeat;
 
   /* Tweak these to adjust “!” thickness/size */
   background-size:
-    8% 40%,    /* bar: width × height (make first value smaller for thinner) */
-    8% 8%;     /* dot: diameter */
+    8% 40%,    
+    8% 8%;     
 
   /* Centered positions with good vertical placement */
   background-position:
-    50% 40%,  /* bar */
-    50% 78%;  /* dot */
+    50% 40%,  
+    50% 78%;  
 
   /* Make it a triangle */
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }
 
-/* LABEL = “Mandatory” below triangle with a clear gap */
+/* LABEL = “Mandatory” below triangle with a clear gap (P TAGS)*/
 :where(p).mandatory::after {
-  content: "Mandatory";          /* no uppercase */
+  content: "Mandatory";          
   display: block;
   text-align: center;
-  color: var(--mandy-accent); /* Uses local variable */
+  color: var(--mandy-accent); 
   font-weight: 700;
   font-size: .8em;
   line-height: 1.1;
@@ -94,40 +95,149 @@
 
   /* Guaranteed spacing: triangle height + explicit gap */
   padding-top: calc(var(--mandy-icon-size) + var(--mandy-gap));
-  z-index: 1; /* ensure label always paints above the icon if close */
+  z-index: 1; 
 }
 
-/* ⬅️ FINAL FIX 2: THE ISOLATED LIST FIX WITH MAXIMUM SPECIFICITY */
+/* LIST FIX: Only target the lists, overriding global margin/padding. (P TAGS)*/
 :where(p).mandatory ul,
 :where(p).mandatory ol {
-    /* Critical resets to override large global margins/padding from styles.css */
-    margin: 0.5em 0 1em 0 !important; 
-    padding-left: 0 !important; 
-
-    /* Puts the bullet inside the content area. */
-    list-style-position: inside !important; 
+    margin: 0.5em 0 1em 0; 
+    padding-left: 0; 
+    list-style-position: inside; 
 }
 
-/* Final list padding to create indent */
+/* Final list padding to create indent (P TAGS)*/
 :where(p).mandatory ul,
 :where(p).mandatory ol {
-    /* This adds a small indent for the list text, but keeps the whole element inside the box */
-    padding-left: 1.5em !important; 
+    padding-left: 1.5em; 
 }
 
-/* Ensure list items follow standard styles */
+/* Ensure list items follow standard styles (P TAGS)*/
 :where(p).mandatory ul li,
 :where(p).mandatory ol li {
-    /* Ensure no extra padding is introduced here */
-    padding-left: 0 !important;
+    margin-bottom: 0.6em;
+    padding-left: 0; 
 }
 
 
-/* --- Other Styles (No Changes) --- */
+/* =======================================
+   Mandatory container (DIV TAGS - THE FIX)
+   ======================================= */
+
+/* --- Mandatory container (DIV TAGS) --- */
+.mandatoryDiv { 
+  /* Layout: [badge] [text] */
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: start;
+  column-gap: .6rem;
+
+  /* Subtle frame (using variables from styles.css) */
+  padding: 8px 12px;
+  border: 1px solid var(--mandy-border);
+  border-radius: 8px;
+  background: var(--mandy-bg);
+
+  /* Set default block margin for the div */
+  margin: 1em 0; 
+
+  /* Smooth transitions, include shadow if you enable it */
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+/* Make hover/focus clearly visible (DIV TAGS) */
+.mandatoryDiv:is(:hover, :focus-within) {
+  background: var(--mandy-bg-hover);
+  border-color: var(--mandy-border-hover);
+}
+
+/* CORE: FORCING ALL DIRECT CHILDREN TO COLUMN 2 (DIV TAGS) */
+.mandatoryDiv > * {
+    grid-column: 2; 
+    margin-top: 0;
+}
+
+
+/* Badge parts share the same grid cell so they stay together on the left (DIV TAGS)*/
+.mandatoryDiv::before,
+.mandatoryDiv::after {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  align-self: start;
+  pointer-events: none; 
+}
+
+/* ICON = triangle in accent color, smaller white “!” (DIV TAGS)*/
+.mandatoryDiv::before {
+  content: "";
+  width: var(--mandy-icon-size);
+  height: var(--mandy-icon-size);
+  background-color: var(--mandy-accent); 
+
+  /* smaller/cleaner “!” using two layers */
+  background-image:
+    linear-gradient(var(--color-white), var(--color-white)),             
+    radial-gradient(circle, var(--color-white) 60%, transparent); 
+  background-repeat: no-repeat;
+
+  /* Tweak these to adjust “!” thickness/size */
+  background-size:
+    8% 40%,    
+    8% 8%;     
+
+  /* Centered positions with good vertical placement */
+  background-position:
+    50% 40%,  
+    50% 78%;  
+
+  /* Make it a triangle */
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+/* LABEL = “Mandatory” below triangle with a clear gap (DIV TAGS)*/
+.mandatoryDiv::after {
+  content: "Mandatory";          
+  display: block;
+  text-align: center;
+  color: var(--mandy-accent); 
+  font-weight: 700;
+  font-size: .8em;
+  line-height: 1.1;
+  letter-spacing: .01em;
+
+  /* Guaranteed spacing: triangle height + explicit gap */
+  padding-top: calc(var(--mandy-icon-size) + var(--mandy-gap));
+  z-index: 1; 
+}
+
+/* LIST FIX: Only target the lists, overriding global margin/padding. (DIV TAGS)*/
+.mandatoryDiv ul,
+.mandatoryDiv ol {
+    margin: 0.5em 0 1em 0; 
+    padding-left: 0; 
+    list-style-position: inside; 
+}
+
+/* Final list padding to create indent (DIV TAGS)*/
+.mandatoryDiv ul,
+.mandatoryDiv ol {
+    padding-left: 1.5em; 
+}
+
+/* Ensure list items follow standard styles (DIV TAGS)*/
+.mandatoryDiv ul li,
+.mandatoryDiv ol li {
+    margin-bottom: 0.6em;
+    padding-left: 0; 
+}
+
+
+/* --- Other Styles (Shared) --- */
 
 /* Respect reduced‑motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  :where(p).mandatory {
+  :where(p).mandatory, .mandatoryDiv {
     transition: none;
   }
 }
