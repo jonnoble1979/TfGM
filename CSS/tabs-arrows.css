@@ -1,203 +1,101 @@
-/* ----- Theme tokens (example) ----- */
 :root{
-  --accent-start: #2e7df6;
-  --accent-end:   #7aa8ff;
-
-  /* Chevron geometry */
-  --tip: 24px;        /* width of the triangular wedge in CSS pixels */
-  --radius: 10px;
-  --border-w: 1px;
+  --accent-start:#2e7df6; --accent-end:#7aa8ff; 
+  --tip:24px; --radius:10px; --border-w:1px;
 }
 
-/* ----- Container ----- */
-.tab-arrows {
-  --arrow-accent-start: var(--accent-start);
-  --arrow-accent-end:   var(--accent-end);
-  --arrow-bg:           var(--nav-bg);
-  --arrow-text:         var(--text-primary);
-  --arrow-muted:        var(--text-secondary);
-  --arrow-border:       var(--brand-blue);
-
-  background: var(--arrow-bg);
-  border: calc(var(--border-w) * 2) solid var(--arrow-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  isolation: isolate;
-  color: var(--arrow-text);
+.tab-arrows{
+  --arrow-accent-start:var(--accent-start);
+  --arrow-accent-end:var(--accent-end);
+  --arrow-bg:var(--nav-bg);
+  --arrow-text:var(--text-primary);
+  --arrow-muted:var(--text-secondary);
+  --arrow-border:var(--brand-blue);
+  background:var(--arrow-bg);
+  border:calc(var(--border-w)*2) solid var(--arrow-border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  isolation:isolate;
+  color:var(--arrow-text);
 }
 
 .tab-arrows > .tabs__controls{
-  display: flex;
-  background: var(--arrow-bg);
-  border-bottom: var(--border-w) solid var(--arrow-border);
-  overflow: visible; /* allow wedges to overlap next tab */
+  display:flex;
+  background:var(--arrow-bg);
+  border-bottom:var(--border-w) solid var(--arrow-border);
+  overflow:visible;
 }
 
-/* ----- Labels: box + overlap + SVG wedge ----- */
 .tab-arrows .tabs__label{
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-
-  /* Make tabs share width evenly */
-  flex: 1 1 0;
-  min-width: 0;
-
-  /* Leave space on the right for the wedge to sit without covering text */
-  padding-block: 12px;
-  padding-inline: 24px calc(24px + var(--tip));
-  min-height: 60px;
-  font-weight: 600;
-  color: var(--arrow-muted);
-  background: #fff;
-
-  /* Crisp rectangular borders from CSS */
-  border-inline-start: var(--border-w) solid var(--arrow-border);
-  border-block: var(--border-w) solid var(--arrow-border);
-  /* We skip the inline-end border; the wedge supplies the diagonal edge */
-  border-inline-end: none;
-
-  /* Overlap so wedges interlock */
-  margin-inline-end: calc(var(--tip) * -1);
-  cursor: pointer;
-  user-select: none;
-  z-index: 1; /* each will rise on hover/active */
-  transition: color .2s ease, background .2s ease, box-shadow .2s ease, z-index .2s ease;
+  position:relative; display:flex; align-items:center; justify-content:center; text-align:center;
+  flex:1 1 0; min-width:0;
+  padding-block:12px; padding-inline:24px calc(24px + var(--tip));
+  min-height:60px; font-weight:600;
+  color:var(--arrow-muted); background:#fff;
+  border-inline-start:var(--border-w) solid var(--arrow-border);
+  border-block:var(--border-w) solid var(--arrow-border);
+  border-inline-end:none;
+  margin-inline-end:calc(var(--tip)*-1);
+  cursor:pointer; user-select:none; z-index:1;
+  transition:color .2s, background .2s, box-shadow .2s, z-index .2s;
 }
 
-/* First/last rounding and edge rules */
 .tab-arrows .tabs__label:first-child{
-  border-start-start-radius: var(--radius);
-  border-end-start-radius: var(--radius);
-  /* Flat left side is CSS border—this fixes the left-hand side */
+  border-start-start-radius:var(--radius);
+  border-end-start-radius:var(--radius);
 }
 .tab-arrows .tabs__label--last{
-  /* Last tab has flat right edge; restore the right border and remove overlap */
-  border-inline-end: var(--border-w) solid var(--arrow-border);
-  border-start-end-radius: var(--radius);
-  border-end-end-radius: var(--radius);
-  margin-inline-end: 0;
-  padding-inline: 24px; /* no wedge space */
+  border-inline-end:var(--border-w) solid var(--arrow-border);
+  border-start-end-radius:var(--radius);
+  border-end-end-radius:var(--radius);
+  margin-inline-end:0;
+  padding-inline:24px;
 }
 
-/* The text sits above the SVG */
-.tab-arrows .tabs__text{ position: relative; z-index: 2; }
+.tab-arrows .tabs__text{ position:relative; z-index:2; }
 
-/* The wedge: right-pointing triangle that supplies the diagonal border */
 .tab-arrows .tabs__wedge{
-  position: absolute;
-  inset-block: calc(var(--border-w) * -1);
-  inset-inline-end: calc(var(--border-w) * -1);
-  width: calc(var(--tip) + var(--border-w)); /* account for missing right border */
-  height: calc(100% + var(--border-w) * 2);
-  display: block;
-  pointer-events: none; /* never intercept clicks */
+  position:absolute;
+  inset-block:calc(var(--border-w)*-1);
+  inset-inline-end:calc(var(--border-w)*-1);
+  width:calc(var(--tip) + var(--border-w));
+  height:calc(100% + var(--border-w)*2);
+  display:block;
+  pointer-events:none;
 }
-
-.tab-arrows .wedge-fill{
-  /* inherit the tab fill so the wedge looks like one piece */
-  fill: var(--tab-fill, #fff);
-}
+.tab-arrows .wedge-fill{ fill:var(--tab-fill, #fff); }
 .tab-arrows .wedge-stroke{
-  fill: none;
-  stroke: var(--arrow-border);
-  stroke-width: var(--border-w);
-  vector-effect: non-scaling-stroke;           /* crisp stroke at any scale */
-  shape-rendering: geometricPrecision;         /* prefer precise edges */
-  stroke-linejoin: miter;
-  stroke-miterlimit: 4;
+  fill:none; stroke:var(--arrow-border); stroke-width:var(--border-w);
+  vector-effect:non-scaling-stroke; shape-rendering:geometricPrecision;
+  stroke-linejoin:miter; stroke-miterlimit:4;
 }
 
-/* Hover (stronger highlight) */
 .tab-arrows .tabs__label:hover{
-  background: #e6f0ff;
-  color: var(--arrow-text);
+  background:#e6f0ff; color:var(--arrow-text);
   box-shadow: inset 0 0 0 var(--border-w) var(--arrow-border);
-  z-index: 2;
+  z-index:2;
 }
-/* Make the wedge follow hover fill */
-.tab-arrows .tabs__label:hover{ --tab-fill: #e6f0ff; }
+.tab-arrows .tabs__label:hover{ --tab-fill:#e6f0ff; }
 
-/* Active (gradient fill + top of stack) */
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
 .tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__controls .tabs__label:nth-of-type(4),
 .tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5){
-  --tab-fill: linear-gradient(90deg, var(--arrow-accent-start), var(--arrow-accent-end));
-  color: #fff;
-  z-index: 3;
-  box-shadow: none;
+  --tab-fill:linear-gradient(90deg, var(--arrow-accent-start), var(--arrow-accent-end));
+  color:#fff; z-index:3; box-shadow:none;
 }
 
-/* Panels */
-.tab-arrows > .tabs__panels{
-  padding: 16px;
-  background: var(--body-bg);
-}
-.tab-arrows > .tabs__panels > .tabs__panel{
-  display: none;
-  animation: fadein .25s ease;
-}
+.tab-arrows > .tabs__panels{ padding:16px; background:var(--body-bg); }
+.tab-arrows > .tabs__panels > .tabs__panel{ display:none; animation:fadein .25s ease; }
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__panels .tabs__panel:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__panels .tabs__panel:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__panels .tabs__panel:nth-of-type(3),
 .tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__panels .tabs__panel:nth-of-type(4),
-.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__panels .tabs__panel:nth-of-type(5){
-  display: block;
-}
+.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__panels .tabs__panel:nth-of-type(5){ display:block; }
 
-/* Hide radios accessibly */
 .tab-arrows > input[type="radio"]{
-  position: absolute !important;
-  inline-size: 1px;
-  block-size: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-  padding: 0;
-  margin: -1px;
+  position:absolute !important; inline-size:1px; block-size:1px; overflow:hidden;
+  clip-path:inset(50%); white-space:nowrap; border:0; padding:0; margin:-1px;
 }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .tab-arrows *{
-    transition: none !important;
-    animation: none !important;
-  }
-}
-
-/* RTL support: flip wedge to the left and overlap to the left */
-:dir(rtl) .tab-arrows .tabs__label{
-  border-inline-end: var(--border-w) solid var(--arrow-border);
-  border-inline-start: none;
-  padding-inline: calc(24px + var(--tip)) 24px;
-  margin-inline-start: calc(var(--tip) * -1);
-  margin-inline-end: 0;
-}
-:dir(rtl) .tab-arrows .tabs__label:first-child{
-  border-start-end-radius: var(--radius);
-  border-end-end-radius: var(--radius);
-}
-:dir(rtl) .tab-arrows .tabs__label--last{
-  border-start-start-radius: var(--radius);
-  border-end-start-radius: var(--radius);
-}
-:dir(rtl) .tab-arrows .tabs__wedge{
-  inset-inline-start: calc(var(--border-w) * -1);
-  inset-inline-end: auto;
-  transform: scaleX(-1); /* mirror the triangle */
-}
-
-/* Forced colors / High contrast: simplify visuals */
-@media (forced-colors: active){
-  .tab-arrows .tabs__label{ background: Canvas; color: ButtonText; border-color: ButtonText; }
-  .tab-arrows .tabs__label:hover{ background: Highlight; color: HighlightText; }
-  .tab-arrows .wedge-fill{ fill: currentColor; }
-  .tab-arrows .wedge-stroke{ stroke: ButtonText; }
-}
-
-@keyframes fadein{ from{opacity:0; transform: translateY(2px);} to{opacity:1; transform: translateY(0);} }
+@keyframes fadein{ from{opacity:0; transform:translateY(2px);} to{opacity:1; transform:translateY(0);} }
