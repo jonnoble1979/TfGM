@@ -1,198 +1,213 @@
+/* ==================================================================== */
+/* Custom Variables for Arrow Tabs */
+/* Add these to your main :root block if you want to customize colors */
+/* :root {
+    --arrow-color: #1a759f;
+    --arrow-hover-color: #166084;
+    --arrow-active-color: #004d73;
+    --arrow-width: 15px;
+    --arrow-text-color: #ffffff;
+} */
+/* If you don't define them, the component will use the fallback values below. */
+/* ==================================================================== */
 
+/* --- Base Tabs Styling (Preserve your existing CSS structure) --- */
+
+/* Parent Container for Arrow Tabs */
 .tab-arrows {
-  /* component-only vars */
-  --tip: 24px;                          /* chevron depth (px) */
-  --radius: 10px;                       /* container & end-tab rounding */
-  --border-w: 1px;                      /* tab border thickness */
-  --arrow-accent-start: var(--accent-start, #2e7df6);
-  --arrow-accent-end:   var(--accent-end,   #7aa8ff);
-  --arrow-bg:     var(--nav-bg);
-  --arrow-text:   var(--text-primary);
-  --arrow-muted:  var(--text-secondary);
-  --arrow-border: var(--brand-blue);
+    /* Use the same styling as your .tabs container, if applicable */
+    --tabs-accent: var(--accent-start, #1a759f);
+    --tabs-bg: var(--nav-bg, #f0f0f0);
+    --tabs-text: var(--text-primary, #333);
+    --tabs-muted: var(--text-secondary, #666);
+    --tabs-border: var(--brand-blue, #1a759f);
 
-  background: var(--arrow-bg);
-  border: calc(var(--border-w) * 2) solid var(--arrow-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  isolation: isolate;
-  color: var(--arrow-text);
+    background: var(--tabs-bg);
+    /* Removed standard border/shadow for clean flow, but you can add it back to the .tab-arrows div */
+    /* border-radius: 10px; */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: fit-content; /* Ensure container only wraps the tabs */
+    overflow: hidden; /* Helps contain any stray shadows/borders */
 }
 
-/* Controls strip */
+/* Hide radios, keep accessible (from your existing code) */
+.tab-arrows > input[type="radio"] {
+    position: absolute !important;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+    padding: 0;
+    margin: -1px;
+}
+
+/* Controls container (must use flex to arrange arrows horizontally) */
 .tab-arrows > .tabs__controls {
-  position: relative;          /* new stacking context for clean z-index */
-  display: flex;
-  background: var(--arrow-bg);
-  border-bottom: var(--border-w) solid var(--arrow-border);
-  overflow: visible;           /* allow wedges to overlap next tab */
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping onto a new line */
+    padding: 0;
+    background: transparent; /* Background on this container should be transparent */
+    border-bottom: none;
+    position: static;
+    top: auto;
+    z-index: 1;
+    backdrop-filter: none;
 }
 
-/* --- HARD ISOLATION: reset labels to avoid global collisions --- */
+/* --- Arrow Label (Button) Styling --- */
+
 .tab-arrows .tabs__label {
-  all: unset;                  /* wipe global label styles */
-  box-sizing: border-box;
+    /* Set color variables using fallbacks */
+    --arrow-color: var(--tabs-accent, #1a759f);
+    --arrow-hover-color: #166084;
+    --arrow-active-color: #004d73;
+    --arrow-text-color: var(--tabs-text, #ffffff);
+    --arrow-width: 15px;
 
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px; /* Define segment height */
+    
+    /* Default styling */
+    background-color: var(--arrow-color);
+    color: var(--arrow-text-color);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+    transition: background-color .2s ease, z-index 0s;
+    z-index: 1; /* Base z-index */
 
-  /* Equal widths, allow wrapping for long label */
-  flex: 1 1 0;
-  min-width: 0;
-
-  /* Leave room for the chevron wedge on the right */
-  padding-block: 12px;
-  padding-inline: 24px calc(24px + var(--tip));
-  min-height: 60px;
-
-  font: inherit;
-  font-weight: 600;
-  color: var(--arrow-muted);
-  background: #fff;
-
-  /* Rectangular borders (right edge is diagonal via wedge) */
-  border-inline-start: var(--border-w) solid var(--arrow-border);
-  border-block:        var(--border-w) solid var(--arrow-border);
-  border-inline-end:   none;
-
-  /* Interlock */
-  margin-inline-end: calc(var(--tip) * -1);
-
-  cursor: pointer;
-  user-select: none;
-  z-index: 1;
-  transition: color .2s ease, background .2s ease, box-shadow .2s ease, z-index .2s ease;
+    /* Overlap is critical to hide the join line. */
+    margin-right: -2px; 
 }
 
-/* First tab: rounded left side */
-.tab-arrows .tabs__label:first-child {
-  border-start-start-radius: var(--radius);
-  border-end-start-radius: var(--radius);
-}
-
-/* Last tab: flat right edge; no wedge and no overlap */
-.tab-arrows .tabs__label--last {
-  border-inline-end: var(--border-w) solid var(--arrow-border);
-  border-start-end-radius: var(--radius);
-  border-end-end-radius: var(--radius);
-  margin-inline-end: 0;
-  padding-inline: 24px; /* remove wedge space */
-}
-
-/* Text sits above wedge */
-.tab-arrows .tabs__text {
-  position: relative;
-  z-index: 2;
-  line-height: 1.2;
-  white-space: normal;
-}
-
-/* Wedge SVG (diagonal edge + stroke) */
-.tab-arrows .tabs__wedge {
-  position: absolute;
-  inset-block: calc(var(--border-w) * -1);
-  inset-inline-end: calc(var(--border-w) * -1);
-  width: calc(var(--tip) + var(--border-w));
-  height: calc(100% + var(--border-w) * 2);
-  display: block;
-  pointer-events: none;
-}
-.tab-arrows .wedge-fill {
-  fill: var(--tab-fill, #fff);
-}
-.tab-arrows .wedge-stroke {
-  fill: none;
-  stroke: var(--arrow-border);
-  stroke-width: var(--border-w);
-  vector-effect: non-scaling-stroke;
-  shape-rendering: geometricPrecision;
-  stroke-linejoin: miter;
-  stroke-miterlimit: 4;
-}
-
-/* Hover */
+/* Hover Effect (applies to all segments) */
 .tab-arrows .tabs__label:hover {
-  background: #e6f0ff;
-  color: var(--arrow-text);
-  box-shadow: inset 0 0 0 var(--border-w) var(--arrow-border);
-  z-index: 2;
+    background-color: var(--arrow-hover-color);
+    color: var(--arrow-text-color);
+    z-index: 2; /* Bring hovered item to front */
 }
-.tab-arrows .tabs__label:hover { --tab-fill: #e6f0ff; }
 
-/* Active (radio-checked) — 5 tabs wired 1:1 */
+/* Padding for text within the segment */
+.tab-arrows .tabs__label .tabs__text {
+    padding: 0 10px; 
+    line-height: 1.2; /* For multi-line text */
+}
+
+/* Hide the SVG wedge from your original HTML, we'll use clip-path */
+.tab-arrows .tabs__label .tabs__wedge {
+    display: none;
+}
+
+/* --- CLIP-PATH SHAPE DEFINITIONS --- */
+
+/* 1. First Segment (Flat Start, Arrow End) */
+.tab-arrows .tabs__label:first-of-type {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    padding-left: 20px; /* Base padding */
+    padding-right: 20px;
+
+    /* Flat left side, arrow point on right */
+    clip-path: polygon(
+        0 0, 
+        calc(100% - var(--arrow-width)) 0, 
+        100% 50%, 
+        calc(100% - var(--arrow-width)) 100%, 
+        0 100%
+    );
+}
+
+/* 2. Middle Segments (V-cut Start, Arrow End) */
+.tab-arrows .tabs__label:not(:first-of-type):not(:last-of-type) {
+    /* Inward V-cut on left, arrow point on right */
+    clip-path: polygon(
+        0 0, 
+        calc(100% - var(--arrow-width)) 0, 
+        100% 50%, 
+        calc(100% - var(--arrow-width)) 100%, 
+        0 100%, 
+        var(--arrow-width) 50% /* Defines the V-cut */
+    );
+    /* Add padding to clear the V-cut area */
+    padding-left: 30px; 
+    padding-right: 20px;
+}
+
+/* 3. Last Segment (V-cut Start, Flat End) */
+/* Note: You are using the custom class tabs__label--last, but nth-of-type is more reliable */
+.tab-arrows .tabs__label:last-of-type,
+.tab-arrows .tabs__label--last {
+    margin-right: 0; /* Remove overlap */
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    
+    /* Inward V-cut on left, flat right side */
+    clip-path: polygon(
+        0 0, 
+        100% 0, 
+        100% 100%, 
+        0 100%, 
+        var(--arrow-width) 50% /* Defines the V-cut */
+    );
+    /* Add padding to clear the V-cut area */
+    padding-left: 30px; 
+    padding-right: 20px; /* Match right padding of other segments */
+    z-index: 1; /* Keep last item at base z-index unless active/hovered */
+}
+
+/* --- Wiring for Active State (up to 10 buttons) --- */
+
+/* The checked radio button is found, then the general sibling selector (~) finds the controls, 
+   and we apply the active color to the corresponding label by position. */
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
 .tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__controls .tabs__label:nth-of-type(4),
-.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5) {
-  --tab-fill: linear-gradient(90deg, var(--arrow-accent-start), var(--arrow-accent-end));
-  color: #fff;
-  z-index: 3;
-  box-shadow: none;
+.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5),
+.tab-arrows > input[type="radio"]:nth-of-type(6):checked ~ .tabs__controls .tabs__label:nth-of-type(6),
+.tab-arrows > input[type="radio"]:nth-of-type(7):checked ~ .tabs__controls .tabs__label:nth-of-type(7),
+.tab-arrows > input[type="radio"]:nth-of-type(8):checked ~ .tabs__controls .tabs__label:nth-of-type(8),
+.tab-arrows > input[type="radio"]:nth-of-type(9):checked ~ .tabs__controls .tabs__label:nth-of-type(9),
+.tab-arrows > input[type="radio"]:nth-of-type(10):checked ~ .tabs__controls .tabs__label:nth-of-type(10) {
+    background-color: var(--arrow-active-color);
+    color: var(--arrow-text-color);
+    z-index: 3; /* Highest z-index for the active tab */
+    box-shadow: none; /* Remove any shadows that interfere with the shape */
+    border-color: transparent;
 }
 
-/* Panels */
+/* --- Panels Styling (from your existing code) --- */
+
 .tab-arrows > .tabs__panels {
-  padding: 16px;
-  background: var(--body-bg);
+    padding: 16px;
+    background-color: var(--body-bg, #ffffff);
 }
 .tab-arrows > .tabs__panels > .tabs__panel {
-  display: none;
-  animation: fadein .25s ease;
+    display: none;
+    animation: fadein .25s ease;
 }
+@keyframes fadein {
+    from { opacity: 0; translate: 0 2px; }
+    to { opacity: 1; translate: 0 0; }
+}
+
+/* Show matching panel */
 .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__panels .tabs__panel:nth-of-type(1),
 .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__panels .tabs__panel:nth-of-type(2),
 .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__panels .tabs__panel:nth-of-type(3),
 .tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__panels .tabs__panel:nth-of-type(4),
-.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__panels .tabs__panel:nth-of-type(5) {
-  display: block;
+.tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__panels .tabs__panel:nth-of-type(5),
+.tab-arrows > input[type="radio"]:nth-of-type(6):checked ~ .tabs__panels .tabs__panel:nth-of-type(6),
+.tab-arrows > input[type="radio"]:nth-of-type(7):checked ~ .tabs__panels .tabs__panel:nth-of-type(7),
+.tab-arrows > input[type="radio"]:nth-of-type(8):checked ~ .tabs__panels .tabs__panel:nth-of-type(8),
+.tab-arrows > input[type="radio"]:nth-of-type(9):checked ~ .tabs__panels .tabs__panel:nth-of-type(9),
+.tab-arrows > input[type="radio"]:nth-of-type(10):checked ~ .tabs__panels .tabs__panel:nth-of-type(10) {
+    display: block;
 }
-
-/* Radios (accessible hide) */
-.tab-arrows > input[type="radio"] {
-  position: absolute !important;
-  inline-size: 1px;
-  block-size: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-  padding: 0;
-  margin: -1px;
-}
-
-/* Optional RTL flip */
-:dir(rtl) .tab-arrows .tabs__label {
-  border-inline-end: var(--border-w) solid var(--arrow-border);
-  border-inline-start: none;
-  padding-inline: calc(24px + var(--tip)) 24px;
-  margin-inline-start: calc(var(--tip) * -1);
-  margin-inline-end: 0;
-}
-:dir(rtl) .tab-arrows .tabs__label:first-child {
-  border-start-end-radius: var(--radius);
-  border-end-end-radius: var(--radius);
-}
-:dir(rtl) .tab-arrows .tabs__label--last {
-  border-start-start-radius: var(--radius);
-  border-end-start-radius: var(--radius);
-}
-:dir(rtl) .tab-arrows .tabs__wedge {
-  inset-inline-start: calc(var(--border-w) * -1);
-  inset-inline-end: auto;
-  transform: scaleX(-1);
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .tab-arrows * { transition: none !important; animation: none !important; }
-}
-
-/* Debug helper (optional): add class 'tab-arrows--debug' on the wrapper */
-.tab-arrows--debug .tabs__label { outline: 1px dashed rgba(255,0,0,.5); }
-.tab-arrows--debug .tabs__wedge  { outline: 1px dashed rgba(0,128,255,.5); }
-
-@keyframes fadein { from {opacity: 0; transform: translateY(2px);} to {opacity: 1; transform: translateY(0);} }
