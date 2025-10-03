@@ -7,8 +7,8 @@
   --mandy-accent: var(--brand-blue); 
 
   /* Triangle size + gap to label */
-  --mandy-icon-size: 2.2em;      /* try 2.0–2.4em */
-  --mandy-gap: 0.5rem;           /* increase for more space */
+  --mandy-icon-size: 2.2em;      
+  --mandy-gap: 0.5rem;           
 }
 
 /* --- Mandatory paragraph container --- */
@@ -38,18 +38,31 @@
   /* box-shadow: 0 0 0 3px var(--mandy-ring); */
 }
 
-/* ⬅️ THE CRITICAL FIX: Ensure ALL content elements get grid-column: 2 
-   This explicitly targets p, ul, ol, div, etc. which are direct children. */
+/* ⬅️ CORE FIX: Ensure ALL content elements get grid-column: 2. 
+   This applies to the initial text node, the <ul>, and any other child. */
 :where(p).mandatory > :not(.mandatory::before):not(.mandatory::after) {
     grid-column: 2;
-    /* Reset margins for content blocks (like ULs) to ensure they fit neatly */
-    margin-top: 0.5em; 
-    margin-bottom: 0.5em;
-    padding-left: 0;
 }
-/* Ensure the first line of text (which is not a tag) doesn't have a top margin */
-:where(p).mandatory > :first-child {
-    margin-top: 0;
+
+
+/* ⬅️ SPECIFICITY OVERRIDE: Clear global list styling ONLY inside the mandatory box. */
+:where(p).mandatory ul,
+:where(p).mandatory ol {
+    /* Critical resets to remove left-side indentation pushing it out of the grid column */
+    margin-left: 0;
+    padding-left: 0;
+
+    /* Re-apply desired vertical spacing */
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+
+    /* Puts the bullet inside the content area, preventing bleed. */
+    list-style-position: inside; 
+}
+/* Re-introduce padding for the bullet if needed, or rely on margin */
+:where(p).mandatory ul {
+    /* This adds a small indent for the list text, but keeps the whole element inside the box */
+    padding-left: 1.5em; 
 }
 
 
@@ -113,14 +126,9 @@
   }
 }
 
-/* FINAL TOUCH: Ensure list bullets are visible and aligned inside the column */
-.mandatory ul {
-    list-style-position: inside; 
-    padding-left: 1.2em; /* Gives space for the bullet itself */
-}
 
-
-/* Ensure all real content lives in column 2 as a single item */
+/* Ensure all real content lives in column 2 as a single item 
+   (If you use a wrapper div like <div class="mandatory__content">) */
 .mandatory__content {
   grid-column: 2;
 }
