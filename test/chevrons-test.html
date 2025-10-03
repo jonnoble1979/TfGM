@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chevron Tabs — Forward Only, Overlapping Tips (v4)</title>
+<title>Chevron Tabs — Forward Chevrons (Tail + Tip) v5</title>
 <style>
   :root{
-    /* Tweak these */
-    --tip-px: 24;   /* width of the right-pointing tip in pixels */
-    --radius: 10px; /* outer container rounding */
-    --stroke: 1;    /* border thickness in pixels */
+    /* Geometry (tweak as needed) */
+    --tail-px: 14;  /* left slanted tail width in px (diagonal) */
+    --tip-px:  24;  /* right arrow tip width in px */
+    --stroke:  1;   /* border thickness in px */
+    --radius:  10px;
 
-    /* Local palette just for this test */
+    /* Local palette for this test page */
     --accent-start: #2e7df6;
     --accent-end:   #7aa8ff;
     --nav-bg:       #ffffff;
@@ -68,7 +69,7 @@
 
 <script>
 (function(){
-  // Tab labels (line break with \n)
+  // Labels (use \n for a line break)
   const labels = [
     'Interim',
     'Stage 1',
@@ -77,9 +78,12 @@
     'Stage 4'
   ];
 
-  const tipPx    = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tip-px')) || 24;
-  const strokePx = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--stroke')) || 1;
+  // Config from CSS vars
+  const tipPx    = +getComputedStyle(document.documentElement).getPropertyValue('--tip-px')  || 24;
+  const tailPx   = +getComputedStyle(document.documentElement).getPropertyValue('--tail-px') || 14;
+  const strokePx = +getComputedStyle(document.documentElement).getPropertyValue('--stroke')  || 1;
 
+  // Elements
   const host = document.getElementById('chevronTabs');
   const panelsEl = document.getElementById('panels');
 
@@ -87,11 +91,11 @@
   const svg = document.createElementNS(svgNS, 'svg');
   svg.setAttribute('width', '100%');
   svg.setAttribute('height', '64');                     // strip height
-  svg.setAttribute('viewBox', '0 0 100 64');            // will be reset
+  svg.setAttribute('viewBox', '0 0 100 64');            // will be reset on draw
   svg.setAttribute('preserveAspectRatio', 'none');
   svg.style.display = 'block';
 
-  // Gradient for active tab
+  // Gradient defs
   const defs = document.createElementNS(svgNS, 'defs');
   const grad = document.createElementNS(svgNS, 'linearGradient');
   grad.setAttribute('id', 'activeGrad');
@@ -108,27 +112,30 @@
   let active = 0;
 
   function draw(){
-    // Remove old segments, keep defs
+    // Clear old segments, keep defs
     while(svg.lastChild && svg.lastChild !== defs){ svg.removeChild(svg.lastChild); }
 
     const rect = svg.getBoundingClientRect();
-    let W = Math.max(360, Math.floor(rect.width));   // sensible min
-    if (W % 2) W -= 1;                               // even width -> cleaner half-pixel snaps
+    let W = Math.max(360, Math.floor(rect.width));
+    if (W % 2) W -= 1; // even width -> crisp half-pixel stroke alignment
     const H = 64;
     const N = labels.length;
     const stroke = strokePx;
     const half = stroke / 2;
-    const tip = Math.round(tipPx);
 
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-    // Base rectangle width so that total width remains W when tips overlap next tab
+    const tip = Math.round(tipPx);
+    const tail = Math.round(tailPx);
+
+    // Base rectangle widths so that total width remains W when tips overlap next tabs
+    // We subtract the width of all tips (N-1) from W, then distribute evenly.
     const baseW = Math.max(40, Math.floor((W - tip * (N - 1)) / N));
 
-    // Precompute rectangle start/end for each segment
-    // Each segment i: rectangle spans [x0, x1], where x0 = i*(baseW) + i*tip, x1 = x0 + baseW
+    // Rectangle span for each tab i:
+    // x0 = i * (baseW + tip); x1 = x0 + baseW
     const rects = [];
-    for(let i=0;i<N;i++){
+    for (let i=0; i<N; i++){
       const x0 = i * (baseW + tip);
       const x1 = x0 + baseW;
       rects.push([x0, x1]);
@@ -136,38 +143,37 @@
 
     const borderColor = (getComputedStyle(document.documentElement).getPropertyValue('--brand-blue') || '#2e7df6').trim();
 
-    // Draw RIGHT -> LEFT so left tabs sit ON TOP of the ones to their right (forward-only overlap)
+    // Draw RIGHT -> LEFT so each left tab sits on top of the next (covers any seam)
     for(let i=N-1; i>=0; i--){
       const [x0, x1] = rects[i];
       const isLast = (i === N-1);
 
-      // Build path:
-      // - Vertical left edge (true arrow body)
-      // - Flat right edge of the rectangle at x1
-      // - Forward tip extending into the next tab by 'tip' (except last)
-      // Points aligned to half-pixels for crisp 1px stroke
-      const TLx = x0 + half, TLy = half;
-      const TRx = x1 - half, TRy = half;
-      const BRx = x1 - half, BRy = H - half;
+      // ---- Forward chevron geometry (slanted tail + right tip) ----
+      // TL: x0 + tail, 0
+      // TR: (last ? x1 : x1 - tip), 0
+      // TIP: (not last) x1 + tip, H/2
+      // BR: (last ? x1 : x1 - tip), H
+      // BL: x0, H
+      // Close back to TL
+      const TLx = x0 + tail + half, TLy = half;
+      const TRx = (isLast ? x1 - half : x1 - tip - half), TRy = half;
+      const BRx = (isLast ? x1 - half : x1 - tip - half), BRy = H - half;
       const BLx = x0 + half, BLy = H - half;
+      const TIPx = x1 + (isLast ? 0 : tip) - half, TIPy = H/2;
 
       const d = [];
-      d.push(`M ${TLx},${TLy}`);            // TL
-      d.push(`L ${TRx},${TRy}`);            // TR
-
+      d.push(`M ${TLx},${TLy}`);      // TL
+      d.push(`L ${TRx},${TRy}`);      // TR
       if(!isLast){
-        // Right-pointing tip (extends over the next rectangle)
-        const TIPx = x1 + tip - half, TIPy = H/2;
-        d.push(`L ${TIPx},${TIPy}`);        // TIP
-        d.push(`L ${BRx},${BRy}`);          // BR (back to rect right edge)
+        d.push(`L ${TIPx},${TIPy}`);  // Right tip
+        d.push(`L ${BRx},${BRy}`);    // BR (return to body)
       }else{
-        d.push(`L ${BRx},${BRy}`);          // BR (flat last)
+        d.push(`L ${BRx},${BRy}`);    // BR (flat last)
       }
-
-      d.push(`L ${BLx},${BLy}`);            // BL
+      d.push(`L ${BLx},${BLy}`);      // BL
       d.push('Z');
 
-      // Group for interaction
+      // Group for interactivity
       const g = document.createElementNS(svgNS, 'g');
       g.classList.add('seg');
       g.setAttribute('tabindex','0');
@@ -185,9 +191,9 @@
       shape.setAttribute('stroke-width', String(stroke));
       shape.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
 
-      // Text (centered on the rectangle, not including tip — matches SmartArt feel)
+      // Text (centered on the rectangular body, not counting the tip)
+      const cx = x0 + tail + ( (x1 - (x0 + tail) - (isLast ? 0 : tip)) / 2 );
       const text = document.createElementNS(svgNS, 'text');
-      const cx = x0 + (x1 - x0)/2;
       text.setAttribute('x', String(cx));
       text.setAttribute('y', String(H/2 + 5));
       text.setAttribute('text-anchor','middle');
@@ -201,12 +207,10 @@
         const [ln1, ln2] = label.split('\n');
         const t1 = document.createElementNS(svgNS, 'tspan');
         t1.setAttribute('x', String(cx));
-        t1.setAttribute('dy', '-0.4em');
-        t1.textContent = ln1;
+        t1.setAttribute('dy', '-0.4em'); t1.textContent = ln1;
         const t2 = document.createElementNS(svgNS, 'tspan');
         t2.setAttribute('x', String(cx));
-        t2.setAttribute('dy', '1.2em');
-        t2.textContent = ln2;
+        t2.setAttribute('dy', '1.2em'); t2.textContent = ln2;
         text.append(t1, t2);
       }else{
         text.textContent = label;
@@ -229,11 +233,11 @@
         }
       });
 
-      // Bigger hit target (rect over the base rectangle area)
+      // Larger hit area (include tip)
       const hit = document.createElementNS(svgNS, 'rect');
       hit.setAttribute('x', x0);
       hit.setAttribute('y', 0);
-      hit.setAttribute('width', x1 - x0 + (isLast ? 0 : tip)); // include tip area for hit test
+      hit.setAttribute('width', (x1 - x0) + (isLast ? 0 : tip));
       hit.setAttribute('height', H);
       hit.setAttribute('fill', 'transparent');
 
@@ -255,10 +259,9 @@
     panels.forEach((p, i)=> p.classList.toggle('active', i===active));
   }
 
-  // Initial draw + resize
+  // Initial draw + resize reflow
   draw();
   activate(0);
-
   let rafId = 0;
   window.addEventListener('resize', () => {
     cancelAnimationFrame(rafId);
