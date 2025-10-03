@@ -3,173 +3,283 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chevron Tabs – Minimal Test</title>
+<title>Chevron Tabs — Pure SVG Baseline</title>
 <style>
-  /* Local palette (no dependency on your global tokens) */
   :root{
-    --accent-start:#2e7df6; --accent-end:#7aa8ff;
-    --nav-bg:#fff; --text-primary:#0b1f33; --text-secondary:#5a6b82;
-    --brand-blue:#2e7df6; --body-bg:#f7f9fc;
+    /* You can tweak these two */
+    --tip-px: 24;     /* chevron point width in pixels */
+    --radius: 10px;   /* rounding for container corners */
+    --stroke: 1;      /* stroke width in pixels */
+
+    /* Palette (local to this test page) */
+    --accent-start: #2e7df6;
+    --accent-end:   #7aa8ff;
+    --nav-bg:       #ffffff;
+    --text-primary: #0b1f33;
+    --text-secondary:#5a6b82;
+    --brand-blue:   #2e7df6;
+    --body-bg:      #f7f9fc;
   }
 
-  /* === TAB ARROWS (SVG wedge) === */
-  .tab-arrows{
-    --tip:24px; --radius:10px; --border-w:1px;
-    --arrow-accent-start:var(--accent-start);
-    --arrow-accent-end:var(--accent-end);
-    --arrow-bg:var(--nav-bg);
-    --arrow-text:var(--text-primary);
-    --arrow-muted:var(--text-secondary);
-    --arrow-border:var(--brand-blue);
+  html, body { margin:0; padding:0; background:var(--body-bg); color:var(--text-primary); font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+  .wrap { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
 
-    background:var(--arrow-bg);
-    border:calc(var(--border-w)*2) solid var(--arrow-border);
-    border-radius:var(--radius);
-    overflow:hidden;
-    isolation:isolate;
-    color:var(--arrow-text);
-    max-width:1100px;
-    margin:24px auto;
-  }
-  .tab-arrows > .tabs__controls{
-    position:relative;
-    display:flex;
-    background:var(--arrow-bg);
-    border-bottom:var(--border-w) solid var(--arrow-border);
-    overflow:visible; /* crucial for wedge overlap */
+  .tabs-box{
+    background: var(--nav-bg);
+    border: calc(var(--stroke) * 2px) solid var(--brand-blue);
+    border-radius: var(--radius);
+    overflow: hidden; /* keep outer rounding */
   }
 
-  .tab-arrows .tabs__label{
-    all:unset; box-sizing:border-box;
-    position:relative; display:flex; align-items:center; justify-content:center; text-align:center;
-    flex:1 1 0; min-width:0;
-    padding-block:12px; padding-inline:24px calc(24px + var(--tip));
-    min-height:60px; font:inherit; font-weight:600;
-    color:var(--arrow-muted); background:#fff;
+  /* Panel area */
+  .panels{
+    background: var(--body-bg);
+    padding: 16px;
+    border-top: 1px solid var(--brand-blue);
+  }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
 
-    border-inline-start:var(--border-w) solid var(--arrow-border);
-    border-block:var(--border-w) solid var(--arrow-border);
-    border-inline-end:none;
-
-    margin-inline-end:calc(var(--tip)*-1);
-    cursor:pointer; user-select:none; z-index:1;
-    transition:color .2s, background .2s, box-shadow .2s, z-index .2s;
-  }
-  .tab-arrows .tabs__label:first-child{
-    border-start-start-radius:var(--radius);
-    border-end-start-radius:var(--radius);
-  }
-  .tab-arrows .tabs__label--last{
-    border-inline-end:var(--border-w) solid var(--arrow-border);
-    border-start-end-radius:var(--radius);
-    border-end-end-radius:var(--radius);
-    margin-inline-end:0;
-    padding-inline:24px;
-  }
-  .tab-arrows .tabs__text{ position:relative; z-index:2; line-height:1.2; white-space:normal; }
-
-  .tab-arrows .tabs__wedge{
-    position:absolute;
-    inset-block:calc(var(--border-w)*-1);
-    inset-inline-end:calc(var(--border-w)*-1);
-    width:calc(var(--tip) + var(--border-w));
-    height:calc(100% + var(--border-w)*2);
-    display:block; pointer-events:none;
-  }
-  .tab-arrows .wedge-fill{ fill:var(--tab-fill,#fff); }
-  .tab-arrows .wedge-stroke{
-    fill:none; stroke:var(--arrow-border); stroke-width:var(--border-w);
-    vector-effect:non-scaling-stroke; shape-rendering:geometricPrecision;
-    stroke-linejoin:miter; stroke-miterlimit:4;
+  /* A11y focus ring for SVG segments (we fake focus on group) */
+  .seg:focus-visible .seg-outline{
+    outline: 2px solid #000;
+    outline-offset: -2px;
   }
 
-  .tab-arrows .tabs__label:hover{
-    background:#e6f0ff; color:var(--arrow-text);
-    box-shadow: inset 0 0 0 var(--border-w) var(--arrow-border);
-    z-index:2;
-  }
-  .tab-arrows .tabs__label:hover{ --tab-fill:#e6f0ff; }
-
-  .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__controls .tabs__label:nth-of-type(1),
-  .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__controls .tabs__label:nth-of-type(2),
-  .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__controls .tabs__label:nth-of-type(3),
-  .tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__controls .tabs__label:nth-of-type(4),
-  .tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__controls .tabs__label:nth-of-type(5){
-    --tab-fill: linear-gradient(90deg, var(--arrow-accent-start), var(--arrow-accent-end));
-    color:#fff; z-index:3; box-shadow:none;
-  }
-
-  .tab-arrows > .tabs__panels{ padding:16px; background:var(--body-bg); }
-  .tab-arrows > .tabs__panels > .tabs__panel{ display:none; animation:fadein .25s ease; }
-  .tab-arrows > input[type="radio"]:nth-of-type(1):checked ~ .tabs__panels .tabs__panel:nth-of-type(1),
-  .tab-arrows > input[type="radio"]:nth-of-type(2):checked ~ .tabs__panels .tabs__panel:nth-of-type(2),
-  .tab-arrows > input[type="radio"]:nth-of-type(3):checked ~ .tabs__panels .tabs__panel:nth-of-type(3),
-  .tab-arrows > input[type="radio"]:nth-of-type(4):checked ~ .tabs__panels .tabs__panel:nth-of-type(4),
-  .tab-arrows > input[type="radio"]:nth-of-type(5):checked ~ .tabs__panels .tabs__panel:nth-of-type(5){ display:block; }
-
-  .tab-arrows > input[type="radio"]{
-    position:absolute !important; inline-size:1px; block-size:1px; overflow:hidden;
-    clip-path:inset(50%); white-space:nowrap; border:0; padding:0; margin:-1px;
-  }
-
-  @keyframes fadein{ from{opacity:0; transform:translateY(2px);} to{opacity:1; transform:translateY(0);} }
+  /* Small helper for label text inside SVG */
+  .seg-text{ pointer-events: none; font-weight: 600; fill: var(--text-secondary); }
+  .seg-text.active{ fill:#fff; }
 </style>
 </head>
 <body>
+<div class="wrap">
+  <h2>Road Safety Audit Stages (Pure SVG Test)</h2>
 
-<div class="tab-arrows">
-  <input type="radio" name="stages-tabs" id="stages-tabs-1" checked>
-  <input type="radio" name="stages-tabs" id="stages-tabs-2">
-  <input type="radio" name="stages-tabs" id="stages-tabs-3">
-  <input type="radio" name="stages-tabs" id="stages-tabs-4">
-  <input type="radio" name="stages-tabs" id="stages-tabs-5">
-
-  <div class="tabs__controls" role="tablist" aria-label="RSA stages tabs">
-    <label class="tabs__label" for="stages-tabs-1" role="tab" id="tab-stg-1-label" aria-controls="panel-stg-1">
-      <span class="tabs__text">Interim</span>
-      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
-        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
-      </svg>
-    </label>
-
-    <label class="tabs__label" for="stages-tabs-2" role="tab" id="tab-stg-2-label" aria-controls="panel-stg-2">
-      <span class="tabs__text">Stage 1</span>
-      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
-        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
-      </svg>
-    </label>
-
-    <label class="tabs__label" for="stages-tabs-3" role="tab" id="tab-stg-3-label" aria-controls="panel-stg-3">
-      <span class="tabs__text">Stage 2<br>&amp; Combined Stage 1–2</span>
-      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
-        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
-      </svg>
-    </label>
-
-    <label class="tabs__label" for="stages-tabs-4" role="tab" id="tab-stg-4-label" aria-controls="panel-stg-4">
-      <span class="tabs__text">Stage 3</span>
-      <svg class="tabs__wedge" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
-        <polygon class="wedge-fill" points="0,0 100,30 0,60"></polygon>
-        <path class="wedge-stroke" d="M0,0 L100,30 L0,60"></path>
-      </svg>
-    </label>
-
-    <label class="tabs__label tabs__label--last" for="stages-tabs-5" role="tab" id="tab-stg-5-label" aria-controls="panel-stg-5">
-      <span class="tabs__text">Stage 4</span>
-    </label>
-  </div>
-
-  <div class="tabs__panels">
-    <section id="panel-stg-1" class="tabs__panel">Interim content</section>
-    <section id="panel-stg-2" class="tabs__panel">Stage 1 content</section>
-    <section id="panel-stg-3" class="tabs__panel">Stage 2 + Combined content</section>
-    <section id="panel-stg-4" class="tabs__panel">Stage 3 content</section>
-    <section id="panel-stg-5" class="tabs__panel">Stage 4 content</section>
+  <div id="chevronTabs" class="tabs-box" aria-label="RSA stages tabs">
+    <!-- SVG strip is injected here by JS -->
+    <div class="panels" id="panels">
+      <section class="panel active"><h3>Interim Road Safety Audit</h3><p>Interim content…</p></section>
+      <section class="panel"><h3>Stage 1 Road Safety Audit</h3><p>Stage 1 content…</p></section>
+      <section class="panel"><h3>Stage 2 &amp; Combined Stage 1–2</h3><p>Stage 2 + Combined content…</p></section>
+      <section class="panel"><h3>Stage 3 Road Safety Audit</h3><p>Stage 3 content…</p></section>
+      <section class="panel"><h3>Stage 4 Road Safety Audit</h3><p>Stage 4 content…</p></section>
+    </div>
   </div>
 </div>
 
+<script>
+(function(){
+  // ----- Config -----
+  const labels = [
+    'Interim',
+    'Stage 1',
+    'Stage 2\n& Combined Stage 1–2',
+    'Stage 3',
+    'Stage 4'
+  ];
+  const tipPx      = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tip-px')) || 24;
+  const strokePx   = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--stroke')) || 1;
+
+  // ----- Build SVG strip -----
+  const host = document.getElementById('chevronTabs');
+  const panelsEl = document.getElementById('panels');
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', '64');                 // strip height (you can tweak)
+  svg.setAttribute('viewBox', '0 0 100 64');        // temporary; we’ll reset dynamically
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.style.display = 'block'; // remove inline gap
+
+  // Gradients
+  const defs = document.createElementNS(svgNS, 'defs');
+  const grad = document.createElementNS(svgNS, 'linearGradient');
+  grad.setAttribute('id', 'activeGrad');
+  grad.setAttribute('x1', '0%'); grad.setAttribute('y1', '0%');
+  grad.setAttribute('x2', '100%'); grad.setAttribute('y2', '0%');
+  const stop1 = document.createElementNS(svgNS, 'stop'); stop1.setAttribute('offset','0%');  stop1.setAttribute('stop-color','var(--accent-start)');
+  const stop2 = document.createElementNS(svgNS, 'stop'); stop2.setAttribute('offset','100%');stop2.setAttribute('stop-color','var(--accent-end)');
+  grad.append(stop1, stop2);
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+
+  host.insertBefore(svg, panelsEl);
+
+  // State
+  let active = 0;
+
+  function draw(){
+    // Clear old segments
+    while(svg.lastChild && svg.lastChild !== defs){ svg.removeChild(svg.lastChild); }
+
+    const rect = svg.getBoundingClientRect();
+    const W = Math.max(320, Math.floor(rect.width));  // avoid tiny widths
+    const H = 64;                                     // fixed strip height
+    const N = labels.length;
+    const stroke = strokePx;                          // 1px
+    const half = stroke/2;
+
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+    const segW = Math.floor(W / N); // equal widths
+    const tip = Math.round(tipPx);  // ensure integer px
+    const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--brand-blue') || '#2e7df6';
+
+    for(let i=0;i<N;i++){
+      // Segment bounds
+      const x0 = i * segW;
+      // Last segment stretches to end to absorb remainder
+      const x1 = (i === N-1) ? W : (i+1) * segW;
+
+      // Build chevron path with constant tip width in px
+      // Coordinates on .5 to align 1px strokes crisply
+      const leftFlat  = i === 0;
+      const rightFlat = i === N-1;
+
+      const path = [];
+
+      // Start top-left
+      if(leftFlat){
+        path.push(`M ${x0+half},${half}`);
+      }else{
+        // left notch tip at x0 + tip
+        path.push(`M ${x0+tip+half},${half}`);
+      }
+
+      // Top-right (minus tip if not last)
+      if(rightFlat){
+        path.push(`L ${x1-half},${half}`);
+        path.push(`L ${x1-half},${H-half}`);
+      }else{
+        path.push(`L ${x1-tip-half},${half}`); // top before tip
+        path.push(`L ${x1-half},${H/2}`);      // right point
+        path.push(`L ${x1-tip-half},${H-half}`); // bottom before tip
+      }
+
+      // Bottom-left
+      if(leftFlat){
+        path.push(`L ${x0+half},${H-half}`);
+      }else{
+        path.push(`L ${x0+tip+half},${H-half}`);
+        path.push(`L ${x0+half},${H/2}`);    // left notch point
+      }
+
+      path.push('Z');
+
+      // Group for interactivity
+      const g = document.createElementNS(svgNS, 'g');
+      g.classList.add('seg');
+      g.setAttribute('tabindex','0');   // focusable
+      g.setAttribute('role','tab');
+      g.setAttribute('aria-selected', i===active ? 'true' : 'false');
+      g.dataset.index = i;
+
+      // Fill
+      const shape = document.createElementNS(svgNS, 'path');
+      shape.setAttribute('d', path.join(' '));
+      shape.setAttribute('vector-effect', 'non-scaling-stroke');
+      shape.setAttribute('shape-rendering', 'geometricPrecision');
+      shape.setAttribute('stroke', borderColor.trim());
+      shape.setAttribute('stroke-width', String(stroke));
+      shape.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
+
+      // Hover effect (using <title> is not enough visually); we’ll adjust fill on events
+      g.appendChild(shape);
+
+      // Text (centered)
+      const text = document.createElementNS(svgNS, 'text');
+      text.setAttribute('x', String(x0 + (x1-x0)/2));
+      text.setAttribute('y', String(H/2 + 5)); // approx vertical centering
+      text.setAttribute('text-anchor','middle');
+      text.setAttribute('dominant-baseline','middle');
+      text.setAttribute('font-size','14');
+      text.setAttribute('font-weight','600');
+      text.classList.add('seg-text');
+      text.textContent = labels[i].includes('\n') ? labels[i].split('\n')[0] : labels[i];
+
+      // If label contains linebreak, draw a second line
+      if(labels[i].includes('\n')){
+        const t1 = document.createElementNS(svgNS, 'tspan');
+        t1.setAttribute('x', text.getAttribute('x'));
+        t1.setAttribute('dy', '-0.4em');
+        t1.textContent = labels[i].split('\n')[0];
+        const t2 = document.createElementNS(svgNS, 'tspan');
+        t2.setAttribute('x', text.getAttribute('x'));
+        t2.setAttribute('dy', '1.2em');
+        t2.textContent = labels[i].split('\n')[1];
+        text.textContent = '';
+        text.append(t1, t2);
+      }
+
+      if(i===active){ text.classList.add('active'); }
+
+      // Hover/active styling via events
+      g.addEventListener('mouseenter', () => {
+        if(i!==active) shape.setAttribute('fill', '#e6f0ff');
+      });
+      g.addEventListener('mouseleave', () => {
+        shape.setAttribute('fill', i===active ? 'url(#activeGrad)' : '#ffffff');
+      });
+      g.addEventListener('click', () => activate(i));
+      g.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(i); }
+        if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+          e.preventDefault();
+          const dir = e.key === 'ArrowRight' ? 1 : -1;
+          const next = (active + dir + labels.length) % labels.length;
+          activate(next);
+          // Move focus
+          const nextG = svg.querySelector(`g.seg[data-index="${next}"]`);
+          if(nextG) nextG.focus();
+        }
+      });
+
+      // Append
+      g.appendChild(text);
+
+      // Optional invisible rect to increase hit target
+      const hit = document.createElementNS(svgNS, 'rect');
+      hit.setAttribute('x', x0);
+      hit.setAttribute('y', 0);
+      hit.setAttribute('width', x1-x0);
+      hit.setAttribute('height', H);
+      hit.setAttribute('fill', 'transparent');
+      g.appendChild(hit);
+
+      svg.appendChild(g);
+    }
+  }
+
+  function activate(idx){
+    active = idx;
+    // Update fills/text colours
+    svg.querySelectorAll('g.seg').forEach((g, i) => {
+      const path = g.querySelector('path');
+      const txt  = g.querySelector('text');
+      if(i === active){
+        g.setAttribute('aria-selected','true');
+        path.setAttribute('fill', 'url(#activeGrad)');
+        txt.classList.add('active');
+      }else{
+        g.setAttribute('aria-selected','false');
+        path.setAttribute('fill', '#ffffff');
+        txt.classList.remove('active');
+      }
+    });
+    // Panels
+    const panels = panelsEl.querySelectorAll('.panel');
+    panels.forEach((p, i)=> p.classList.toggle('active', i===active));
+  }
+
+  // Initial draw & on resize
+  draw();
+  activate(0);
+  let rafId = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => { draw(); activate(active); });
+  });
+})();
+</script>
 </body>
-</html>
