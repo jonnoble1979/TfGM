@@ -3,203 +3,312 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Chevron Tabs — CSS (left cap + no seams)</title>
+<title>Chevron Tabs — Canvas (flat start, no seams)</title>
 <style>
   :root{
-    --h: 56px;        /* nav height (use an even px) */
-    --tip: 22px;      /* right/left tip width */
-    --left-cap: 10px; /* flat lead-in on the very left of the first tab */
-    --fudge: 1px;     /* anti-gap oversize to hide hairlines */
+    --h: 64;          /* strip height (px) */
+    --tip: 24;        /* tip width (px) */
+    --tail: 14;       /* slanted tail width on left of inner tabs (px) */
+    --left-cap: 10;   /* flat start length at the very left (px) */
 
-    --brand: #2e7df6; /* active fill */
-    --hover: #eaf2ff; /* hover fill for inactive */
-    --muted: #5a6b82; /* inactive text */
-    --body:  #f7f9fc; /* page bg */
+    --brand-start:#2e7df6; /* active gradient start */
+    --brand-end:  #7aa8ff; /* active gradient end */
+    --hover:      #eaf2ff; /* hover fill for inactive segments */
+    --text:       #0b1f33;
+    --text-muted: #5a6b82;
+    --body:       #f7f9fc;
+    --box-border: #2e7df6;
   }
 
   html, body { margin:0; padding:0; background:var(--body);
-    font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; }
+    font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
   .wrap { max-width:1100px; margin:24px auto; padding:0 16px; }
 
-  /* -------- NAV (separate so nothing clips the left tip) -------- */
-  .chevron-nav {
-    display:flex;
-    align-items:stretch;
-    height:var(--h);
-    overflow:visible; /* allow tips to extend */
-    gap:0;
-    background:transparent;
+  .tabs-shell{
+    border:2px solid var(--box-border);
+    border-radius:10px;
+    background:#fff;
   }
 
-  .tab {
-    --fill: #fff;
-    --text: var(--muted);
+  /* --- Canvas-backed chevron strip --- */
+  .chevron-strip{
     position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:0 18px;
-    min-width:120px;
+    height: calc(var(--h) * 1px);
+    border-bottom:1px solid var(--box-border);
+  }
+  .chevron-strip canvas{
+    display:block;
+    width:100%;
     height:100%;
-    flex:1 1 0;
-    background:var(--fill);
-    color:var(--text);
-    font-weight:600;
-    border:0;
-    cursor:pointer;
-    margin-left: calc(var(--tip) * -1);  /* overlap to hide seams */
-    outline:none;
-    line-height:1.2;
-    text-align:center;
-  }
-  .tab:first-child { margin-left:0; }
-
-  .tab.is-active { --fill: var(--brand); --text:#fff; }
-  .tab:not(.is-active):hover { --fill: var(--hover); }
-
-  /* Ensure pseudo-elements sit above the cap rectangle */
-  .tab::before, .tab::after { position:absolute; z-index:2; content:""; }
-
-  /* Right chevron tip for all but the last (oversized by --fudge to kill hairlines) */
-  .tab::after{
-    top: calc(-1 * var(--fudge));
-    right: calc(var(--tip) * -1);
-    width:0; height:0;
-    border-top: calc(var(--h)/2 + var(--fudge)) solid transparent;
-    border-bottom: calc(var(--h)/2 + var(--fudge)) solid transparent;
-    border-left: var(--tip) solid var(--fill);
-  }
-  .tab:last-child::after { display:none; }
-
-  /* ---------- FIRST TAB: flat left start + true left arrow ---------- */
-
-  /* Flat lead-in block at the very left (gives a horizontal start) */
-  .tab:first-child .cap{
-    position:absolute; z-index:1;
-    left: calc(var(--tip) * -1 - var(--left-cap));
-    top: calc(-1 * var(--fudge));
-    width: var(--left-cap);
-    height: calc(var(--h) + 2 * var(--fudge));
-    background: var(--fill);
-    pointer-events:none;
-    content:"";
   }
 
-  /* Left-pointing triangle (comes immediately after the flat section) */
-  .tab:first-child::before{
-    left: calc(var(--tip) * -1);
-    top: calc(-1 * var(--fudge));
-    width:0; height:0;
-    border-top: calc(var(--h)/2 + var(--fudge)) solid transparent;
-    border-bottom: calc(var(--h)/2 + var(--fudge)) solid transparent;
-    border-right: var(--tip) solid var(--fill);
+  /* Click/keyboard targets + labels */
+  .labels{
+    position:absolute; inset:0;
   }
-
-  /* Accessibility focus */
+  .tab{
+    position:absolute; top:0; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    background:transparent; border:0; margin:0; padding:0 18px;
+    color:var(--text-muted); font-weight:600; line-height:1.2; text-align:center;
+    cursor:pointer; outline:none;
+  }
+  .tab.is-active{ color:#fff; }
   .tab:focus-visible{ outline:3px solid #94b8ff; outline-offset:2px; }
 
-  /* -------- PANELS (rounded box is separate; no clipping issues) -------- */
-  .tabs-box{
-    margin-top:8px;
-    background:#fff;
-    border:2px solid var(--brand);
-    border-radius:10px;
-    overflow:hidden;
-  }
-  .panels{ padding:16px; background:var(--body); border-top:1px solid var(--brand); }
+  /* content */
+  .panels{ background:var(--body); padding:16px; }
   .panel{ display:none; }
   .panel.active{ display:block; }
-
-  /* Mobile */
-  @media (max-width:560px){
-    :root { --h: 64px; --tip: 18px; --left-cap: 8px; }
-    .tab { min-width:100px; padding:0 12px; font-size:14px; }
-  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h2>Road Safety Audit Stages — CSS chevrons (flat start + no seams)</h2>
+  <h2>Road Safety Audit Stages — Canvas chevrons (flat start, no seams)</h2>
 
-  <!-- Chevron nav -->
-  <div id="chevronNav" class="chevron-nav" role="tablist" aria-label="RSA stages tabs">
-    <button class="tab is-active" role="tab" id="t0" aria-selected="true" aria-controls="p0">
-      <span class="label">Interim</span>
-      <span class="cap" aria-hidden="true"></span> <!-- flat start -->
-    </button>
-    <button class="tab" role="tab" id="t1" aria-selected="false" aria-controls="p1">
-      <span class="label">Stage 1</span>
-    </button>
-    <button class="tab" role="tab" id="t2" aria-selected="false" aria-controls="p2">
-      <span class="label">Stage 2<br>&amp; Combined Stage 1–2</span>
-    </button>
-    <button class="tab" role="tab" id="t3" aria-selected="false" aria-controls="p3">
-      <span class="label">Stage 3</span>
-    </button>
-    <button class="tab" role="tab" id="t4" aria-selected="false" aria-controls="p4">
-      <span class="label">Stage 4</span>
-    </button>
-  </div>
+  <div class="tabs-shell" aria-label="RSA stages tabs">
+    <div id="chevrons" class="chevron-strip" role="tablist">
+      <canvas id="navCanvas"></canvas>
+      <div id="labels" class="labels" aria-hidden="false"></div>
+    </div>
 
-  <div class="tabs-box">
     <div class="panels" id="panels">
-      <section id="p0" class="panel active" role="tabpanel" aria-labelledby="t0">
-        <h3>Interim Road Safety Audit</h3><p>Interim content…</p>
-      </section>
-      <section id="p1" class="panel" role="tabpanel" aria-labelledby="t1">
-        <h3>Stage 1 Road Safety Audit</h3><p>Stage 1 content…</p>
-      </section>
-      <section id="p2" class="panel" role="tabpanel" aria-labelledby="t2">
-        <h3>Stage 2 &amp; Combined Stage 1–2</h3><p>Stage 2 + Combined content…</p>
-      </section>
-      <section id="p3" class="panel" role="tabpanel" aria-labelledby="t3">
-        <h3>Stage 3 Road Safety Audit</h3><p>Stage 3 content…</p>
-      </section>
-      <section id="p4" class="panel" role="tabpanel" aria-labelledby="t4">
-        <h3>Stage 4 Road Safety Audit</h3><p>Stage 4 content…</p>
-      </section>
+      <section class="panel active" role="tabpanel" aria-labelledby="t0"><h3>Interim Road Safety Audit</h3><p>Interim content…</p></section>
+      <section class="panel" role="tabpanel" aria-labelledby="t1"><h3>Stage 1 Road Safety Audit</h3><p>Stage 1 content…</p></section>
+      <section class="panel" role="tabpanel" aria-labelledby="t2"><h3>Stage 2 &amp; Combined Stage 1–2</h3><p>Stage 2 + Combined content…</p></section>
+      <section class="panel" role="tabpanel" aria-labelledby="t3"><h3>Stage 3 Road Safety Audit</h3><p>Stage 3 content…</p></section>
+      <section class="panel" role="tabpanel" aria-labelledby="t4"><h3>Stage 4 Road Safety Audit</h3><p>Stage 4 content…</p></section>
     </div>
   </div>
 </div>
 
 <script>
 (function(){
-  const tabs   = Array.from(document.querySelectorAll('.tab'));
-  const panels = Array.from(document.querySelectorAll('.panel'));
+  // Labels (use \n for line breaks)
+  const labels = [
+    'Interim',
+    'Stage 1',
+    'Stage 2\n& Combined Stage 1–2',
+    'Stage 3',
+    'Stage 4'
+  ];
 
-  // Ensure left tabs paint on top (hides seams reliably)
-  tabs.forEach((t, i) => t.style.zIndex = String(1000 - i));
+  // Read CSS vars
+  const cs = getComputedStyle(document.documentElement);
+  const H         = +cs.getPropertyValue('--h') || 64;
+  const TIP       = +cs.getPropertyValue('--tip') || 24;
+  const TAIL      = +cs.getPropertyValue('--tail') || 14;
+  const LEFT_CAP  = +cs.getPropertyValue('--left-cap') || 10;
+  const BRAND_S   = cs.getPropertyValue('--brand-start').trim() || '#2e7df6';
+  const BRAND_E   = cs.getPropertyValue('--brand-end').trim()   || '#7aa8ff';
+  const HOVER     = cs.getPropertyValue('--hover').trim()       || '#eaf2ff';
 
-  function activate(idx){
-    tabs.forEach((t,i)=>{
-      const on = i===idx;
-      t.classList.toggle('is-active', on);
-      t.setAttribute('aria-selected', on ? 'true':'false');
-      t.setAttribute('tabindex', on ? '0':'-1');
-    });
-    panels.forEach((p,i)=>{
-      const on = i===idx;
-      p.classList.toggle('active', on);
-      p.setAttribute('aria-hidden', on ? 'false':'true');
-    });
-    tabs[idx].focus({preventScroll:true});
+  const strip   = document.getElementById('chevrons');
+  const canvas  = document.getElementById('navCanvas');
+  const labelsEl= document.getElementById('labels');
+  const panelsEl= document.getElementById('panels');
+
+  let active = 0;
+  let geom   = null; // segment geometry cache
+
+  function px(v){ return Math.round(v); }
+
+  function computeGeom(W){
+    const N = labels.length;
+    // With a true left tip on the first and right tips on all but the last,
+    // there are N tips total to subtract.
+    const baseW = Math.max(60, Math.floor((W - N*TIP) / N));
+    const rects = [];
+    for(let i=0;i<N;i++){
+      const x0 = TIP + i * (baseW + TIP); // body left
+      const x1 = x0 + baseW;              // body right
+      rects.push([x0, x1]);
+    }
+    // Build geometry objects with polygon points and label centers
+    const segs = [];
+    for(let i=0;i<N;i++){
+      const [x0,x1] = rects[i];
+      const isFirst = (i===0);
+      const isLast  = (i===N-1);
+
+      let poly = [];
+      if(isFirst){
+        // First segment: flat start at top and bottom, then left apex.
+        // Outline (clockwise): top-left flat -> top-right (before tip) -> right apex (if any) -> bottom-right -> bottom-left flat -> left apex
+        const TLx = x0;                // body top-left (after the left wedge)
+        const TRx = isLast ? x1 : x1 - TIP;
+        poly = [
+          [0, 0],                      // very left, top (start flat)
+          [LEFT_CAP, 0],               // flat start length
+          [TRx, 0],
+          ...(isLast ? [] : [[x1 + TIP, H/2]]),
+          [TRx, H],
+          [LEFT_CAP, H],               // flat bottom start
+          [0, H/2]                     // TRUE left apex
+        ];
+      }else{
+        const TRx = isLast ? x1 : x1 - TIP;
+        // Forward chevron with slanted tail
+        poly = [
+          [x0, 0],
+          [TRx, 0],
+          ...(isLast ? [] : [[x1 + TIP, H/2]]),
+          [TRx, H],
+          [x0, H],
+          [x0 - TAIL, H/2]
+        ];
+      }
+
+      // Label center (use body only; exclude tips)
+      const bodyLeft  = isFirst ? x0 : x0;
+      const bodyRight = isLast ? x1 : x1 - TIP;
+      const cx = bodyLeft + (bodyRight - bodyLeft)/2;
+      const wForButtonLeft  = isFirst ? 0 : (x0 - TAIL);               // cover the slanted tail area
+      const wForButtonRight = isLast ? x1 : (x1 + TIP);                // include tip area
+      segs.push({
+        i, isFirst, isLast, x0, x1, poly,
+        labelX: cx,
+        btnLeft: Math.max(0, wForButtonLeft),
+        btnRight: Math.min(W, wForButtonRight)
+      });
+    }
+    return {baseW, rects, segs};
   }
 
-  tabs.forEach((t,i)=>{
-    t.addEventListener('click', ()=> activate(i));
-    t.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(i); }
-      if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
-        e.preventDefault();
-        const dir = e.key === 'ArrowRight' ? 1 : -1;
-        const next = (i + dir + tabs.length) % tabs.length;
-        activate(next);
-      }
-    });
-  });
+  function sizeCanvas(){
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const Wcss = strip.clientWidth;
+    canvas.width  = Math.floor(Wcss * dpr);
+    canvas.height = Math.floor(H * dpr);
+    canvas.style.width  = Wcss + 'px';
+    canvas.style.height = H + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // CSS pixels
+    return {ctx, W: Wcss, dpr};
+  }
 
-  // Init
-  tabs.forEach((t,i)=> t.setAttribute('tabindex', i===0 ? '0':'-1'));
+  function draw(){
+    const {ctx, W} = sizeCanvas();
+    geom = computeGeom(W);
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw from right -> left so left segments sit visually on top (even though no stroke)
+    for(let idx = geom.segs.length - 1; idx >= 0; idx--){
+      const seg = geom.segs[idx];
+
+      // Fill style
+      if(idx === active){
+        const grad = ctx.createLinearGradient(seg.x0, 0, (seg.isLast ? seg.x1 : seg.x1 - TIP), 0);
+        grad.addColorStop(0, BRAND_S);
+        grad.addColorStop(1, BRAND_E);
+        ctx.fillStyle = grad;
+      }else{
+        ctx.fillStyle = '#ffffff';
+      }
+
+      // Path
+      ctx.beginPath();
+      const pts = seg.poly;
+      ctx.moveTo(px(pts[0][0]), px(pts[0][1]));
+      for(let k=1;k<pts.length;k++){
+        ctx.lineTo(px(pts[k][0]), px(pts[k][1]));
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      // Hover highlight for non-active (optional subtle)
+      if(hoverIndex === idx && idx !== active){
+        ctx.save();
+        ctx.globalAlpha = 1.0;
+        ctx.fillStyle = HOVER;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Draw labels (on canvas so they always center over the body)
+    ctx.font = '600 14px system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for(const seg of geom.segs){
+      const lines = String(labels[seg.i]).split('\n');
+      const color = (seg.i === active) ? '#ffffff' : getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#5a6b82';
+      ctx.fillStyle = color;
+      if(lines.length === 1){
+        ctx.fillText(lines[0], seg.labelX, H/2 + 1);
+      }else{
+        ctx.fillText(lines[0], seg.labelX, H/2 - 8);
+        ctx.fillText(lines[1], seg.labelX, H/2 + 10);
+      }
+    }
+
+    // (Optional) outer border line can be drawn if needed, but it may reintroduce hairlines between segments.
+    // We keep the outer shell border in CSS instead.
+    layoutButtons(W);
+  }
+
+  function layoutButtons(W){
+    // Build/position transparent buttons purely for a11y, focus, and click
+    const N = labels.length;
+    if(labelsEl.childElementCount !== N){
+      labelsEl.innerHTML = '';
+      for(let i=0;i<N;i++){
+        const btn = document.createElement('button');
+        btn.className = 'tab' + (i===active ? ' is-active' : '');
+        btn.id = 't' + i;
+        btn.setAttribute('role','tab');
+        btn.setAttribute('aria-selected', i===active ? 'true' : 'false');
+        btn.setAttribute('tabindex', i===active ? '0' : '-1');
+        btn.textContent = labels[i].replace('\n',' ');
+        btn.addEventListener('click', ()=> activate(i));
+        btn.addEventListener('mouseenter', ()=> { hoverIndex = i; draw(); });
+        btn.addEventListener('mouseleave', ()=> { hoverIndex = -1; draw(); });
+        btn.addEventListener('keydown', (e)=>{
+          if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(i); }
+          if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+            e.preventDefault();
+            const dir = e.key === 'ArrowRight' ? 1 : -1;
+            const next = (active + dir + N) % N;
+            activate(next);
+          }
+        });
+        labelsEl.appendChild(btn);
+      }
+    }
+    // Position and z-index (left tabs above to ensure expected focus ring stacking)
+    const tabs = Array.from(labelsEl.children);
+    tabs.forEach((btn, i)=>{
+      const seg = geom.segs[i];
+      const left = seg.btnLeft;
+      const right= seg.btnRight;
+      btn.style.left = left + 'px';
+      btn.style.width = Math.max(0, right - left) + 'px';
+      btn.style.zIndex = String(1000 - i);
+      btn.classList.toggle('is-active', i===active);
+      btn.setAttribute('aria-selected', i===active ? 'true' : 'false');
+      btn.setAttribute('tabindex', i===active ? '0' : '-1');
+    });
+  }
+
+  function activate(i){
+    if(i === active) return;
+    active = i;
+    // Panels
+    const ps = panelsEl.querySelectorAll('.panel');
+    ps.forEach((p, idx) => p.classList.toggle('active', idx===active));
+    draw();
+  }
+
+  // Hover state (for canvas highlight)
+  let hoverIndex = -1;
+
+  // Initial draw + resize
+  draw();
+  let raf = 0;
+  window.addEventListener('resize', ()=>{
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(draw);
+  });
 })();
 </script>
 </body>
