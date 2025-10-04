@@ -1,0 +1,59 @@
+/* Styling for the Filter Controls */
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.control-group.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.control-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#search-text {
+    min-width: 200px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Styling for the Results */
+.procedure-app-container {
+    max-width: 1200px; 
+    margin: 0 auto;
+}
+
+/* Custom classes for the output headings */
+.procedure-heading {
+    color: #003366; 
+    border-bottom: 2px solid #003366;
+    padding-bottom: 5px;
+    margin-top: 25px;
+}
+
+.procedure-subheading {
+    color: #1a5c92; 
+    font-size: 1.2em;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+/* Ensure a basic margin for standard paragraphs */
+.procedures-results p {
+    margin: 1em 0;
+}
