@@ -1,1 +1,35 @@
-b
+
+<!-- Procedures component -->
+<div id="proceduresApp">
+  <div class="rsaControls">
+    <label>
+      Heading:
+      <select id="procHeading">
+        <option value="__ALL__">All headings</option>
+      </select>
+    </label>
+
+    <label>
+      Subheading:
+      <select id="procSubheading" disabled>
+        <option value="__ALL__">All subheadings</option>
+      </select>
+    </label>
+
+    <label>
+      <input type="checkbox" id="procMandatory"> Mandatory only
+    </label>
+
+    <label>
+      Search:
+      <input type="text" id="procSearch" placeholder="Search within text…" />
+    </label>
+
+    <button type="button" id="procClear">Clear</button>
+  </div>
+
+  <!-- Results -->
+  <div id="procResults">
+    <!-- Populated by procedures.js -->
+  </div>
+</div>
