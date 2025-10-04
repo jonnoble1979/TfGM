@@ -1,206 +1,213 @@
-// Use a self-executing anonymous function (IIFE) to contain local variables and prevent global pollution.
-(function() {
-    let PROCEDURES_DATA = [];
-    let dataLoaded = false;
+// procedures.js
+
+// ---------- State & helpers ----------
+let PROCEDURES_DATA = [];
+let proceduresLoaded = false;
+
+
+/**
+ * Converts text containing an intro sentence followed by list markers 
+ * into the required <div class="mandatoryDiv">...</div> structure.
+ * This relies on the global function 'escapeHtml' defined in your other script.
+ */
+function convertTextToMandatoryDiv(item) {
+    // Check for the global function defined in your defs.js
+    if (typeof escapeHtml !== 'function') {
+        console.error("Helper function 'escapeHtml' is missing from the global scope.");
+        return `<div class="mandatoryDiv" data-parano="${item.paraNo}"><div>${item.text}</div></div>`;
+    }
+
+    const text = item.text;
+    const escapedText = escapeHtml(text);
     
-    // NOTE: This assumes 'escapeHtml' is defined in a globally accessible script (like defs.js).
-    // If you get a ReferenceError for 'escapeHtml', you must define it globally (like in your 'defs.js').
+    // Pattern to find the start of a list 
+    const listStartPattern = /(\n• |\n\d+\) )/;
+    const parts = escapedText.split(listStartPattern);
 
-    /**
-     * Converts text containing an intro sentence followed by list markers 
-     * into the required <div class="mandatoryDiv">...</div> structure.
-     */
-    function convertTextToMandatoryDiv(item) {
-        // Assume 'escapeHtml' is available globally
-        if (typeof escapeHtml !== 'function') {
-            console.error("Helper function 'escapeHtml' is missing from the global scope.");
-            return `<div class="mandatoryDiv" data-parano="${item.paraNo}"><div>${item.text}</div></div>`;
-        }
+    if (parts.length <= 2) {
+        return `<div class="mandatoryDiv" data-parano="${item.paraNo}"><div>${escapedText}</div></div>`;
+    }
 
-        const text = item.text;
-        const escapedText = escapeHtml(text);
-        
-        // Pattern to find the start of a list 
-        const listStartPattern = /(\n• |\n\d+\) )/;
-        const parts = escapedText.split(listStartPattern);
+    const introText = parts[0].trim();
+    let listItemsHtml = '';
+    let listTag = '';
 
-        // If no list marker is found, or it's not a multi-part structure, return as a simple mandatory paragraph
-        if (parts.length <= 2) {
-            return `<div class="mandatoryDiv" data-parano="${item.paraNo}"><div>${escapedText}</div></div>`;
-        }
+    for (let i = 1; i < parts.length; i += 2) {
+        const delimiter = parts[i].trim();
+        const content = parts[i + 1] ? parts[i + 1].trim() : '';
 
-        const introText = parts[0].trim();
-        let listItemsHtml = '';
-        let listTag = '';
-
-        for (let i = 1; i < parts.length; i += 2) {
-            const delimiter = parts[i].trim();
-            const content = parts[i + 1] ? parts[i + 1].trim() : '';
-
-            if (!listTag) {
-                listTag = delimiter.includes('•') ? 'ul' : 'ol';
-            }
-            
-            if (content) {
-                const formattedContent = content.replaceAll('\n', '<br>'); 
-                listItemsHtml += `<li>${formattedContent}</li>`;
-            }
+        if (!listTag) {
+            listTag = delimiter.includes('•') ? 'ul' : 'ol';
         }
         
-        if (listItemsHtml) {
-            return `
-                <div class="mandatoryDiv" data-parano="${item.paraNo}">
-                    <div>${introText}</div>
-                    <${listTag}>
-                        ${listItemsHtml}
-                    </${listTag}>
-                </div>
-            `;
-        } else {
-            return `<div class="mandatoryDiv" data-parano="${item.paraNo}"><div>${escapedText}</div></div>`;
+        if (content) {
+            const formattedContent = content.replaceAll('\n', '<br>'); 
+            listItemsHtml += `<li>${formattedContent}</li>`;
         }
     }
+    
+    if (listItemsHtml) {
+        return `
+            <div class="mandatoryDiv" data-parano="${item.paraNo}">
+                <div>${introText}</div>
+                <${listTag}>
+                    ${listItemsHtml}
+                </${listTag}>
+            </div>
+        `;
+    } else {
+        return `<div class="mandatoryDiv" data-parano="${item.paraNo}"><div>${escapedText}</div></div>`;
+    }
+}
 
 
-    /**
-     * Renders a single procedure item using the correct element and class.
-     */
-    function renderProcedureItem(item) {
-        if (item.mandatory) {
-            return convertTextToMandatoryDiv(item);
-        } else {
-            return `<p data-parano="${item.paraNo}">${escapeHtml(item.text)}</p>`;
-        }
+/**
+ * Renders a single procedure item.
+ */
+function renderProcedureItem(item) {
+    if (item.mandatory) {
+        return convertTextToMandatoryDiv(item);
+    } else {
+        return `<p data-parano="${item.paraNo}">${escapeHtml(item.text)}</p>`;
+    }
+}
+
+
+/**
+ * Renders the full list of procedures, grouped by Heading and Subheading.
+ */
+function renderProcedures(data) {
+    const resultsContainer = document.getElementById('procedures-results');
+    if (!resultsContainer) return;
+
+    if (!proceduresLoaded) {
+        resultsContainer.innerHTML = `<p>Loading procedures...</p>`;
+        return;
     }
 
+    if (data.length === 0) {
+        resultsContainer.innerHTML = '<p>No procedure comments match the current filters.</p>';
+        return;
+    }
 
-    /**
-     * Filters the data based on current UI input and calls the renderer.
-     * EXPLICITLY GLOBAL for HTML event handlers.
-     */
-    window.applyFilters = function() {
-        if (!dataLoaded) return;
+    // Grouping logic: Map<Heading, Map<Subheading, [Items]>>
+    const grouped = data.reduce((acc, item) => {
+        if (!acc.has(item.heading)) acc.set(item.heading, new Map());
+        const subheadingMap = acc.get(item.heading);
+        if (!subheadingMap.has(item.subheading)) subheadingMap.set(item.subheading, []);
+        subheadingMap.get(item.subheading).push(item);
+        return acc;
+    }, new Map());
+
+    let html = '';
+
+    for (const [heading, subheadingMap] of grouped) {
+        html += `<h3 class="procedure-heading">${escapeHtml(heading)}</h3>`;
         
-        const headingFilter = document.getElementById('filter-heading').value;
-        const subheadingFilter = document.getElementById('filter-subheading').value;
-        const mandatoryFilter = document.getElementById('filter-mandatory').checked;
-        const searchText = document.getElementById('search-text').value.toLowerCase().trim();
+        for (const [subheading, items] of subheadingMap) {
+            html += `<h4 class="procedure-subheading">${escapeHtml(subheading)}</h4>`;
+            
+            html += `<div class="procedure-group">`;
+            items.forEach(item => {
+                html += renderProcedureItem(item);
+            });
+            html += `</div>`;
+        }
+    }
 
-        let filteredData = PROCEDURES_DATA.filter(item => {
-            // 1. Heading Filter
-            if (headingFilter && item.heading !== headingFilter) return false;
+    resultsContainer.innerHTML = html;
+}
 
-            // 2. Subheading Filter
-            if (subheadingFilter && item.subheading !== subheadingFilter) return false;
 
-            // 3. Mandatory Filter
-            if (mandatoryFilter && item.mandatory !== true) return false;
+/**
+ * Populates the Heading and Subheading dropdowns with unique options.
+ */
+function populateFilters() {
+    const headings = new Set();
+    const subheadings = new Set();
 
-            // 4. Search Text Filter
-            if (searchText) {
-                const searchTargets = [
-                    item.text,
-                    item.heading,
-                    item.subheading
-                ].map(s => String(s).toLowerCase());
-                
-                if (!searchTargets.some(target => target.includes(searchText))) {
-                    return false;
-                }
+    PROCEDURES_DATA.forEach(item => {
+        headings.add(item.heading);
+        subheadings.add(item.subheading);
+    });
+
+    const headingSelect = document.getElementById('filter-heading');
+    headings.forEach(h => {
+        headingSelect.innerHTML += `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`;
+    });
+
+    const subheadingSelect = document.getElementById('filter-subheading');
+    subheadings.forEach(s => {
+        subheadingSelect.innerHTML += `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`;
+    });
+}
+
+
+// ---------- Filtering ----------
+
+/**
+ * Filters the data based on current UI input.
+ * Declared globally to be accessible by HTML inline handlers (onchange="applyFilters()").
+ */
+function applyFilters() {
+    if (!proceduresLoaded) return;
+    
+    const headingFilter = document.getElementById('filter-heading').value;
+    const subheadingFilter = document.getElementById('filter-subheading').value;
+    const mandatoryFilter = document.getElementById('filter-mandatory').checked;
+    const searchText = document.getElementById('search-text').value.toLowerCase().trim();
+
+    let filteredData = PROCEDURES_DATA.filter(item => {
+        if (headingFilter && item.heading !== headingFilter) return false;
+        if (subheadingFilter && item.subheading !== subheadingFilter) return false;
+        if (mandatoryFilter && item.mandatory !== true) return false;
+
+        if (searchText) {
+            const searchTargets = [
+                item.text,
+                item.heading,
+                item.subheading
+            ].map(s => String(s).toLowerCase());
+            
+            if (!searchTargets.some(target => target.includes(searchText))) {
+                return false;
             }
-            
-            return true;
-        });
-
-        renderProcedures(filteredData);
-    }
-
-
-    /**
-     * Renders the full list of procedures, grouped by Heading and Subheading.
-     */
-    function renderProcedures(data) {
-        const resultsContainer = document.getElementById('procedures-results');
-        if (!resultsContainer) return;
-
-        if (data.length === 0) {
-            resultsContainer.innerHTML = '<p>No procedure comments match the current filters.</p>';
-            return;
         }
+        
+        return true;
+    });
 
-        const grouped = data.reduce((acc, item) => {
-            if (!acc.has(item.heading)) acc.set(item.heading, new Map());
-            const subheadingMap = acc.get(item.heading);
-            if (!subheadingMap.has(item.subheading)) subheadingMap.set(item.subheading, []);
-            subheadingMap.get(item.subheading).push(item);
-            return acc;
-        }, new Map());
+    renderProcedures(filteredData);
+}
 
-        let html = '';
 
-        for (const [heading, subheadingMap] of grouped) {
-            html += `<h3 class="procedure-heading">${escapeHtml(heading)}</h3>`;
-            
-            for (const [subheading, items] of subheadingMap) {
-                html += `<h4 class="procedure-subheading">${escapeHtml(subheading)}</h4>`;
-                
-                html += `<div class="procedure-group">`;
-                items.forEach(item => {
-                    html += renderProcedureItem(item);
-                });
-                html += `</div>`;
-            }
-        }
+// ---------- Data loading ----------
 
-        resultsContainer.innerHTML = html;
+/**
+ * Loads the procedure data from the JSON file.
+ * Declared globally to be called from the DOMContentLoaded event listener.
+ */
+async function loadProcedures() {
+    proceduresLoaded = false;
+    try {
+        // ✅ Ensure the filename/path is exactly correct (case-sensitive on many hosts)
+        const res = await fetch('data/procedures.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status} fetching data/procedures.json`);
+        
+        const data = await res.json();
+        PROCEDURES_DATA = data;
+        proceduresLoaded = true;
+        
+        console.log(`Procedures loaded: ${PROCEDURES_DATA.length}`);
+
+        populateFilters();
+        applyFilters(); // Initial render with loaded data
+    } catch (err) {
+        proceduresLoaded = true; // load finished (failed)
+        console.error('Failed to load procedures:', err);
+        document.getElementById('procedures-results').innerHTML = 
+            `<p style="color: #b91c1c; padding: 20px; border: 1px solid #ffdddd;">
+                ❌ Failed to load procedures data: <code>${escapeHtml(err.message)}</code>
+            </p>`;
     }
-
-
-    /**
-     * Populates the Heading and Subheading dropdowns with unique options.
-     */
-    function populateFilters() {
-        const headings = new Set();
-        const subheadings = new Set();
-
-        PROCEDURES_DATA.forEach(item => {
-            headings.add(item.heading);
-            subheadings.add(item.subheading);
-        });
-
-        const headingSelect = document.getElementById('filter-heading');
-        headings.forEach(h => {
-            headingSelect.innerHTML += `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`;
-        });
-
-        const subheadingSelect = document.getElementById('filter-subheading');
-        subheadings.forEach(s => {
-            subheadingSelect.innerHTML += `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`;
-        });
-    }
-
-    /**
-     * Loads the procedure data from the JSON file.
-     * EXPLICITLY GLOBAL for the DOMContentLoaded event.
-     */
-    window.loadProceduresComponent = async function() {
-        try {
-            const res = await fetch('data/procedures.json');
-            if (!res.ok) throw new Error(`HTTP ${res.status} fetching data/procedures.json`);
-            
-            PROCEDURES_DATA = await res.json();
-            dataLoaded = true;
-            
-            populateFilters();
-            applyFilters(); 
-        } catch (err) {
-            dataLoaded = false;
-            console.error('Failed to load procedures:', err);
-            document.getElementById('procedures-results').innerHTML = 
-                `<p style="color: #b91c1c; padding: 20px; border: 1px solid #ffdddd;">
-                    ❌ Failed to load procedures data from <code>data/procedures.json</code>. 
-                    Please ensure the file exists at this path. Error: ${escapeHtml(err.message)}
-                </p>`;
-        }
-    }
-})();
+}
