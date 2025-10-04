@@ -191,7 +191,7 @@ async function loadProcedures() {
     proceduresLoaded = false;
     try {
         // ✅ Ensure the filename/path is exactly correct (case-sensitive on many hosts)
-        const res = await fetch('data/procedures.json', { cache: 'no-store' });
+        const res = await fetch('/data/procedures.json', { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP ${res.status} fetching data/procedures.json`);
         
         const data = await res.json();
