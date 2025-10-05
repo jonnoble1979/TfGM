@@ -1,59 +1,48 @@
-/* Styling for the Filter Controls */
-.filter-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 20px;
+/* =========================
+   Procedures page layout (scoped)
+   ========================= */
+.procedure-app-container .procedure-group {
+  margin: 0.75rem 0 1.25rem;
 }
 
-.control-group {
-    display: flex;
-    flex-direction: column;
+/* One row per item: [paraNo] | [content] */
+.procedure-app-container .procedure-item {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 0.75rem;
+  align-items: start;
+  margin: 0.5rem 0;
 }
 
-.control-group.checkbox-group {
-    flex-direction: row;
-    align-items: center;
-    padding-top: 10px;
+/* Para number (left column) */
+.procedure-app-container .procedure-item .para-no {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  font-weight: 600;
+  line-height: 1.6;
 }
 
-.control-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
+/* Content (right column) */
+.procedure-app-container .procedure-item .para-text {
+  min-width: 0;       /* ensure wrapping */
 }
 
-#search-text {
-    min-width: 200px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
+/* Regular paragraphs inside the content column */
+.procedure-app-container .procedure-item .para-text > p {
+  margin: 0;          /* outer row handles vertical rhythm */
+  line-height: 1.6;
+  color: var(--text-body);
 }
 
-/* Styling for the Results */
-.procedure-app-container {
-    max-width: 1200px; 
-    margin: 0 auto;
+/* Optional: tighter stacking inside a group */
+.procedure-app-container .procedure-group .procedure-item + .procedure-item {
+  margin-top: 0.35rem;
 }
 
-/* Custom classes for the output headings */
-.procedure-heading {
-    color: #003366; 
-    border-bottom: 2px solid #003366;
-    padding-bottom: 5px;
-    margin-top: 25px;
-}
-
-.procedure-subheading {
-    color: #1a5c92; 
-    font-size: 1.2em;
-    margin-top: 15px;
-    margin-bottom: 10px;
-}
-
-/* Ensure a basic margin for standard paragraphs */
-.procedures-results p {
-    margin: 1em 0;
+/* Responsive nicety: a touch more gap on small screens */
+@media (max-width: 640px) {
+  .procedure-app-container .procedure-item {
+    column-gap: 0.6rem;
+  }
 }
