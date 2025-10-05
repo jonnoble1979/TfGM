@@ -15,9 +15,8 @@ let proceduresLoaded = false; // fetch completion flag
 // ---------- Helpers ----------
 
 /**
- * Build the inner content block for mandatory items (without the outer number).
- * Returns your .mandatoryDiv (badge + content preserved), and injects a
- * `.mandline` row with the para number INSIDE the badge.
+ * Build the inner content block for mandatory items (no para number inside).
+ * Returns your .mandatoryDiv (badge + content preserved).
  */
 function buildMandatoryContent(item) {
   if (typeof escapeHtml !== 'function') {
@@ -25,7 +24,6 @@ function buildMandatoryContent(item) {
     return `<div class="mandatoryDiv"><div>${item.text ?? ''}</div></div>`;
   }
 
-  const paraNo = item.paraNo ?? '';
   const text = item.text ?? '';
   const escapedText = escapeHtml(text);
 
@@ -33,19 +31,11 @@ function buildMandatoryContent(item) {
   const listStartPattern = /(\n• |\n\d+\) )/;
   const parts = escapedText.split(listStartPattern);
 
-  // No list => show para number + full text on one mandline inside the badge
+  // No list => simple mandatory box with text
   if (parts.length <= 2) {
-    return `
-      <div class="mandatoryDiv">
-        <div class="mandline">
-          <span class="para-no">${escapeHtml(paraNo)}</span>
-          <div class="mand-text">${escapedText}</div>
-        </div>
-      </div>
-    `;
+    return `<div class="mandatoryDiv"><div>${escapedText}</div></div>`;
   }
 
-  // List found: show number + intro on the mandline, then the list below
   const introText = parts[0].trim();
   let listItemsHtml = '';
   let listTag = '';
@@ -64,10 +54,7 @@ function buildMandatoryContent(item) {
   if (listItemsHtml) {
     return `
       <div class="mandatoryDiv">
-        <div class="mandline">
-          <span class="para-no">${escapeHtml(paraNo)}</span>
-          <div class="mand-text">${introText}</div>
-        </div>
+        <div>${introText}</div>
         <${listTag}>
           ${listItemsHtml}
         </${listTag}>
@@ -75,27 +62,19 @@ function buildMandatoryContent(item) {
     `;
   }
 
-  // Fallback (shouldn't really happen)
-  return `
-    <div class="mandatoryDiv">
-      <div class="mandline">
-        <span class="para-no">${escapeHtml(paraNo)}</span>
-        <div class="mand-text">${escapedText}</div>
-      </div>
-    </div>
-  `;
+  return `<div class="mandatoryDiv"><div>${escapedText}</div></div>`;
 }
 
 /**
  * Renders a single procedure item with a hanging number column.
- * Left column: para number (hidden for mandatory items; visible for normal).
+ * Left column: para number (always visible in the gutter).
  * Right column: content (mandatory box or plain text).
  */
 function renderProcedureItem(item) {
   const paraNo = item.paraNo ?? '';
   const numberHtml = `<span class="para-no">${escapeHtml(paraNo)}</span>`;
   const contentHtml = item.mandatory
-    ? buildMandatoryContent(item)                                   // inside the badge
+    ? buildMandatoryContent(item)                                   // badge stays inside the box
     : `<p class="para-content">${escapeHtml(item.text ?? '')}</p>`; // normal paragraph
 
   return `
@@ -137,7 +116,7 @@ function renderProcedures(data) {
     return acc;
   }, new Map());
 
-  // Optional: sort headings/subheadings alphabetically for consistent UI
+  // Sort headings/subheadings alphabetically for consistent UI
   const sortedHeadings = [...grouped.keys()].sort((a, b) =>
     a.localeCompare(b, undefined, { sensitivity: 'base' })
   );
