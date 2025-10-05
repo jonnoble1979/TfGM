@@ -67,3 +67,66 @@
 .procedure-app-container .procedure-item.is-mandatory {
     column-gap: 0 !important;
 }
+
+/* 1) Remove the extra indent inside the mandatory box in the procedures view */
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
+  position: relative;
+  display: block;              /* kill the internal grid for this context */
+  margin: 0;                   /* outer .procedure-item controls spacing */
+  padding: 8px 12px;           /* keep your box padding */
+}
+
+/* Cancel the global rule that forces children into grid column 2 */
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv > * {
+  grid-column: auto !important;
+}
+
+/* 2) The outer gutter: hide outer number but keep its width to align rows */
+.procedure-app-container .procedure-item.is-mandatory > .para-no {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 3) Float the badge stack (triangle + label) into the LEFT GUTTER,
+      so it no longer pushes the text inside the box to the right */
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv::before,
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv::after {
+  position: absolute !important;
+  left: calc(-1 * (2.75rem));  /* <-- adjust to match your number+gap gutter */
+  /* Tip: try 2.5rem–3rem depending on your font/number width */
+  grid-column: auto;
+  grid-row: auto;
+  justify-self: start;
+  align-self: start;
+}
+
+/* Adjust vertical positions (keep your original geometry) */
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv::before {
+  top: 8px;  /* triangle top inside the box */
+}
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv::after {
+  top: calc(8px + var(--mandy-icon-size) + var(--mandy-gap));
+}
+
+/* 4) Para number INSIDE the box, without shifting text */
+.procedure-app-container .mandatoryDiv .mandline {
+  position: relative;          /* number anchors to this line */
+}
+
+.procedure-app-container .mandatoryDiv .mandline .para-no {
+  position: absolute;
+  left: 0;                     /* put the number right at the box’s text edge */
+  transform: translateX(-0.25rem); /* tiny optical tuck; tweak to taste */
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Give the text a touch of left padding so the number does not overlap,
+   but keep it SMALL so it stays aligned with normal paragraphs */
+.procedure-app-container .mandatoryDiv .mandline .mand-text {
+  padding-left: 1.25rem;       /* small space for the inside number */
+  min-width: 0;
+}
+
