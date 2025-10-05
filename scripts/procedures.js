@@ -9,10 +9,67 @@
 'use strict';
 
 // ---------- State ----------
-let PROCEDURES_DATA = [];           // full dataset
-let proceduresLoaded = false;       // fetch completion flag
+let PROCEDURES_DATA = [];             // full dataset
+let proceduresLoaded = false;         // fetch completion flag
+let SUB_DROPDOWN_FIXED_WIDTH_PX = null; // locked pixel width for subheading <select>
 
-// ---------- Helper: Build mandatory content (keeps your badge box) ----------
+// ---------- Small utilities ----------
+function uniqueSorted(arr) {
+  return [...new Set(arr)].sort((a, b) =>
+    String(a ?? '').localeCompare(String(b ?? ''), undefined, { sensitivity: 'base' })
+  );
+}
+
+// ---------- Subheading width helpers ----------
+/**
+ * Measure how wide a <select> needs to be to fit the widest value.
+ * We clone the real select so we get the same fonts, padding, arrow, etc.
+ */
+function measureSelectWidthForValues(selectEl, values, minPx = 220) {
+  if (!selectEl) return minPx;
+
+  // Shallow clone to inherit computed styles (size/appearance), empty options
+  const probe = selectEl.cloneNode(false);
+  probe.style.position = 'absolute';
+  probe.style.visibility = 'hidden';
+  probe.style.left = '-9999px';
+  probe.style.top = '0';
+  probe.innerHTML = '';
+
+  // Single OPTION reused for each value
+  const opt = document.createElement('option');
+  probe.appendChild(opt);
+  document.body.appendChild(probe);
+
+  let max = 0;
+  for (const v of values) {
+    opt.textContent = String(v ?? '');
+    // Force layout to get accurate width that includes the select arrow UI
+    const w = probe.offsetWidth;
+    if (w > max) max = w;
+  }
+
+  document.body.removeChild(probe);
+
+  // Small buffer for focus/UA differences
+  const buffered = Math.ceil(max + 6);
+  return Math.max(minPx, buffered);
+}
+
+/**
+ * Compute and lock the Subheading select width to the maximum across ALL subheadings.
+ * Call this after data load; re-apply in updateSubheadingOptions().
+ */
+function computeAndLockSubheadingWidth() {
+  const subSelect = document.getElementById('filter-subheading');
+  if (!subSelect) return;
+
+  const allSubs = uniqueSorted(PROCEDURES_DATA.map(x => x.subheading).filter(Boolean));
+  SUB_DROPDOWN_FIXED_WIDTH_PX = measureSelectWidthForValues(subSelect, allSubs, /*minPx*/ 220);
+  subSelect.style.width = SUB_DROPDOWN_FIXED_WIDTH_PX + 'px';
+}
+
+// ---------- Mandatory content builder (keeps your badge box) ----------
 function buildMandatoryContent(item) {
   if (typeof escapeHtml !== 'function') {
     console.error("Helper 'escapeHtml' missing from global scope.");
@@ -57,61 +114,7 @@ function buildMandatoryContent(item) {
     `
     : `<div class="mandatoryDiv"><div>${escapedText}</div></div>`;
 }
-// --- Width locking for Subheading select ---
-let SUB_DROPDOWN_FIXED_WIDTH_PX = null;
 
-/**
- * Measure how wide a <select> needs to be to fit its widest value.
- * We clone the real select so we get the same fonts, padding, arrow, etc.
- */
-function measureSelectWidthForValues(selectEl, values, minPx = 220) {
-  if (!selectEl) return minPx;
-
-  // Shallow clone to inherit computed styles, but start empty
-  const probe = selectEl.cloneNode(false);
-  probe.style.position = 'absolute';
-  probe.style.visibility = 'hidden';
-  probe.style.left = '-9999px';
-  probe.style.top = '0';
-  probe.innerHTML = '';
-
-  // Single OPTION we reuse for each value
-  const opt = document.createElement('option');
-  probe.appendChild(opt);
-
-  document.body.appendChild(probe);
-
-  let max = 0;
-  for (const v of values) {
-    opt.textContent = String(v ?? '');
-    // reading offsetWidth forces layout/reflow, giving an accurate width
-    const w = probe.offsetWidth;
-    if (w > max) max = w;
-  }
-
-  document.body.removeChild(probe);
-
-  // Add a tiny safety buffer (some UAs render a hair wider on focus)
-  const buffered = Math.ceil(max + 6);
-  return Math.max(minPx, buffered);
-}
-
-/**
- * Compute and lock the Subheading select width to the maximum across ALL subheadings.
- * Call this once after data load; re-apply in updateSubheadingOptions if needed.
- */
-function computeAndLockSubheadingWidth() {
-  const subSelect = document.getElementById('filter-subheading');
-  if (!subSelect) return;
-
-  const allSubs = uniqueSorted(
-    PROCEDURES_DATA.map(x => x.subheading).filter(Boolean)
-  );
-
-  // Measure and lock
-  SUB_DROPDOWN_FIXED_WIDTH_PX = measureSelectWidthForValues(subSelect, allSubs, /*minPx*/ 220);
-  subSelect.style.width = SUB_DROPDOWN_FIXED_WIDTH_PX + 'px';
-}
 // ---------- Rendering ----------
 function renderProcedureItem(item) {
   const paraNo = item.paraNo ?? '';
@@ -183,16 +186,6 @@ function renderProcedures(data) {
 }
 
 // ---------- Filters: population & cascading ----------
-function uniqueSorted(arr) {
-  return [...new Set(arr)].sort((a, b) =>
-    String(a ?? '').localeCompare(String(b ?? ''), undefined, { sensitivity: 'base' })
-  );
-}
-
-/**
- * Populate only the Headings initially.
- * Subheadings are populated dynamically based on selected heading.
- */
 function populateFilters() {
   const headingSelect = document.getElementById('filter-heading');
   const subheadingSelect = document.getElementById('filter-subheading');
@@ -214,10 +207,6 @@ function populateFilters() {
   updateSubheadingOptions();
 }
 
-/**
- * Compute and fill subheading options for the currently selected heading.
- * Keeps previous selection if still valid.
- */
 function updateSubheadingOptions() {
   const headingSelect = document.getElementById('filter-heading');
   const subheadingSelect = document.getElementById('filter-subheading');
@@ -245,6 +234,11 @@ function updateSubheadingOptions() {
 
   // Restore previous subheading if still applicable; otherwise reset to All
   subheadingSelect.value = subs.includes(prevSub) ? prevSub : '';
+
+  // Re-apply locked width so the select doesn't jitter
+  if (SUB_DROPDOWN_FIXED_WIDTH_PX) {
+    subheadingSelect.style.width = SUB_DROPDOWN_FIXED_WIDTH_PX + 'px';
+  }
 }
 
 // ---------- Filtering (global for inline handlers) ----------
@@ -269,7 +263,7 @@ function applyFilters() {
 
     if (searchText) {
       const targets = [
-        item.paraNo,    // 👉 include paragraph number in search
+        item.paraNo,    // include paragraph number in search
         item.text,
         item.heading,
         item.subheading
@@ -298,8 +292,9 @@ async function loadProcedures() {
     console.log(`Procedures loaded: ${PROCEDURES_DATA.length}`);
     if (PROCEDURES_DATA.length) console.table(PROCEDURES_DATA.slice(0, 5));
 
-    populateFilters();         // headings + initial subheadings
-    applyFilters();            // initial render
+    populateFilters();                // headings + initial subheadings
+    computeAndLockSubheadingWidth();  // lock subheading select width to max across ALL
+    applyFilters();                   // initial render
   } catch (err) {
     proceduresLoaded = true; // finished (failed)
     console.error('Failed to load procedures:', err);
@@ -333,18 +328,14 @@ async function loadProcedures() {
       input.addEventListener('input', applyFilters);
       input.__procHooked = true;
     }
-
-    // Subheading + mandatory already have inline handlers; no extra needed
+    // Subheading select & mandatory checkbox already have inline handlers
   }
 
   function tryStart() {
     const container = document.querySelector('.procedure-app-container');
     if (!container) return false;
 
-    // Kick off the loader
-    loadProcedures();
-
-    // Wire the filter controls
+    loadProcedures();   // fetch + populate + render
     wireFilterControls();
     return true;
   }
@@ -359,7 +350,7 @@ async function loadProcedures() {
   mo.observe(document.documentElement, { childList: true, subtree: true });
 })();
 
-// Expose globals used by inline handlers (if bundlers/minifiers change scope)
+// Expose globals used by inline handlers (in case of scope changes)
 window.applyFilters = window.applyFilters || applyFilters;
 window.loadProcedures = window.loadProcedures || loadProcedures;
 window.updateSubheadingOptions = window.updateSubheadingOptions || updateSubheadingOptions;
