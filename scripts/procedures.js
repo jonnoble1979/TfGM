@@ -123,24 +123,36 @@ function renderProcedures(data) {
  * Populates the Heading and Subheading dropdowns with unique options.
  */
 function populateFilters() {
-    const headings = new Set();
-    const subheadings = new Set();
+  const headingSelect = document.getElementById('filter-heading');
+  const subheadingSelect = document.getElementById('filter-subheading');
+  if (!headingSelect || !subheadingSelect) return;
 
-    PROCEDURES_DATA.forEach(item => {
-        headings.add(item.heading);
-        subheadings.add(item.subheading);
-    });
+  // keep the first “All …” option, remove the rest
+  headingSelect.length = 1;
+  subheadingSelect.length = 1;
 
-    const headingSelect = document.getElementById('filter-heading');
-    headings.forEach(h => {
-        headingSelect.innerHTML += `<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`;
-    });
+  const headings = new Set();
+  const subheadings = new Set();
 
-    const subheadingSelect = document.getElementById('filter-subheading');
-    subheadings.forEach(s => {
-        subheadingSelect.innerHTML += `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`;
-    });
-}
+  PROCEDURES_DATA.forEach(item => {
+    if (item.heading) headings.add(item.heading);
+    if (item.subheading) subheadings.add(item.subheading);
+  });
+
+  // Sort for a nicer UX
+  [...headings].sort().forEach(h => {
+    headingSelect.insertAdjacentHTML(
+      'beforeend',
+      `<option value="${escapeAttr(h)}">${escapeHtml(h)}</option>`
+    );
+  });
+
+  [...subheadings].sort().forEach(s => {
+    subheadingSelect.insertAdjacentHTML(
+      'beforeend',
+      `<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`
+    );
+  });
 
 
 // ---------- Filtering ----------
