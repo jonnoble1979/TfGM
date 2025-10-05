@@ -324,3 +324,45 @@ ul li::marker {
     color: var(--brand-blue);  /* or try #60a5fa for accent */
     font-size: 1.1em;          /* slightly larger bullet */
 }
+
+/* === Procedures: Filter controls layout (scoped) === */
+.procedure-app-container .filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: end;         /* align selects and button/checkbox bottoms */
+  margin: 0 0 16px 0;
+}
+
+.procedure-app-container .filter-controls .control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;         /* gives consistent widths; adjust to taste */
+}
+
+.procedure-app-container .filter-controls .checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  min-width: auto;          /* checkbox can be narrow */
+}
+
+/* Inputs & selects look consistent */
+.procedure-app-container .filter-controls select,
+.procedure-app-container .filter-controls input[type="text"] {
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+  background: var(--color-light-bg);
+  color: var(--text-body);
+}
+
+/* On smaller screens, allow full-width groups */
+@media (max-width: 640px) {
+  .procedure-app-container .filter-controls .control-group {
+    min-width: min(100%, 340px);
+    flex: 1 1 100%;
+  }
+}
