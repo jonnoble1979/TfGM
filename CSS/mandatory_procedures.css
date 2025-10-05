@@ -1,0 +1,19 @@
+/* =======================================
+   Mandatory badge – Procedures-scoped tweaks
+   ======================================= */
+
+/* Remove inner margin so the outer .procedure-item controls spacing */
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
+  margin: 0;
+}
+
+/* Optional: slightly reduce the left/right padding so
+   the badge breathes well inside the grid row (tweak to taste) */
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
+  /* padding: 8px 10px;  Uncomment if you want a tighter badge inside procedures */
+}
+
+/* Optional hover subtlety only inside procedures page */
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv:is(:hover, :focus-within) {
+  /* inherits your global hover vars; nothing else needed */
+}
