@@ -20,6 +20,26 @@ function uniqueSorted(arr) {
   );
 }
 
+// ---- ParaNo parsing & comparison (1.2.10 > 1.2.9 numerically) ----
+function parseParaNo(no) {
+  if (!no) return [];
+  return String(no).split('.').map(n => {
+    const v = parseInt(n, 10);
+    return Number.isFinite(v) ? v : 0;
+  });
+}
+function compareParaNo(a, b) {
+  const pa = parseParaNo(a);
+  const pb = parseParaNo(b);
+  const len = Math.max(pa.length, pb.length);
+  for (let i = 0; i < len; i++) {
+    const av = pa[i] ?? 0;
+    const bv = pb[i] ?? 0;
+    if (av !== bv) return av - bv;
+  }
+  return 0;
+}
+
 // ---------- Subheading width helpers ----------
 /**
  * Measure how wide a <select> needs to be to fit the widest value.
@@ -81,7 +101,7 @@ function splitOnRsaTablePlaceholder(rawText) {
 }
 
 function renderRsaTeamRequirementsTable() {
-  // Static, trusted HTML
+  // Static, trusted HTML (optionally add classes/wrapper if you used the themed table CSS)
   return `
     <table>
       <thead>
@@ -129,7 +149,7 @@ function buildMandatoryContent(item) {
 
   const raw = item.text ?? '';
 
-  // 1) SPECIAL CASE: table placeholder in mandatory paragraph
+  // SPECIAL CASE: table placeholder in mandatory paragraph
   if (hasRsaTeamRequirementsPlaceholder(raw)) {
     const [before, after] = splitOnRsaTablePlaceholder(raw);
     const beforeHtml = before && before.trim() ? `<div>${escapeHtml(before.trim())}</div>` : '';
@@ -143,7 +163,7 @@ function buildMandatoryContent(item) {
     `;
   }
 
-  // 2) Regular mandatory text, possibly with bullet/numbered lists
+  // Regular mandatory text, possibly with bullet/numbered lists
   const escapedText = escapeHtml(raw);
 
   // Detect start of list (• bullets or 1) 2) ...)
@@ -230,6 +250,11 @@ function renderProcedureItem(item) {
   `;
 }
 
+/**
+ * Render procedures in true para order:
+ * 1) Sort filtered data by paraNo (numeric dotted comparison)
+ * 2) Stream headings/subheadings in the order they appear
+ */
 function renderProcedures(data) {
   const resultsContainer = document.getElementById('procedures-results');
   if (!resultsContainer) return;
@@ -244,39 +269,44 @@ function renderProcedures(data) {
     return;
   }
 
-  // Group: Map<Heading, Map<Subheading, Item[]>>
-  const grouped = data.reduce((acc, item) => {
-    const h = item.heading ?? '';
-    const s = item.subheading ?? '';
-    if (!acc.has(h)) acc.set(h, new Map());
-    const sub = acc.get(h);
-    if (!sub.has(s)) sub.set(s, []);
-    sub.get(s).push(item);
-    return acc;
-  }, new Map());
-
-  const sortedHeadings = [...grouped.keys()].sort((a, b) =>
-    a.localeCompare(b, undefined, { sensitivity: 'base' })
-  );
+  // Sort by paraNo across the filtered list
+  const sorted = [...data].sort((a, b) => compareParaNo(a.paraNo, b.paraNo));
 
   let html = '';
+  let currentHeading = null;
+  let currentSubheading = null;
+  let groupOpen = false;
 
-  for (const heading of sortedHeadings) {
-    const subMap = grouped.get(heading);
-    html += `<h3 class="procedure-heading">${escapeHtml(heading)}</h3>`;
-
-    const sortedSubs = [...subMap.keys()].sort((a, b) =>
-      a.localeCompare(b, undefined, { sensitivity: 'base' })
-    );
-
-    for (const subheading of sortedSubs) {
-      const items = subMap.get(subheading);
-      html += `<h4 class="procedure-subheading">${escapeHtml(subheading)}</h4>`;
-      html += `<div class="procedure-group">`;
-      items.forEach(it => { html += renderProcedureItem(it); });
-      html += `</div>`;
+  for (const item of sorted) {
+    // New heading?
+    if (item.heading !== currentHeading) {
+      // close previous group if open
+      if (groupOpen) {
+        html += `</div>`;
+        groupOpen = false;
+      }
+      currentHeading = item.heading;
+      currentSubheading = null;
+      html += `<h3 class="procedure-heading">${escapeHtml(currentHeading ?? '')}</h3>`;
     }
+
+    // New subheading?
+    if (item.subheading !== currentSubheading) {
+      if (groupOpen) {
+        html += `</div>`;
+        groupOpen = false;
+      }
+      currentSubheading = item.subheading;
+      html += `<h4 class="procedure-subheading">${escapeHtml(currentSubheading ?? '')}</h4>`;
+      html += `<div class="procedure-group">`;
+      groupOpen = true;
+    }
+
+    // Item
+    html += renderProcedureItem(item);
   }
+
+  if (groupOpen) html += `</div>`;
 
   resultsContainer.innerHTML = html;
 }
@@ -291,6 +321,7 @@ function populateFilters() {
   headingSelect.length = 1;
   subheadingSelect.length = 1;
 
+  // Headings (alphabetical is fine for dropdown; render order is controlled by paraNo)
   const headings = uniqueSorted(PROCEDURES_DATA.map(x => x.heading).filter(Boolean));
   headings.forEach(h => {
     headingSelect.insertAdjacentHTML(
@@ -390,7 +421,7 @@ async function loadProcedures() {
 
     populateFilters();                // headings + initial subheadings
     computeAndLockSubheadingWidth();  // lock subheading select width to max across ALL
-    applyFilters();                   // initial render
+    applyFilters();                   // initial render (now paraNo-ordered)
   } catch (err) {
     proceduresLoaded = true; // finished (failed)
     console.error('Failed to load procedures:', err);
@@ -449,4 +480,3 @@ async function loadProcedures() {
 // Expose globals used by inline handlers (in case of scope changes)
 window.applyFilters = window.applyFilters || applyFilters;
 window.loadProcedures = window.loadProcedures || loadProcedures;
-window.updateSubheadingOptions = window.updateSubheadingOptions || updateSubheadingOptions;
