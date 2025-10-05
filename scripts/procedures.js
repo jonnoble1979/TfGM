@@ -9,9 +9,9 @@
 'use strict';
 
 // ---------- State ----------
-let PROCEDURES_DATA = [];             // full dataset
-let proceduresLoaded = false;         // fetch completion flag
-let SUB_DROPDOWN_FIXED_WIDTH_PX = null; // locked pixel width for subheading <select>
+let PROCEDURES_DATA = [];                // full dataset
+let proceduresLoaded = false;            // fetch completion flag
+let SUB_DROPDOWN_FIXED_WIDTH_PX = null;  // locked pixel width for subheading <select>
 
 // ---------- Small utilities ----------
 function uniqueSorted(arr) {
@@ -69,6 +69,57 @@ function computeAndLockSubheadingWidth() {
   subSelect.style.width = SUB_DROPDOWN_FIXED_WIDTH_PX + 'px';
 }
 
+// ---------- Placeholder → Table (special content) ----------
+const RSA_TABLE_TOKEN_RE = /<<\s*insert image of RSA team requirements\s*>>/i;
+
+function hasRsaTeamRequirementsPlaceholder(rawText) {
+  return RSA_TABLE_TOKEN_RE.test(String(rawText || ''));
+}
+
+function splitOnRsaTablePlaceholder(rawText) {
+  return String(rawText || '').split(RSA_TABLE_TOKEN_RE); // [before, after]
+}
+
+function renderRsaTeamRequirementsTable() {
+  // Static, trusted HTML
+  return `
+    <table>
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Training</th>
+          <th>Experience</th>
+          <th>RSAs Completed</th>
+          <th>CPD</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>RSA Team Leader</td>
+          <td>10-day course or condensed equivalent</td>
+          <td>Minimum 4 years</td>
+          <td>At least 5 in past 12 months</td>
+          <td>Minimum 2 days in past 12 months</td>
+        </tr>
+        <tr>
+          <td>RSA Team Member</td>
+          <td>10-day course or condensed equivalent</td>
+          <td>Minimum 1 year</td>
+          <td>At least 5 in past 24 months</td>
+          <td>Minimum 2 days in past 12 months</td>
+        </tr>
+        <tr>
+          <td>RSA Observer</td>
+          <td>2-day course</td>
+          <td>Not required</td>
+          <td>Not required</td>
+          <td>Not required</td>
+        </tr>
+      </tbody>
+    </table>
+  `;
+}
+
 // ---------- Mandatory content builder (keeps your badge box) ----------
 function buildMandatoryContent(item) {
   if (typeof escapeHtml !== 'function') {
@@ -76,10 +127,26 @@ function buildMandatoryContent(item) {
     return `<div class="mandatoryDiv"><div>${item.text ?? ''}</div></div>`;
   }
 
-  const text = item.text ?? '';
-  const escapedText = escapeHtml(text);
+  const raw = item.text ?? '';
 
-  // Detect list start (• bullets or 1) 2) ...)
+  // 1) SPECIAL CASE: table placeholder in mandatory paragraph
+  if (hasRsaTeamRequirementsPlaceholder(raw)) {
+    const [before, after] = splitOnRsaTablePlaceholder(raw);
+    const beforeHtml = before && before.trim() ? `<div>${escapeHtml(before.trim())}</div>` : '';
+    const afterHtml  = after  && after.trim()  ? `<div>${escapeHtml(after.trim())}</div>`  : '';
+    return `
+      <div class="mandatoryDiv">
+        ${beforeHtml}
+        ${renderRsaTeamRequirementsTable()}
+        ${afterHtml}
+      </div>
+    `;
+  }
+
+  // 2) Regular mandatory text, possibly with bullet/numbered lists
+  const escapedText = escapeHtml(raw);
+
+  // Detect start of list (• bullets or 1) 2) ...)
   const listStartPattern = /(\n• |\n\d+\) )/;
   const parts = escapedText.split(listStartPattern);
 
@@ -96,6 +163,7 @@ function buildMandatoryContent(item) {
   for (let i = 1; i < parts.length; i += 2) {
     const delimiter = (parts[i] || '').trim();
     const content = parts[i + 1] ? parts[i + 1].trim() : '';
+
     if (!listTag) listTag = delimiter.includes('•') ? 'ul' : 'ol';
     if (content) {
       const formatted = content.replaceAll('\n', '<br>');
@@ -115,13 +183,41 @@ function buildMandatoryContent(item) {
     : `<div class="mandatoryDiv"><div>${escapedText}</div></div>`;
 }
 
+// ---------- Standard content builder (non-mandatory) ----------
+function buildStandardContent(item) {
+  if (typeof escapeHtml !== 'function') {
+    console.error("Helper 'escapeHtml' missing from global scope.");
+    return `<p class="para-content">${item.text ?? ''}</p>`;
+  }
+
+  const raw = item.text ?? '';
+
+  // SPECIAL CASE: table placeholder
+  if (hasRsaTeamRequirementsPlaceholder(raw)) {
+    const [before, after] = splitOnRsaTablePlaceholder(raw);
+    const beforeHtml = before && before.trim() ? `<div>${escapeHtml(before.trim())}</div>` : '';
+    const afterHtml  = after  && after.trim()  ? `<div>${escapeHtml(after.trim())}</div>`  : '';
+    // Use a DIV wrapper so the table isn't nested inside <p> (invalid)
+    return `
+      <div class="para-content">
+        ${beforeHtml}
+        ${renderRsaTeamRequirementsTable()}
+        ${afterHtml}
+      </div>
+    `;
+  }
+
+  // Normal paragraph
+  return `<p class="para-content">${escapeHtml(raw)}</p>`;
+}
+
 // ---------- Rendering ----------
 function renderProcedureItem(item) {
   const paraNo = item.paraNo ?? '';
   const numberHtml = `<span class="para-no">${escapeHtml(paraNo)}</span>`;
   const contentHtml = item.mandatory
     ? buildMandatoryContent(item)
-    : `<p class="para-content">${escapeHtml(item.text ?? '')}</p>`;
+    : buildStandardContent(item);
 
   return `
     <div class="procedure-item ${item.mandatory ? 'is-mandatory' : ''}"
