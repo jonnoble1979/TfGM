@@ -31,19 +31,3 @@
         <p>Loading procedure data from data/procedures.json...</p>
     </div>
 </div>
-
-<script>
-    // This calls the loader function defined in the procedure script on page load.
-    document.addEventListener('DOMContentLoaded', () => {
-        // Only run if the function is available (the script has loaded)
-        if (typeof loadProcedures === 'function') {
-            loadProcedures();
-        }
-        
-        // Also attach the search input listener here, similar to your existing script
-        const input = document.getElementById('search-text');
-        if (input) {
-            input.addEventListener('input', applyFilters);
-        }
-    });
-</script>
