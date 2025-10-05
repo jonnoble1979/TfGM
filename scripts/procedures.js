@@ -20,6 +20,10 @@ function uniqueSorted(arr) {
   );
 }
 
+function buildNumberedLabel(idx1, text) {
+  return `${idx1}. ${text}`;
+}
+
 // ---- ParaNo parsing & comparison (1.2.10 > 1.2.9 numerically) ----
 function parseParaNo(no) {
   if (!no) return [];
@@ -38,6 +42,47 @@ function compareParaNo(a, b) {
     if (av !== bv) return av - bv;
   }
   return 0;
+}
+
+// ---------- Heading/Subheading chapter ordering ----------
+/**
+ * Returns headings ordered by the minimum paraNo that appears under each heading.
+ * [{ heading, minParaNo }]
+ */
+function getHeadingOrder() {
+  const map = new Map(); // heading -> minParaNo
+  for (const it of PROCEDURES_DATA) {
+    if (!it.heading) continue;
+    const cur = map.get(it.heading);
+    map.set(
+      it.heading,
+      cur == null || compareParaNo(it.paraNo, cur) < 0 ? it.paraNo : cur
+    );
+  }
+  return [...map.entries()]
+    .sort((a, b) => compareParaNo(a[1], b[1]))
+    .map(([heading, minParaNo]) => ({ heading, minParaNo }));
+}
+
+/**
+ * Returns subheadings ordered by the minimum paraNo.
+ * If heading is provided, it restricts to that heading.
+ * [{ subheading, minParaNo }]
+ */
+function getSubheadingOrder(selectedHeading = '') {
+  const map = new Map(); // subheading -> minParaNo
+  for (const it of PROCEDURES_DATA) {
+    if (selectedHeading && it.heading !== selectedHeading) continue;
+    if (!it.subheading) continue;
+    const cur = map.get(it.subheading);
+    map.set(
+      it.subheading,
+      cur == null || compareParaNo(it.paraNo, cur) < 0 ? it.paraNo : cur
+    );
+  }
+  return [...map.entries()]
+    .sort((a, b) => compareParaNo(a[1], b[1]))
+    .map(([subheading, minParaNo]) => ({ subheading, minParaNo }));
 }
 
 // ---------- Subheading width helpers ----------
@@ -72,20 +117,28 @@ function measureSelectWidthForValues(selectEl, values, minPx = 220) {
   document.body.removeChild(probe);
 
   // Small buffer for focus/UA differences
-  const buffered = Math.ceil(max + 6);
+  const buffered = Math.ceil(max + 10); // +10px to account for "1. " prefixes comfortably
   return Math.max(minPx, buffered);
 }
 
 /**
- * Compute and lock the Subheading select width to the maximum across ALL subheadings.
- * Call this after data load; re-apply in updateSubheadingOptions().
+ * Compute and lock the Subheading select width to the maximum across ALL subheadings,
+ * including space for numeric prefixes (N. ).
  */
 function computeAndLockSubheadingWidth() {
   const subSelect = document.getElementById('filter-subheading');
   if (!subSelect) return;
 
-  const allSubs = uniqueSorted(PROCEDURES_DATA.map(x => x.subheading).filter(Boolean));
-  SUB_DROPDOWN_FIXED_WIDTH_PX = measureSelectWidthForValues(subSelect, allSubs, /*minPx*/ 220);
+  const orderedSubs = getSubheadingOrder(''); // global order
+  const total = orderedSubs.length || 1;
+  const dig = String(total).length;
+
+  // Build "worst case" labels with the largest index so measurement includes prefix width
+  const worstCaseLabels = orderedSubs.map(({ subheading }) =>
+    `${total}. ${subheading}`
+  );
+
+  SUB_DROPDOWN_FIXED_WIDTH_PX = measureSelectWidthForValues(subSelect, worstCaseLabels, /*minPx*/ 220);
   subSelect.style.width = SUB_DROPDOWN_FIXED_WIDTH_PX + 'px';
 }
 
@@ -101,7 +154,7 @@ function splitOnRsaTablePlaceholder(rawText) {
 }
 
 function renderRsaTeamRequirementsTable() {
-  // Static, trusted HTML (optionally add classes/wrapper if you used the themed table CSS)
+  // Static, trusted HTML (you can add classes/wrapper if you applied themed CSS)
   return `
     <table>
       <thead>
@@ -280,11 +333,7 @@ function renderProcedures(data) {
   for (const item of sorted) {
     // New heading?
     if (item.heading !== currentHeading) {
-      // close previous group if open
-      if (groupOpen) {
-        html += `</div>`;
-        groupOpen = false;
-      }
+      if (groupOpen) { html += `</div>`; groupOpen = false; }
       currentHeading = item.heading;
       currentSubheading = null;
       html += `<h3 class="procedure-heading">${escapeHtml(currentHeading ?? '')}</h3>`;
@@ -292,10 +341,7 @@ function renderProcedures(data) {
 
     // New subheading?
     if (item.subheading !== currentSubheading) {
-      if (groupOpen) {
-        html += `</div>`;
-        groupOpen = false;
-      }
+      if (groupOpen) { html += `</div>`; groupOpen = false; }
       currentSubheading = item.subheading;
       html += `<h4 class="procedure-subheading">${escapeHtml(currentSubheading ?? '')}</h4>`;
       html += `<div class="procedure-group">`;
@@ -311,7 +357,7 @@ function renderProcedures(data) {
   resultsContainer.innerHTML = html;
 }
 
-// ---------- Filters: population & cascading ----------
+// ---------- Filters: population & cascading (now chapter-ordered + numbered) ----------
 function populateFilters() {
   const headingSelect = document.getElementById('filter-heading');
   const subheadingSelect = document.getElementById('filter-subheading');
@@ -321,16 +367,17 @@ function populateFilters() {
   headingSelect.length = 1;
   subheadingSelect.length = 1;
 
-  // Headings (alphabetical is fine for dropdown; render order is controlled by paraNo)
-  const headings = uniqueSorted(PROCEDURES_DATA.map(x => x.heading).filter(Boolean));
-  headings.forEach(h => {
+  // Headings in chapter order with numeric prefixes
+  const headingOrder = getHeadingOrder(); // [{heading, minParaNo}]
+  headingOrder.forEach((h, idx) => {
+    const label = buildNumberedLabel(idx + 1, h.heading);
     headingSelect.insertAdjacentHTML(
       'beforeend',
-      `<option value="${escapeAttr(h)}">${escapeHtml(h)}</option>`
+      `<option value="${escapeAttr(h.heading)}">${escapeHtml(label)}</option>`
     );
   });
 
-  // Fill initial subheadings (no heading selected => all)
+  // Fill initial subheadings (no heading selected => global chapter order)
   updateSubheadingOptions();
 }
 
@@ -345,22 +392,17 @@ function updateSubheadingOptions() {
   // Clear to keep "All Subheadings"
   subheadingSelect.length = 1;
 
-  const subs = uniqueSorted(
-    PROCEDURES_DATA
-      .filter(item => !selectedHeading || item.heading === selectedHeading)
-      .map(item => item.subheading)
-      .filter(Boolean)
-  );
-
-  subs.forEach(s => {
+  const subOrder = getSubheadingOrder(selectedHeading); // [{subheading,minParaNo}]
+  subOrder.forEach((s, idx) => {
+    const label = buildNumberedLabel(idx + 1, s.subheading);
     subheadingSelect.insertAdjacentHTML(
       'beforeend',
-      `<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`
+      `<option value="${escapeAttr(s.subheading)}">${escapeHtml(label)}</option>`
     );
   });
 
   // Restore previous subheading if still applicable; otherwise reset to All
-  subheadingSelect.value = subs.includes(prevSub) ? prevSub : '';
+  subheadingSelect.value = subOrder.some(s => s.subheading === prevSub) ? prevSub : '';
 
   // Re-apply locked width so the select doesn't jitter
   if (SUB_DROPDOWN_FIXED_WIDTH_PX) {
@@ -382,7 +424,6 @@ function applyFilters() {
   const mandatoryFilter = !!(mandatoryCheckbox?.checked);
   const searchText = (searchInput?.value || '').toLowerCase().trim();
 
-  // Filter the base list
   const filtered = PROCEDURES_DATA.filter(item => {
     if (headingFilter && item.heading !== headingFilter) return false;
     if (subheadingFilter && item.subheading !== subheadingFilter) return false;
@@ -419,9 +460,9 @@ async function loadProcedures() {
     console.log(`Procedures loaded: ${PROCEDURES_DATA.length}`);
     if (PROCEDURES_DATA.length) console.table(PROCEDURES_DATA.slice(0, 5));
 
-    populateFilters();                // headings + initial subheadings
-    computeAndLockSubheadingWidth();  // lock subheading select width to max across ALL
-    applyFilters();                   // initial render (now paraNo-ordered)
+    populateFilters();                // headings (chapter order) + initial subheadings (chapter order)
+    computeAndLockSubheadingWidth();  // lock subheading select width to max across ALL, incl. prefixes
+    applyFilters();                   // initial render (paraNo-ordered)
   } catch (err) {
     proceduresLoaded = true; // finished (failed)
     console.error('Failed to load procedures:', err);
@@ -480,3 +521,4 @@ async function loadProcedures() {
 // Expose globals used by inline handlers (in case of scope changes)
 window.applyFilters = window.applyFilters || applyFilters;
 window.loadProcedures = window.loadProcedures || loadProcedures;
+window.updateSubheadingOptions = window.updateSubheadingOptions || updateSubheadingOptions;
