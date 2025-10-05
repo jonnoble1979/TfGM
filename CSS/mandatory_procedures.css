@@ -52,3 +52,18 @@
   padding: 8px 10px;
 }
 */
+
+/* Remove left indent for mandatory boxes inside procedures */
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    /* If you want to remove ALL margin, use: */
+    margin: 0 !important;
+    /* If you want to slightly reduce padding, you can tweak: */
+    /* padding-left: 0.75rem; */
+}
+
+/* Optional: If your outer grid has column-gap, but you want the box flush left: */
+.procedure-app-container .procedure-item.is-mandatory {
+    column-gap: 0 !important;
+}
