@@ -1,132 +1,38 @@
-/* =======================================
-   Mandatory badge – Procedures-scoped tweaks
-   ======================================= */
+/* === Procedures-only alignment for mandatory boxes === */
 
-/* Remove inner margin so the outer .procedure-item controls spacing */
-.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
-  margin: 0;
-}
-
-/* Optional: slightly reduce the left/right padding so
-   the badge breathes well inside the grid row (tweak to taste) */
-.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
-  /* padding: 8px 10px;  Uncomment if you want a tighter badge inside procedures */
-}
-
-/* Optional hover subtlety only inside procedures page */
-.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv:is(:hover, :focus-within) {
-  /* inherits your global hover vars; nothing else needed */
-}
-
-/* Hide the outer gutter number for mandatory rows, but keep the column width */
+/* 1) Keep the outer gutter number visible for mandatory rows */
 .procedure-app-container .procedure-item.is-mandatory > .para-no {
-  opacity: 0;            /* keeps space for consistent alignment */
-  pointer-events: none;
+  opacity: 1 !important;
+  position: static !important;
 }
 
-/* Inside the mandatory badge, create a mini grid: [paraNo] | [intro text] */
-.procedure-app-container .mandatoryDiv .mandline {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  column-gap: 0.6rem;
-  align-items: start;
-}
-
-/* The para number inside the box */
-.procedure-app-container .mandatoryDiv .mandline .para-no {
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-/* The intro text cell inside the box */
-.procedure-app-container .mandatoryDiv .mandline .mand-text {
-  min-width: 0;
-}
-
-/* Optional: slightly tighter badge padding only within procedures, if desired */
-/*
+/* 2) Ensure the mandatory badge + label stay INSIDE the box and the text wraps inside */
 .procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
-  padding: 8px 10px;
-}
-*/
-
-/* Remove left indent for mandatory boxes inside procedures */
-.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    /* If you want to remove ALL margin, use: */
-    margin: 0 !important;
-    /* If you want to slightly reduce padding, you can tweak: */
-    /* padding-left: 0.75rem; */
+  display: grid;                           /* keep internal grid */
+  grid-template-columns: max-content 1fr;  /* [badge] | [content] */
+  column-gap: .6rem;
+  margin: 0;                               /* outer row controls spacing */
+  /* keep your original padding/border/background from global CSS */
 }
 
-/* Optional: If your outer grid has column-gap, but you want the box flush left: */
-.procedure-app-container .procedure-item.is-mandatory {
-    column-gap: 0 !important;
-}
-
-/* 1) Remove the extra indent inside the mandatory box in the procedures view */
-.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
-  position: relative;
-  display: block;              /* kill the internal grid for this context */
-  margin: 0;                   /* outer .procedure-item controls spacing */
-  padding: 8px 12px;           /* keep your box padding */
-}
-
-/* Cancel the global rule that forces children into grid column 2 */
+/* Make sure content is in column 2 (as in your global CSS) */
 .procedure-app-container .procedure-item.is-mandatory .mandatoryDiv > * {
-  grid-column: auto !important;
+  grid-column: 2 !important;
+  margin-top: 0;
 }
 
-/* 2) The outer gutter: hide outer number but keep its width to align rows */
-.procedure-app-container .procedure-item.is-mandatory > .para-no {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* 3) Float the badge stack (triangle + label) into the LEFT GUTTER,
-      so it no longer pushes the text inside the box to the right */
+/* Badge (triangle + "Mandatory") stays in column 1, inside the border */
 .procedure-app-container .procedure-item.is-mandatory .mandatoryDiv::before,
 .procedure-app-container .procedure-item.is-mandatory .mandatoryDiv::after {
-  position: absolute !important;
-  left: calc(-1 * (2.75rem));  /* <-- adjust to match your number+gap gutter */
-  /* Tip: try 2.5rem–3rem depending on your font/number width */
-  grid-column: auto;
-  grid-row: auto;
-  justify-self: start;
+  position: static !important; /* participate in the grid, not absolutely positioned */
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
   align-self: start;
 }
 
-/* Adjust vertical positions (keep your original geometry) */
-.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv::before {
-  top: 8px;  /* triangle top inside the box */
+/* Optional: if you want the box border to line up exactly with normal text */
+.procedure-app-container .procedure-item.is-mandatory {
+  /* Keep the same gap as standard rows so the border starts where normal text starts */
+  column-gap: 0.75rem; /* match your .procedure-item gap in procedures.css */
 }
-.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv::after {
-  top: calc(8px + var(--mandy-icon-size) + var(--mandy-gap));
-}
-
-/* 4) Para number INSIDE the box, without shifting text */
-.procedure-app-container .mandatoryDiv .mandline {
-  position: relative;          /* number anchors to this line */
-}
-
-.procedure-app-container .mandatoryDiv .mandline .para-no {
-  position: absolute;
-  left: 0;                     /* put the number right at the box’s text edge */
-  transform: translateX(-0.25rem); /* tiny optical tuck; tweak to taste */
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
-/* Give the text a touch of left padding so the number does not overlap,
-   but keep it SMALL so it stays aligned with normal paragraphs */
-.procedure-app-container .mandatoryDiv .mandline .mand-text {
-  padding-left: 1.25rem;       /* small space for the inside number */
-  min-width: 0;
-}
-
