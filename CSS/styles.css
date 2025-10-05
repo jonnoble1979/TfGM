@@ -42,6 +42,15 @@
     --mandy-ring: rgba(56, 189, 248, 0.22);
 }
 
+/* Reserve vertical scrollbar space to prevent layout shift when content height changes */
+html {
+  scrollbar-gutter: stable; /* keeps gutter on the inline-end side (right in LTR) */
+}
+
+/* Fallback for older browsers that don’t support scrollbar-gutter */
+@supports not (scrollbar-gutter: stable) {
+  html { overflow-y: scroll; } /* always show vertical scrollbar space */
+}
 /* --- GLOBAL LAYOUT --- */
 body {
     font-family: var(--font-family);
