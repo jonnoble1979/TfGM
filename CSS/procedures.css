@@ -46,3 +46,17 @@
     column-gap: 0.6rem;
   }
 }
+
+/* Prevent jitter but stay responsive */
+.procedure-app-container .filter-controls select#filter-subheading {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .procedure-app-container .filter-controls .control-group {
+    min-width: 100%;
+  }
+  .procedure-app-container .filter-controls select#filter-subheading {
+    width: 100% !important;  /* full width on small screens */
+  }
+}
