@@ -17,3 +17,38 @@
 .procedure-app-container .procedure-item.is-mandatory .mandatoryDiv:is(:hover, :focus-within) {
   /* inherits your global hover vars; nothing else needed */
 }
+
+/* Hide the outer gutter number for mandatory rows, but keep the column width */
+.procedure-app-container .procedure-item.is-mandatory > .para-no {
+  opacity: 0;            /* keeps space for consistent alignment */
+  pointer-events: none;
+}
+
+/* Inside the mandatory badge, create a mini grid: [paraNo] | [intro text] */
+.procedure-app-container .mandatoryDiv .mandline {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 0.6rem;
+  align-items: start;
+}
+
+/* The para number inside the box */
+.procedure-app-container .mandatoryDiv .mandline .para-no {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* The intro text cell inside the box */
+.procedure-app-container .mandatoryDiv .mandline .mand-text {
+  min-width: 0;
+}
+
+/* Optional: slightly tighter badge padding only within procedures, if desired */
+/*
+.procedure-app-container .procedure-item.is-mandatory .mandatoryDiv {
+  padding: 8px 10px;
+}
+*/
