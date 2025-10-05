@@ -211,3 +211,26 @@ async function loadProcedures() {
             </p>`;
     }
 }
+
+
+// Put this at the bottom of procedures.js
+(function bootProceduresOnceTheUIExists() {
+  function tryStart() {
+    // only run if the app container exists in DOM
+    const container = document.querySelector('.procedure-app-container');
+    if (!container) return false;
+    // kick off the load
+    if (typeof loadProcedures === 'function') loadProcedures();
+    return true;
+  }
+
+  // If DOM already loaded and container exists, start immediately
+  if (document.readyState !== 'loading' && tryStart()) return;
+
+  // Otherwise, watch for the container to be inserted
+  const mo = new MutationObserver(() => {
+    if (tryStart()) mo.disconnect();
+  });
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+})();
+
