@@ -57,7 +57,61 @@ function buildMandatoryContent(item) {
     `
     : `<div class="mandatoryDiv"><div>${escapedText}</div></div>`;
 }
+// --- Width locking for Subheading select ---
+let SUB_DROPDOWN_FIXED_WIDTH_PX = null;
 
+/**
+ * Measure how wide a <select> needs to be to fit its widest value.
+ * We clone the real select so we get the same fonts, padding, arrow, etc.
+ */
+function measureSelectWidthForValues(selectEl, values, minPx = 220) {
+  if (!selectEl) return minPx;
+
+  // Shallow clone to inherit computed styles, but start empty
+  const probe = selectEl.cloneNode(false);
+  probe.style.position = 'absolute';
+  probe.style.visibility = 'hidden';
+  probe.style.left = '-9999px';
+  probe.style.top = '0';
+  probe.innerHTML = '';
+
+  // Single OPTION we reuse for each value
+  const opt = document.createElement('option');
+  probe.appendChild(opt);
+
+  document.body.appendChild(probe);
+
+  let max = 0;
+  for (const v of values) {
+    opt.textContent = String(v ?? '');
+    // reading offsetWidth forces layout/reflow, giving an accurate width
+    const w = probe.offsetWidth;
+    if (w > max) max = w;
+  }
+
+  document.body.removeChild(probe);
+
+  // Add a tiny safety buffer (some UAs render a hair wider on focus)
+  const buffered = Math.ceil(max + 6);
+  return Math.max(minPx, buffered);
+}
+
+/**
+ * Compute and lock the Subheading select width to the maximum across ALL subheadings.
+ * Call this once after data load; re-apply in updateSubheadingOptions if needed.
+ */
+function computeAndLockSubheadingWidth() {
+  const subSelect = document.getElementById('filter-subheading');
+  if (!subSelect) return;
+
+  const allSubs = uniqueSorted(
+    PROCEDURES_DATA.map(x => x.subheading).filter(Boolean)
+  );
+
+  // Measure and lock
+  SUB_DROPDOWN_FIXED_WIDTH_PX = measureSelectWidthForValues(subSelect, allSubs, /*minPx*/ 220);
+  subSelect.style.width = SUB_DROPDOWN_FIXED_WIDTH_PX + 'px';
+}
 // ---------- Rendering ----------
 function renderProcedureItem(item) {
   const paraNo = item.paraNo ?? '';
